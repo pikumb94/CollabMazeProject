@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [SerializeField] private string horizontalInputName, verticalInputName;
     [SerializeField] private float speed = 6f;
 
     private Vector3 moveDirection = Vector3.zero;
@@ -18,9 +19,12 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-        moveDirection *= speed;
+        float horizInput = Input.GetAxis(horizontalInputName) * speed;
+        float vertInput = Input.GetAxis(verticalInputName) * speed;
 
-        controller.Move(moveDirection * Time.deltaTime);
+        Vector3 forwardMovement = transform.forward * vertInput;
+        Vector3 rightMovement = transform.right * horizInput;
+
+        controller.SimpleMove(forwardMovement + rightMovement);
     }
 }

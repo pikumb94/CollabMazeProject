@@ -39,7 +39,8 @@ public class CameraMovement : MonoBehaviour
             ClampXAxisRotationToValue(90.0f);
         }
 
-        camera.transform.Rotate(-transform.right * mouseY);
+        camera.transform.Rotate(Vector3.left * mouseY);
+        transform.Rotate(Vector3.up * mouseX);
     }
 
     private void ClampXAxisRotationToValue(float value)
