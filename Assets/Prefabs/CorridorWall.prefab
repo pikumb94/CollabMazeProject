@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 63950689229378426}
   - component: {fileID: 6624317952876682371}
   - component: {fileID: 2673392634211117301}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: CorridorWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -157,6 +157,6 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Convex: 1
+  m_Convex: 0
   m_CookingOptions: 14
   m_Mesh: {fileID: 0}

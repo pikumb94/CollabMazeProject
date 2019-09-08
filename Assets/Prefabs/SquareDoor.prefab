@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 754048295141958944}
   - component: {fileID: 2867338820769786344}
   - component: {fileID: 2827133647974804550}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SquareDoor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
