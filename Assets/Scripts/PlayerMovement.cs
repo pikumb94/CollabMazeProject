@@ -32,6 +32,7 @@ public class PlayerMovement : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log(other.name);
+        GameManager.instance.ApplyPenalty();
     }
 
     private void OnTriggerExit(Collider other)

@@ -21,7 +21,7 @@ public class TrapBehaviour : MonoBehaviour
         smoothedTrapPos = trap.transform.position;
         initialTrapPos = trap.transform.position;
     }
-    // Update is called once per frame
+
     void Update()
     {
         //Debug.DrawRay(this.transform.Find("DeadWallContainer").position, transform.right * 1000, Color.white);
