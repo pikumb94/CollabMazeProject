@@ -19,13 +19,16 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float horizInput = Input.GetAxis(horizontalInputName) * speed;
-        float vertInput = Input.GetAxis(verticalInputName) * speed;
+        if (!GameManager.instance.isGameOver) {
+            float horizInput = Input.GetAxis(horizontalInputName) * speed;
+            float vertInput = Input.GetAxis(verticalInputName) * speed;
 
-        Vector3 forwardMovement = transform.forward * vertInput;
-        Vector3 rightMovement = transform.right * horizInput;
+            Vector3 forwardMovement = transform.forward * vertInput;
+            Vector3 rightMovement = transform.right * horizInput;
 
-        controller.SimpleMove(forwardMovement + rightMovement);
+            controller.SimpleMove(forwardMovement + rightMovement);
+        }
+        
     }
 
 

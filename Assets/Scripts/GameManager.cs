@@ -8,12 +8,12 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance = null;
-    public int countdownSeconds = 450;
-    private TextMeshProUGUI timerText;
-    private TextMeshProUGUI penaltyText;
-    private int minutes, seconds;
-    private bool isGameOver = false;
+    [HideInInspector] public int remainingSeconds;
+    public int countdownSeconds = 300;
+
+    [HideInInspector] public bool isGameOver = false;
     public int penaltySeconds = 10;
+
 
     private void Awake()
     {
@@ -21,55 +21,70 @@ public class GameManager : MonoBehaviour
             instance = this;
         else if (instance != this)
             Destroy(gameObject);
-        //DontDestroyOnLoad(gameObject);  //ESSENDO IL GAMEMANAGER DOVREBBE SOPRAVVIVERE MA ATTUALMENTE NON HO BISOGNO DI CONSERVARE DATI/STATI DEL GIOCO FRA LE SCENE
+        DontDestroyOnLoad(gameObject);
     }
 
     void Start()
     {
-
-        timerText = GameObject.Find("TimerText").GetComponent<TextMeshProUGUI>();
-        penaltyText = GameObject.Find("PenaltyText").GetComponent<TextMeshProUGUI>();
-        Debug.Log(timerText.name+" "+penaltyText.name);
-        DisplayTimeFormatted();
+        Init();
         InvokeRepeating("DecreaseCounter", 1f, 1f);
     }
 
     void Update()
     {
+        if (isGameOver)
+        {
+                        
+        }
+
         if (Input.GetKeyDown("1")) {
-           SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+           SceneManager.LoadScene(0);
         }
     }
 
-    void DecreaseCounter (){
-        countdownSeconds--;
-        if (countdownSeconds >= 0)
-            DisplayTimeFormatted();
-        else
-            isGameOver = true;
+    private void OnLevelWasLoaded(int level)
+    {
+        Init();
     }
 
-    void DisplayTimeFormatted()
+    void Init()
     {
-        minutes = countdownSeconds / 60;
-        seconds = countdownSeconds % 60;
-        timerText.SetText(minutes.ToString() + ":" + String.Format("{0:00}", seconds));
+        isGameOver = false;
+        GameUIManager.instance.HideGameOverPanel();
+        remainingSeconds = countdownSeconds;
+        GameUIManager.instance.DisplayTimeFormatted();
     }
+
+    public void DecreaseCounter(){
+        remainingSeconds--;
+        if (remainingSeconds >= 0)
+        {
+            GameUIManager.instance.DisplayTimeFormatted();
+        }
+        else
+            GameIsOver();
+    }
+
+
 
     public void ApplyPenalty()
     {
-        if (countdownSeconds >= penaltySeconds)
-            countdownSeconds = countdownSeconds - penaltySeconds;
+        if (remainingSeconds >= penaltySeconds)
+            remainingSeconds = remainingSeconds - penaltySeconds;
         else
-            countdownSeconds = 0;
-        DisplayTimeFormatted();
-        penaltyText.SetText("  -"+penaltySeconds);
-        Invoke("CancelPenaltyText", 3);
+            remainingSeconds = 0;
+
+        if (remainingSeconds <= 0)
+            GameIsOver();
+        GameUIManager.instance.DisplayPenaltyText(penaltySeconds);
+        GameUIManager.instance.DisplayTimeFormatted();
+        
     }
 
-    private void CancelPenaltyText()
+    void GameIsOver()
     {
-        penaltyText.SetText("");
+        isGameOver = true;
+        GameUIManager.instance.DisplayGameOverPanel();
     }
 
 }
