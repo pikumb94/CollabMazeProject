@@ -60,7 +60,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10758, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a8963a8491ae94d4d90026aa1e0b9cbe, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -172,6 +172,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: TrapParticle
+      objectReference: {fileID: 0}
+    - target: {fileID: 6946413880028514032, guid: eb1e47ebe9aed5240907a23c76533360,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6946413880028514033, guid: eb1e47ebe9aed5240907a23c76533360,
         type: 3}

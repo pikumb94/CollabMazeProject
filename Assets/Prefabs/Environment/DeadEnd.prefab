@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f6a17ddddf5586439bb49153ee75554, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  trapVelocity: 1
+  trapVelocity: 2
 --- !u!1 &6410331392812838980
 GameObject:
   m_ObjectHideFlags: 0
@@ -145,12 +145,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 797187933398818463, guid: 8af42b4fdcc724a429663ab4bbfebd9d,
+    - target: {fileID: 797187933398818458, guid: 8af42b4fdcc724a429663ab4bbfebd9d,
         type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 797187933398818458, guid: 8af42b4fdcc724a429663ab4bbfebd9d,
+    - target: {fileID: 797187933398818463, guid: 8af42b4fdcc724a429663ab4bbfebd9d,
         type: 3}
       propertyPath: m_Mesh
       value: 
