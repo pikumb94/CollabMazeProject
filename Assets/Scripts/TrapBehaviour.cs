@@ -12,12 +12,15 @@ public class TrapBehaviour : MonoBehaviour
     private Vector3 smoothedTrapPos;
     private Vector3 initialTrapPos;
 
+    [SerializeField] private Transform positionDeadWallContainer;
+    [SerializeField] private GameObject trapGameObj;
+
 
     private void Start()
     {
-        Physics.Raycast(this.transform.Find("DeadWallContainer").position, transform.right, out hit, Mathf.Infinity, LayerMask.GetMask("Wall"));
+        Physics.Raycast(/*this.transform.Find("/DeadWallContainer").position*/positionDeadWallContainer.position, transform.right, out hit, Mathf.Infinity, LayerMask.GetMask("Wall"));
         dst = hit.distance;
-        trap = this.transform.Find("Trap").gameObject;
+        trap = /*this.transform.Find("Trap").gameObject;*/ trapGameObj;
         smoothedTrapPos = trap.transform.position;
         initialTrapPos = trap.transform.position;
     }
@@ -26,7 +29,7 @@ public class TrapBehaviour : MonoBehaviour
     {
         //Debug.DrawRay(this.transform.Find("DeadWallContainer").position, transform.right * 1000, Color.white);
         //Debug.DrawRay(this.transform.Find("DeadWallContainer").position, transform.right * dst, Color.red);
-        if(Physics.Raycast(this.transform.Find("DeadWallContainer").position, transform.right , out hit, dst, LayerMask.GetMask("Player")))
+        if(Physics.Raycast(/*this.transform.Find("/DeadWallContainer").position*/ positionDeadWallContainer.position, transform.right , out hit, dst, LayerMask.GetMask("Player")))
         {
             Debug.Log("Raycast: Player Hit!");
             isTrapActive = true;

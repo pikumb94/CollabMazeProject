@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     public int countdownSeconds = 300;
 
     [HideInInspector] public bool isGameOver = false;
+    [HideInInspector] public bool isWin = false;
     public int penaltySeconds = 10;
 
 
@@ -32,10 +33,6 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if (isGameOver)
-        {
-                        
-        }
 
         if (Input.GetKeyDown("1")) {
            SceneManager.LoadScene(0);
@@ -50,19 +47,25 @@ public class GameManager : MonoBehaviour
     void Init()
     {
         isGameOver = false;
+        isWin = false;
         GameUIManager.instance.HideGameOverPanel();
+        GameUIManager.instance.HideYouWinPanel();
         remainingSeconds = countdownSeconds;
         GameUIManager.instance.DisplayTimeFormatted();
     }
 
     public void DecreaseCounter(){
-        remainingSeconds--;
-        if (remainingSeconds >= 0)
+        if (!isWin)
         {
-            GameUIManager.instance.DisplayTimeFormatted();
+            remainingSeconds--;
+            if (remainingSeconds >= 0)
+            {
+                GameUIManager.instance.DisplayTimeFormatted();
+            }
+            else
+                GameIsOver();
         }
-        else
-            GameIsOver();
+        
     }
 
 
@@ -85,6 +88,12 @@ public class GameManager : MonoBehaviour
     {
         isGameOver = true;
         GameUIManager.instance.DisplayGameOverPanel();
+    }
+
+    public void YouWin()
+    {
+        isWin = true;
+        GameUIManager.instance.DisplayYouWinPanel();
     }
 
 }

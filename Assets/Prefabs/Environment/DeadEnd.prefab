@@ -47,6 +47,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trapVelocity: 2
+  positionDeadWallContainer: {fileID: 1030968928815139530}
+  trapGameObj: {fileID: 3337648136834639420}
 --- !u!1 &6410331392812838980
 GameObject:
   m_ObjectHideFlags: 0
@@ -157,6 +159,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8af42b4fdcc724a429663ab4bbfebd9d, type: 3}
+--- !u!1 &3337648136834639420 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 797187933398818462, guid: 8af42b4fdcc724a429663ab4bbfebd9d,
+    type: 3}
+  m_PrefabInstance: {fileID: 2684597794067658914}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3337648136834639417 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 797187933398818459, guid: 8af42b4fdcc724a429663ab4bbfebd9d,

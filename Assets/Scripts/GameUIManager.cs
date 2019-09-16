@@ -7,6 +7,7 @@ using TMPro;
 public class GameUIManager : MonoBehaviour
 {
     public GameObject gameOverPanel;
+    public GameObject youWinPanel;
     public static GameUIManager instance = null;
 
     public TextMeshProUGUI timerText;
@@ -59,5 +60,15 @@ public class GameUIManager : MonoBehaviour
     public void HideGameOverPanel()
     {
         gameOverPanel.SetActive(false);
+    }
+
+    public void DisplayYouWinPanel()
+    {
+        youWinPanel.SetActive(true);
+    }
+
+    public void HideYouWinPanel()
+    {
+        youWinPanel.SetActive(false);
     }
 }
