@@ -28,14 +28,14 @@ public class PlayerMovement : MonoBehaviour
 
             controller.SimpleMove(forwardMovement + rightMovement);
         }
-        
+
     }
 
-
+    //CHIEDERE S3E VA BENE USARE CONTROLLER E ONTRIGGERENTER
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log(other.name);
-        if(other.name=="Trap")
+        if (other.name == "Trap")
             GameManager.instance.ApplyPenalty();
         if (other.name == "FinishLane")
             GameManager.instance.YouWin();
@@ -43,8 +43,6 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-
         Destroy(other.gameObject);
     }
-
 }

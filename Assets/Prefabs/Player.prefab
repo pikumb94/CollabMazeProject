@@ -95,6 +95,7 @@ GameObject:
   - component: {fileID: 7840684371773021804}
   - component: {fileID: 4680115416781251615}
   - component: {fileID: 8363059298323980886}
+  - component: {fileID: 3384212658415736324}
   m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
@@ -165,3 +166,17 @@ MonoBehaviour:
   mouseXInputName: Mouse X
   mouseYInputName: Mouse Y
   mouseSensivity: 4
+--- !u!136 &3384212658415736324
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3580078335566612301}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  m_Radius: 0.3
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
