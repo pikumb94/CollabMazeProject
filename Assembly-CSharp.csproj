@@ -62,13 +62,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\BoxSpawnerManager.cs" />
     <Compile Include="Assets\Scripts\CameraMovement.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\GameUIManager.cs" />
+    <Compile Include="Assets\Scripts\OrbitBoxParameters.cs" />
     <Compile Include="Assets\Scripts\PlayerMovement.cs" />
+    <Compile Include="Assets\Scripts\SpawnerManager.cs" />
     <Compile Include="Assets\Scripts\StopwatchManager.cs" />
     <Compile Include="Assets\Scripts\TrapBehaviour.cs" />
-    <Compile Include="Assets\WinManager.cs" />
+    <Compile Include="Assets\Scripts\WinManager.cs" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Properties.cginc" />
