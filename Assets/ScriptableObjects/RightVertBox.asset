@@ -12,14 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 421bcfd41b2e8c14681201338f9d73b8, type: 3}
   m_Name: RightVertBox
   m_EditorClassIdentifier: 
-  xOffset: 2
-  yOffset: 1
-  zOffset: 0.5
+  xSpread: 2
+  ySpread: 1
+  zSpread: 0.5
   xPos: 0
   yPos: 3.5
   zPos: -1.5
   freqXOrbit: 1
   freqYOrbit: 1
   freqZOrbit: 1
-  numObj: 1
-  isRandomSpawning: 0
+  numObj: 6
+  isSameRotationDirection: 1
+  isRandomFrequencies: 0
+  isOrbitSpeedIncreasing: 0
+  endingOrbitVelocity: 1
+  orbitVelocity: 0.5
