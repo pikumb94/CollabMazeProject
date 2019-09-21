@@ -62,7 +62,7 @@ public class SpawnerManager : MonoBehaviour
         for (int i = 0; i < numObj; i++)
         {
             //if(isEquidistant)
-
+            Debug.Log(this.transform.position);
                 if(isSameRotationDirection)
                     sphereList.Add(new SphereInitialContext(Instantiate(spherePrefab, this.transform.position, Quaternion.identity) as GameObject, new Vector3((2 * Mathf.PI / numObj) * i, (2 * Mathf.PI / numObj) * i, (2 * Mathf.PI / numObj) * i), Random.Range(0, 2)>=1 ? true: true));
                 else
@@ -101,7 +101,7 @@ public class SpawnerManager : MonoBehaviour
             SphereInitialContext sphereIC = sphereList[i];
             int rotDirection = (sphereIC.isCounterclockwise ? 1 : -1);
 
-            sphereIC.sphere.transform.SetPositionAndRotation( new Vector3(rotDirection * Mathf.Cos(freqXOrbit*time + sphereIC.initialPosition.x) * xSpread, rotDirection * Mathf.Sin(freqYOrbit* time + sphereIC.initialPosition.y) * ySpread, Mathf.Sin(freqZOrbit*time + sphereIC.initialPosition.z) * zSpread )+new Vector3(xPos,yPos,zPos), Quaternion.identity);
+            sphereIC.sphere.transform.SetPositionAndRotation( new Vector3(rotDirection * Mathf.Cos(freqXOrbit*time + sphereIC.initialPosition.x) * xSpread, rotDirection * Mathf.Sin(freqYOrbit* time + sphereIC.initialPosition.y) * ySpread, Mathf.Sin(freqZOrbit*time + sphereIC.initialPosition.z) * zSpread )+new Vector3(xPos,yPos,zPos)+ this.transform.position, Quaternion.identity);
             
             //PIANO XZ DI UN ELLISSE
             //sphereIC.sphere.transform.SetPositionAndRotation(new Vector3(rotDirection * Mathf.Cos( time + sphereIC.initialPosition.x)* Mathf.Sin(delta) * xSpread, Mathf.Cos(delta) * ySpread, Mathf.Sin(delta) * Mathf.Sin(time + sphereIC.initialPosition.z) * zSpread) + new Vector3(xPos, yPos, zPos), Quaternion.identity);

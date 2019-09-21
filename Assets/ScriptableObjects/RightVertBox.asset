@@ -21,9 +21,9 @@ MonoBehaviour:
   freqXOrbit: 1
   freqYOrbit: 1
   freqZOrbit: 1
-  numObj: 6
+  numObj: 4
   isSameRotationDirection: 1
-  isRandomFrequencies: 0
-  isOrbitSpeedIncreasing: 0
+  isRandomFrequencies: 1
+  isOrbitSpeedIncreasing: 1
   endingOrbitVelocity: 1
   orbitVelocity: 0.5
