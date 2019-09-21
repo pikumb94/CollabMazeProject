@@ -47,7 +47,7 @@ MonoBehaviour:
   m_MinSize: {x: 683, y: 494}
   m_MaxSize: {x: 14004, y: 14044}
   vertical: 0
-  controlID: 269
+  controlID: 126
 --- !u!114 &3
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -94,8 +94,8 @@ MonoBehaviour:
     y: 0
     width: 285
     height: 675
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 202, y: 222}
+  m_MaxSize: {x: 4002, y: 4022}
   m_ActualView: {fileID: 17}
   m_Panes:
   - {fileID: 17}
@@ -220,7 +220,7 @@ MonoBehaviour:
   m_MinSize: {x: 406, y: 494}
   m_MaxSize: {x: 10002, y: 14044}
   vertical: 1
-  controlID: 189
+  controlID: 127
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -245,7 +245,7 @@ MonoBehaviour:
   m_MinSize: {x: 406, y: 222}
   m_MaxSize: {x: 8006, y: 4022}
   vertical: 0
-  controlID: 190
+  controlID: 128
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -449,20 +449,20 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Prefabs/Environment/CorridorShorthands
+    - Assets/Prefabs/Environment
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Prefabs/Environment/CorridorShorthands
+  - Assets/Prefabs/Environment
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\RedFury\CollabMazeProject
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 79}
-    m_SelectedIDs: 82800000
-    m_LastClickedID: 32898
-    m_ExpandedIDs: 00000000d42f00000e330000cc33000068340000743400009e3400003c35000000ca9a3b
+    scrollPos: {x: 0, y: 159}
+    m_SelectedIDs: 88340000
+    m_LastClickedID: 13448
+    m_ExpandedIDs: 00000000e62f00002e330000ec3300008834000094340000be3400005e35000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -490,7 +490,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000d42f00000e330000cc330000743400009e340000
+    m_ExpandedIDs: 00000000e62f00002e330000ec33000094340000be340000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -610,10 +610,10 @@ MonoBehaviour:
   m_ViewDataDictionary: {fileID: 0}
   m_SceneHierarchy:
     m_TreeViewState:
-      scrollPos: {x: 0, y: 0}
+      scrollPos: {x: 0, y: 625}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: fa43feff5446feff5247feff1697feffbcb8feffbabcfeff3ebffeff76c1feff44c2feff7cc5feff94d6feffc0e4feff42ecfeff8817ffff9221ffff3024ffff2c27ffffe83ffffff243ffffa25dffff6077ffff0e91ffff7cadffff30c7ffff76fbffff00960000
+      m_ExpandedIDs: 44c4ffffb8c4ffff28d5ffff5ed5ffffd0e6ffff76fbffff6c3700003e4f0000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -665,7 +665,7 @@ MonoBehaviour:
   m_ViewDataDictionary: {fileID: 0}
   m_ShowContextualTools: 0
   m_WindowGUID: bfeb0e3a5d379754eb6e19a5cb64094b
-  m_Gizmos: 0
+  m_Gizmos: 1
   m_SceneIsLit: 0
   m_SceneLighting: 1
   m_2DMode: 0
@@ -673,9 +673,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 64.82871, y: -204.42558, z: 1.0498677}
+    m_Target: {x: 38.98047, y: -280.11673, z: 3.7198544}
     speed: 2
-    m_Value: {x: 64.82871, y: -204.42558, z: 1.0498677}
+    m_Value: {x: 38.98047, y: -280.11673, z: 3.7198544}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -704,13 +704,13 @@ MonoBehaviour:
       speed: 2
       m_Value: 0
   m_Rotation:
-    m_Target: {x: -0.45254552, y: -0.49334103, z: 0.38472813, w: -0.63830805}
+    m_Target: {x: 0.23273848, y: 0.70470506, z: -0.59517366, w: 0.31465605}
     speed: 2
-    m_Value: {x: -0.45057097, y: -0.4943559, z: 0.3853841, w: -0.63567066}
+    m_Value: {x: 0.23138124, y: 0.70376426, z: -0.5943297, w: 0.31297073}
   m_Size:
-    m_Target: 247.84843
+    m_Target: 321.08566
     speed: 2
-    m_Value: 259.52716
+    m_Value: 307.259
   m_Ortho:
     m_Target: 0
     speed: 2
