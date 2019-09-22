@@ -37,6 +37,22 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown("1")) {
            SceneManager.LoadScene(0);
         }
+        if (Input.GetKeyDown("2"))
+        {
+            SceneManager.LoadScene(1);
+        }
+        if (Input.GetKeyDown("3"))
+        {
+            SceneManager.LoadScene(2);
+        }
+        if (Input.GetKeyDown("4"))
+        {
+            SceneManager.LoadScene(3);
+        }
+        if (Input.GetKeyDown("5"))
+        {
+            SceneManager.LoadScene(4);
+        }
     }
 
     private void OnLevelWasLoaded(int level)

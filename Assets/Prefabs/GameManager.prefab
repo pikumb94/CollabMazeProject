@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   remainingSeconds: 0
-  countdownSeconds: 10
+  countdownSeconds: 300
+  isGameOver: 0
+  isWin: 0
   penaltySeconds: 10
-  gameUIManagerScript: {fileID: 3507373461946161751, guid: 3c3b685d11d883449aee4f7727bf6cd2,
-    type: 3}
