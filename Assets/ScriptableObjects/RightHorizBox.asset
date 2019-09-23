@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 421bcfd41b2e8c14681201338f9d73b8, type: 3}
+  m_Name: RightHorizBox
+  m_EditorClassIdentifier: 
+  xSpread: 0.5
+  ySpread: 1
+  zSpread: 1
+  xPos: -1.5
+  yPos: 3.5
+  zPos: -1
+  freqXOrbit: 1
+  freqYOrbit: 1
+  freqZOrbit: 1
+  numObj: 3
+  isSameRotationDirection: 1
+  isRandomFrequencies: 1
+  isOrbitSpeedIncreasing: 1
+  endingOrbitVelocity: 1
+  orbitVelocity: 0.5

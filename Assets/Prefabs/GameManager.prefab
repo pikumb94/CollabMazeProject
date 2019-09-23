@@ -43,4 +43,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb0a36b93022c23448f9e4c5d465502b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  countdownMinutes: 450
+  remainingSeconds: 0
+  countdownSeconds: 300
+  isGameOver: 0
+  isWin: 0
+  penaltySeconds: 10

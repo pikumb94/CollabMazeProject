@@ -21,26 +21,28 @@ public class CameraMovement : MonoBehaviour
 
     void Update()
     {
-        //Debug.Log(Input.GetAxis(mouseXInputName)+ "  " + Input.GetAxis(mouseYInputName));
-        float mouseX = Input.GetAxis(mouseXInputName) * mouseSensivity;
-        float mouseY = Input.GetAxis(mouseYInputName) * mouseSensivity;
-        xAxisClamp += mouseY;
+        if (!GameManager.instance.isGameOver) {
+            float mouseX = Input.GetAxis(mouseXInputName) * mouseSensivity;
+            float mouseY = Input.GetAxis(mouseYInputName) * mouseSensivity;
+            xAxisClamp += mouseY;
 
-        if (xAxisClamp > 90.0f)
-        {
-            xAxisClamp = 90.0f;
-            mouseY = 0;
-            ClampXAxisRotationToValue(270.0f);
-        }
-        else if (xAxisClamp <- 90.0f)
-        {
-            xAxisClamp = -90.0f;
-            mouseY = 0;
-            ClampXAxisRotationToValue(90.0f);
-        }
+            if (xAxisClamp > 90.0f)
+            {
+                xAxisClamp = 90.0f;
+                mouseY = 0;
+                ClampXAxisRotationToValue(270.0f);
+            }
+            else if (xAxisClamp < -90.0f)
+            {
+                xAxisClamp = -90.0f;
+                mouseY = 0;
+                ClampXAxisRotationToValue(90.0f);
+            }
 
-        camera.transform.Rotate(Vector3.left * mouseY);
-        transform.Rotate(Vector3.up * mouseX);
+            camera.transform.Rotate(Vector3.left * mouseY);
+            transform.Rotate(Vector3.up * mouseX);
+        }
+        
     }
 
     private void ClampXAxisRotationToValue(float value)
