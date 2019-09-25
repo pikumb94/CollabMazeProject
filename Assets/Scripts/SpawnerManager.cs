@@ -23,11 +23,13 @@ public class SpawnerManager : MonoBehaviour
     [SerializeField] private bool isOrbitSpeedIncreasing = false;//NB: SE QUESTA è FALSA, LA ORBIT SPEED è COSTANTE E DI 0.5f
     [SerializeField] private float endingOrbitVelocity = 1f;
     [SerializeField] private float orbitVelocity = 0.5f;
+    [SerializeField] private bool randomizeColours = false;
     /* RIATTIVA SE VUOI USARE ELLISSE
     [Range(0f, Mathf.PI)]
     public float delta; */
 
     private float time;
+
     public class SphereInitialContext
     {
         public GameObject sphere;
@@ -42,15 +44,18 @@ public class SpawnerManager : MonoBehaviour
         }
     }
     public List<SphereInitialContext> sphereList;
+
     void Awake()
     {
         if (scriptObj != null)
             setInternalParametersFromSO(scriptObj);
     }
+
     void Start()
     {
         sphereList = new List<SphereInitialContext>();
         time = Time.time;
+        
 
         if (isRandomFrequencies)
         {
@@ -59,14 +64,16 @@ public class SpawnerManager : MonoBehaviour
             freqZOrbit = Random.Range(1, 11);
         }
 
+
+
         for (int i = 0; i < numObj; i++)
         {
             //if(isEquidistant)
             Debug.Log(this.transform.position);
-                if(isSameRotationDirection)
-                    sphereList.Add(new SphereInitialContext(Instantiate(spherePrefab, this.transform.position, Quaternion.identity) as GameObject, new Vector3((2 * Mathf.PI / numObj) * i, (2 * Mathf.PI / numObj) * i, (2 * Mathf.PI / numObj) * i), Random.Range(0, 2)>=1 ? true: true));
-                else
-                    sphereList.Add(new SphereInitialContext(Instantiate(spherePrefab, this.transform.position, Quaternion.identity) as GameObject, new Vector3((2 * Mathf.PI / numObj) * i, (2 * Mathf.PI / numObj) * i, (2 * Mathf.PI / numObj) * i), Random.Range(0, 2) >= 1 ? true : false));
+            if (isSameRotationDirection)
+                sphereList.Add(new SphereInitialContext(Instantiate(spherePrefab, this.transform.position, Quaternion.identity) as GameObject, new Vector3((2 * Mathf.PI / numObj) * i, (2 * Mathf.PI / numObj) * i, (2 * Mathf.PI / numObj) * i), Random.Range(0, 2) >= 1 ? true : true));
+            else
+                sphereList.Add(new SphereInitialContext(Instantiate(spherePrefab, this.transform.position, Quaternion.identity) as GameObject, new Vector3((2 * Mathf.PI / numObj) * i, (2 * Mathf.PI / numObj) * i, (2 * Mathf.PI / numObj) * i), Random.Range(0, 2) >= 1 ? true : false));
 
             /*else
 
@@ -75,9 +82,16 @@ public class SpawnerManager : MonoBehaviour
                 else
                     sphereList.Add(new SphereInitialContext(Instantiate(spherePrefab, this.transform.position, Quaternion.identity) as GameObject, randomPointOnSphereToAngles(), Random.Range(0, 2) >= 1 ? true : false));
 
-    */
-            Debug.Log(sphereList[i].isCounterclockwise);
+                */
+            if (randomizeColours) {
+                Color iObjColor;
+                iObjColor = Color.HSVToRGB((1.0f / numObj) * i, 1, 1);
+                iObjColor.a = sphereList[i].sphere.GetComponent<MeshRenderer>().material.color.a;
+                sphereList[i].sphere.GetComponent<MeshRenderer>().material.color = iObjColor;
+            }
         }
+
+
     }
 
     // Update is called once per frame
@@ -145,12 +159,12 @@ public class SpawnerManager : MonoBehaviour
         this.freqXOrbit = sO.freqXOrbit;
         this.freqYOrbit = sO.freqYOrbit;
         this.freqZOrbit = sO.freqZOrbit;
-        this.numObj = sO.numObj;
-        this.isSameRotationDirection = sO.isSameRotationDirection;
-        this.isRandomFrequencies = sO.isRandomFrequencies;
-        this.isOrbitSpeedIncreasing = sO.isOrbitSpeedIncreasing;
-        this.endingOrbitVelocity = sO.endingOrbitVelocity;
-        this.orbitVelocity = sO.orbitVelocity;
+        //this.numObj = sO.numObj;
+        //this.isSameRotationDirection = sO.isSameRotationDirection;
+        //this.isRandomFrequencies = sO.isRandomFrequencies;
+        //this.isOrbitSpeedIncreasing = sO.isOrbitSpeedIncreasing;
+        //this.endingOrbitVelocity = sO.endingOrbitVelocity;
+        //this.orbitVelocity = sO.orbitVelocity;
 
 }
 

@@ -6,9 +6,11 @@ public class StopwatchManager : MonoBehaviour
 {
     public Transform minutesHand;
     public Transform secondHand;
+
     public bool isCountDown = false;
     public bool isSymmetrical = false;
-    void Start()
+
+    void Awake()
     {
         if (isCountDown)
         {

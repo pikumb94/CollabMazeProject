@@ -64,8 +64,10 @@ public class GameManager : MonoBehaviour
     {
         isGameOver = false;
         isWin = false;
+
         GameUIManager.instance.HideGameOverPanel();
         GameUIManager.instance.HideYouWinPanel();
+        GameUIManager.instance.HideDescriptionPanel();
         remainingSeconds = countdownSeconds;
         GameUIManager.instance.DisplayTimeFormatted();
     }
@@ -104,12 +106,14 @@ public class GameManager : MonoBehaviour
     {
         isGameOver = true;
         GameUIManager.instance.DisplayGameOverPanel();
+        GameUIManager.instance.DisplayDescriptionPanel();
     }
 
     public void YouWin()
     {
         isWin = true;
         GameUIManager.instance.DisplayYouWinPanel();
+        GameUIManager.instance.DisplayDescriptionPanel();
     }
 
 }

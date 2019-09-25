@@ -162,6 +162,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f86fdcedabe751d40b467bed0d12d740, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  camera: {fileID: 3580078335294458485}
   mouseXInputName: Mouse X
   mouseYInputName: Mouse Y
   mouseSensivity: 4

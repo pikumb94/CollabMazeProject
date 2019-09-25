@@ -14,10 +14,10 @@ public class OrbitBoxParameters : ScriptableObject
     public float freqXOrbit = 1f;
     public float freqYOrbit = 1f;
     public float freqZOrbit = 1f;
-    public int numObj = 1;
-    public bool isSameRotationDirection = true;
-    public bool isRandomFrequencies = false;
-    public bool isOrbitSpeedIncreasing = false;
-    public float endingOrbitVelocity = 1f;
-    public float orbitVelocity = 0.5f;
+    //public int numObj = 1;
+    //public bool isSameRotationDirection = true;
+    //public bool isRandomFrequencies = false;
+    //public bool isOrbitSpeedIncreasing = false;
+    //public float endingOrbitVelocity = 1f;
+    //public float orbitVelocity = 0.5f;
 }
