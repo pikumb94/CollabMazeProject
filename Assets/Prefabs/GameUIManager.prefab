@@ -444,6 +444,7 @@ GameObject:
   - component: {fileID: 5225461816067745491}
   - component: {fileID: 8689587444572652687}
   - component: {fileID: 2491817388977090377}
+  - component: {fileID: 2017118144}
   m_Layer: 5
   m_Name: YouWinPanel
   m_TagString: Untagged
@@ -509,6 +510,25 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!95 &2017118144
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5766260275661008229}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a0bd4682b229b984bb088bc9980af6e8, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &8105336458097041183
 GameObject:
   m_ObjectHideFlags: 0
@@ -1013,6 +1033,7 @@ GameObject:
   - component: {fileID: 8105336459038483131}
   - component: {fileID: 8105336459038483134}
   - component: {fileID: 8105336459038483129}
+  - component: {fileID: 1714845477}
   m_Layer: 5
   m_Name: GameOverPanel
   m_TagString: Untagged
@@ -1078,6 +1099,25 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!95 &1714845477
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8105336459038483130}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a0bd4682b229b984bb088bc9980af6e8, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &8105336459166059288
 GameObject:
   m_ObjectHideFlags: 0
