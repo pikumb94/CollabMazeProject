@@ -6,7 +6,7 @@ using UnityEngine;
 public class SpawnerManager : MonoBehaviour
 {
     public GameObject spherePrefab;
-    public OrbitBoxParameters scriptObj=null;
+    public OrbitBoxPosition scriptObj=null;
     [SerializeField] private float xSpread=1;
     [SerializeField] private float ySpread=1;
     [SerializeField] private float zSpread=1;
@@ -148,7 +148,7 @@ public class SpawnerManager : MonoBehaviour
         this.numObj = numObj;
     }
 
-    private void setInternalParametersFromSO(OrbitBoxParameters sO)
+    private void setInternalParametersFromSO(OrbitBoxPosition sO)
     {
         this.xSpread = sO.xSpread;
         this.ySpread = sO.ySpread;
@@ -156,9 +156,9 @@ public class SpawnerManager : MonoBehaviour
         this.xPos = sO.xPos;
         this.yPos = sO.yPos;
         this.zPos = sO.zPos;
-        this.freqXOrbit = sO.freqXOrbit;
-        this.freqYOrbit = sO.freqYOrbit;
-        this.freqZOrbit = sO.freqZOrbit;
+        //this.freqXOrbit = sO.freqXOrbit;
+        //this.freqYOrbit = sO.freqYOrbit;
+        //this.freqZOrbit = sO.freqZOrbit;
         //this.numObj = sO.numObj;
         //this.isSameRotationDirection = sO.isSameRotationDirection;
         //this.isRandomFrequencies = sO.isRandomFrequencies;
