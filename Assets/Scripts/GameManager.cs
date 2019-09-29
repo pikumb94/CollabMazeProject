@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
 
     [HideInInspector] public bool isGameOver = false;
     [HideInInspector] public bool isWin = false;
+    [HideInInspector] public bool isPause = false;
     public int penaltySeconds = 10;
 
 
@@ -53,6 +54,32 @@ public class GameManager : MonoBehaviour
         {
             SceneManager.LoadScene(4);
         }
+        if (Input.GetKeyDown("6"))
+        {
+            SceneManager.LoadScene(5);
+        }
+        if (Input.GetKeyDown("7"))
+        {
+            SceneManager.LoadScene(6);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (isPause)
+            {
+                GameUIManager.instance.HideDescriptionPanel();
+                isPause = false;
+            }
+            else
+            {
+                if(!isWin && !isGameOver)
+                {
+                    isPause = true;
+                    GameUIManager.instance.DisplayDescriptionPanel();
+                }
+            }
+        }
+
     }
 
     private void OnLevelWasLoaded(int level)
@@ -64,6 +91,7 @@ public class GameManager : MonoBehaviour
     {
         isGameOver = false;
         isWin = false;
+        isPause = false;
 
         GameUIManager.instance.HideGameOverPanel();
         GameUIManager.instance.HideYouWinPanel();
@@ -73,7 +101,7 @@ public class GameManager : MonoBehaviour
     }
 
     public void DecreaseCounter(){
-        if (!isWin)
+        if (!isWin && !isPause)
         {
             remainingSeconds--;
             if (remainingSeconds >= 0)
@@ -115,5 +143,7 @@ public class GameManager : MonoBehaviour
         GameUIManager.instance.DisplayYouWinPanel();
         GameUIManager.instance.DisplayDescriptionPanel();
     }
+
+
 
 }

@@ -20,7 +20,7 @@ public class CameraMovement : MonoBehaviour
 
     void Update()
     {
-        if (!GameManager.instance.isGameOver) {
+        if (!GameManager.instance.isGameOver && !GameManager.instance.isPause) {
             float mouseX = Input.GetAxis(mouseXInputName) * mouseSensivity;
             float mouseY = Input.GetAxis(mouseYInputName) * mouseSensivity;
             xAxisClamp += mouseY;

@@ -20,4 +20,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Tutorial_TriangularRoom.unity
     guid: 0cde88c350bc16b4fb84049d21277665
+  - enabled: 1
+    path: Assets/Scenes/SampleLevel1(easy).unity
+    guid: 588ce6da86af45448b5159a13277786d
+  - enabled: 1
+    path: Assets/Scenes/SampleLevel2(hard).unity
+    guid: b7d445459ded1d54d9b849141be99306
   m_configObjects: {}

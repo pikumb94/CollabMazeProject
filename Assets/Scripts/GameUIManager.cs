@@ -82,4 +82,15 @@ public class GameUIManager : MonoBehaviour
     {
         descriptionPanel.SetActive(false);
     }
+
+    public void ExitButtonPressed()
+    {
+        Application.Quit();
+    }
+
+    public void ResumeButtonPressed()
+    {
+        HideDescriptionPanel();
+        GameManager.instance.isPause = false;
+    }
 }
