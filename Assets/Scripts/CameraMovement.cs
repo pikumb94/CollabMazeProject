@@ -4,24 +4,23 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
-    private new Camera camera;
+    public new GameObject camera;
+    private Transform _tr;
+    private Transform _trCamera;
+
     [SerializeField] private string mouseXInputName, mouseYInputName;
     [SerializeField] private float mouseSensivity;
     private float xAxisClamp;
 
     private void Awake()
     {
-        xAxisClamp = 0.0f;
-    }
-
-    void Start()
-    {
-        camera = GetComponentInChildren<Camera>();
+        _trCamera = camera.GetComponent<Transform>();
+        _tr = GetComponent<Transform>();
     }
 
     void Update()
     {
-        if (!GameManager.instance.isGameOver) {
+        if (!GameManager.instance.isGameOver && !GameManager.instance.isPause) {
             float mouseX = Input.GetAxis(mouseXInputName) * mouseSensivity;
             float mouseY = Input.GetAxis(mouseYInputName) * mouseSensivity;
             xAxisClamp += mouseY;
@@ -39,16 +38,16 @@ public class CameraMovement : MonoBehaviour
                 ClampXAxisRotationToValue(90.0f);
             }
 
-            camera.transform.Rotate(Vector3.left * mouseY);
-            transform.Rotate(Vector3.up * mouseX);
+            _trCamera.Rotate(Vector3.left * mouseY);
+            _tr.Rotate(Vector3.up * mouseX);
         }
         
     }
 
     private void ClampXAxisRotationToValue(float value)
     {
-        Vector3 eulerRotation = camera.transform.eulerAngles;
+        Vector3 eulerRotation = _trCamera.transform.eulerAngles;
         eulerRotation.x = value;
-        camera.transform.eulerAngles = eulerRotation;
+        _trCamera.transform.eulerAngles = eulerRotation;
     }
 }

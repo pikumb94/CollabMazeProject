@@ -8,6 +8,7 @@ public class GameUIManager : MonoBehaviour
 {
     public GameObject gameOverPanel;
     public GameObject youWinPanel;
+    public GameObject descriptionPanel;
     public static GameUIManager instance = null;
 
     public TextMeshProUGUI timerText;
@@ -70,5 +71,26 @@ public class GameUIManager : MonoBehaviour
     public void HideYouWinPanel()
     {
         youWinPanel.SetActive(false);
+    }
+
+    public void DisplayDescriptionPanel()
+    {
+        descriptionPanel.SetActive(true);
+    }
+
+    public void HideDescriptionPanel()
+    {
+        descriptionPanel.SetActive(false);
+    }
+
+    public void ExitButtonPressed()
+    {
+        Application.Quit();
+    }
+
+    public void ResumeButtonPressed()
+    {
+        HideDescriptionPanel();
+        GameManager.instance.isPause = false;
     }
 }
