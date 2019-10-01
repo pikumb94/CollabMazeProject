@@ -1,3 +1,2 @@
-**/[Ll]ibrary/
-**/.vs/
-Library/*
+Library/
+Library
