@@ -24,9 +24,7 @@ public class SpawnerManager : MonoBehaviour
     [SerializeField] private float endingOrbitVelocity = 1f;
     [SerializeField] private float orbitVelocity = 0.5f;
     [SerializeField] private bool randomizeColours = false;
-    /* RIATTIVA SE VUOI USARE ELLISSE
-    [Range(0f, Mathf.PI)]
-    public float delta; */
+
 
     private float time;
 
@@ -45,14 +43,12 @@ public class SpawnerManager : MonoBehaviour
     }
     public List<SphereInitialContext> sphereList;
 
+
     void Awake()
     {
         if (scriptObj != null)
             setInternalParametersFromSO(scriptObj);
-    }
 
-    void Start()
-    {
         sphereList = new List<SphereInitialContext>();
         time = Time.time;
         
@@ -68,21 +64,11 @@ public class SpawnerManager : MonoBehaviour
 
         for (int i = 0; i < numObj; i++)
         {
-            //if(isEquidistant)
-            Debug.Log(this.transform.position);
             if (isSameRotationDirection)
                 sphereList.Add(new SphereInitialContext(Instantiate(spherePrefab, this.transform.position, Quaternion.identity) as GameObject, new Vector3((2 * Mathf.PI / numObj) * i, (2 * Mathf.PI / numObj) * i, (2 * Mathf.PI / numObj) * i), Random.Range(0, 2) >= 1 ? true : true));
             else
                 sphereList.Add(new SphereInitialContext(Instantiate(spherePrefab, this.transform.position, Quaternion.identity) as GameObject, new Vector3((2 * Mathf.PI / numObj) * i, (2 * Mathf.PI / numObj) * i, (2 * Mathf.PI / numObj) * i), Random.Range(0, 2) >= 1 ? true : false));
 
-            /*else
-
-                if (isSameRotationDirection)
-                    sphereList.Add(new SphereInitialContext(Instantiate(spherePrefab, this.transform.position, Quaternion.identity) as GameObject, randomPointOnSphereToAngles(), Random.Range(0, 2) >= 1 ? true : true));
-                else
-                    sphereList.Add(new SphereInitialContext(Instantiate(spherePrefab, this.transform.position, Quaternion.identity) as GameObject, randomPointOnSphereToAngles(), Random.Range(0, 2) >= 1 ? true : false));
-
-                */
             if (randomizeColours) {
                 Color iObjColor;
                 iObjColor = Color.HSVToRGB((1.0f / numObj) * i, 1, 1);
@@ -116,10 +102,7 @@ public class SpawnerManager : MonoBehaviour
             int rotDirection = (sphereIC.isCounterclockwise ? 1 : -1);
 
             sphereIC.sphere.transform.SetPositionAndRotation( new Vector3(rotDirection * Mathf.Cos(freqXOrbit*time + sphereIC.initialPosition.x) * xSpread, rotDirection * Mathf.Sin(freqYOrbit* time + sphereIC.initialPosition.y) * ySpread, Mathf.Sin(freqZOrbit*time + sphereIC.initialPosition.z) * zSpread )+new Vector3(xPos,yPos,zPos)+ this.transform.position, Quaternion.identity);
-            
-            //PIANO XZ DI UN ELLISSE
-            //sphereIC.sphere.transform.SetPositionAndRotation(new Vector3(rotDirection * Mathf.Cos( time + sphereIC.initialPosition.x)* Mathf.Sin(delta) * xSpread, Mathf.Cos(delta) * ySpread, Mathf.Sin(delta) * Mathf.Sin(time + sphereIC.initialPosition.z) * zSpread) + new Vector3(xPos, yPos, zPos), Quaternion.identity);
-            
+              
 
         }
         yield return null;
@@ -129,7 +112,6 @@ public class SpawnerManager : MonoBehaviour
     private Vector2 randomPointOnSphereToAngles()
     {
         Vector3 pos = Random.onUnitSphere;
-        //return new Vector2(-Mathf.Atan(pos.x / pos.y), Mathf.Atan(pos.z / (Mathf.Sqrt(Mathf.Pow(pos.x , 2) + Mathf.Pow(pos.y , 2)))));
         return new Vector2(Mathf.Acos(pos.x), Mathf.Asin(pos.y));
     }
 
@@ -160,13 +142,8 @@ public class SpawnerManager : MonoBehaviour
         //this.freqYOrbit = sO.freqYOrbit;
         //this.freqZOrbit = sO.freqZOrbit;
         //this.numObj = sO.numObj;
-        //this.isSameRotationDirection = sO.isSameRotationDirection;
-        //this.isRandomFrequencies = sO.isRandomFrequencies;
-        //this.isOrbitSpeedIncreasing = sO.isOrbitSpeedIncreasing;
-        //this.endingOrbitVelocity = sO.endingOrbitVelocity;
-        //this.orbitVelocity = sO.orbitVelocity;
 
-}
+    }
 
 
 }

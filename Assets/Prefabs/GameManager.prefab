@@ -47,4 +47,5 @@ MonoBehaviour:
   countdownSeconds: 300
   isGameOver: 0
   isWin: 0
+  isPause: 0
   penaltySeconds: 10

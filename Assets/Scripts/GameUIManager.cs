@@ -13,7 +13,6 @@ public class GameUIManager : MonoBehaviour
 
     public TextMeshProUGUI timerText;
     public TextMeshProUGUI penaltyText;
-    // Start is called before the first frame update
 
     private void Awake()
     {
@@ -22,17 +21,6 @@ public class GameUIManager : MonoBehaviour
         else if (instance != this)
             Destroy(gameObject);
         DontDestroyOnLoad(gameObject);
-    }
-
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-       
     }
 
     public void DisplayTimeFormatted()
