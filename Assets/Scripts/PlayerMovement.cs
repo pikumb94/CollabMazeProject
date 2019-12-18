@@ -35,14 +35,12 @@ public class PlayerMovement : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log(other.name);
-        if (other.name == "Trap")
+        if (other.tag == "Trap") { 
             GameManager.instance.ApplyPenalty();
+            Destroy(other.gameObject);
+        }
         if (other.name == "FinishLane")
             GameManager.instance.YouWin();
     }
 
-    private void OnTriggerExit(Collider other)
-    {
-        Destroy(other.gameObject);
-    }
 }
