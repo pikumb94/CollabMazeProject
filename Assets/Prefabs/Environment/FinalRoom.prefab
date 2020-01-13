@@ -2107,7 +2107,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4735337284978909407}
-  - component: {fileID: 5293837175988847223}
   m_Layer: 0
   m_Name: FinalRoom
   m_TagString: Untagged
@@ -2132,18 +2131,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5293837175988847223
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 589685163209517984}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef59bfe3a04ae8f42bd113fed56fdc60, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &7617110083093049170
 GameObject:
   m_ObjectHideFlags: 0
@@ -2371,6 +2358,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2650651931321625941, guid: 694b5dabaa20aa8429e5f7eb7f896709,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 2867338820769786344, guid: 694b5dabaa20aa8429e5f7eb7f896709,
         type: 3}
       propertyPath: m_SelectedFaces.Array.size
@@ -2387,11 +2379,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2827133647974804550, guid: 694b5dabaa20aa8429e5f7eb7f896709,
-        type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 2650651931321625941, guid: 694b5dabaa20aa8429e5f7eb7f896709,
         type: 3}
       propertyPath: m_Mesh
       value: 

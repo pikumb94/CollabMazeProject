@@ -39,7 +39,7 @@ public class PlayerMovement : MonoBehaviour
             GameManager.instance.ApplyPenalty();
             Destroy(other.gameObject);
         }
-        if (other.name == "FinishLane")
+        if (other.name.Contains("FinishLane"))
             GameManager.instance.YouWin();
     }
 

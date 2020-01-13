@@ -22,6 +22,14 @@ public class MetalDoorBehaviour : MonoBehaviour
     GameObject trapGObject;
     bool hasHit;
     float speedTrap = 6f;
+    /*
+    private void Awake()
+    {
+        if (Physics.CheckSphere(transform.position, .25f, 1 << gameObject.layer))
+        {
+            Destroy(gameObject);
+        }
+    }*/
 
     void Start()
     {
@@ -29,7 +37,7 @@ public class MetalDoorBehaviour : MonoBehaviour
         initialUpDoor = doorTrs[1].transform.position;
         initialDownDoor = doorTrs[2].transform.position;
 
-        if (!hasTrap)
+        if (!hasTrap && doorTrs.Length>3)
         {
             Destroy(doorTrs[3].gameObject);
             Destroy(doorTrs[4].gameObject);

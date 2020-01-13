@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 7455121524883435635}
   - component: {fileID: 289073403}
   - component: {fileID: 591011475369545008}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: MetalDoor
-  m_TagString: Untagged
+  m_TagString: MetalDoor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
