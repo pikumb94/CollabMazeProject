@@ -9,15 +9,17 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector3 moveDirection = Vector3.zero;
     private CharacterController controller;
-    
+
+
     // Start is called before the first frame update
-    void Awake()
+    protected void Awake()
     {
         controller = GetComponent<CharacterController>();
+            
     }
 
     // Update is called once per frame
-    void Update()
+    protected void Update()
     {
         if (!GameManager.instance.isGameOver && !GameManager.instance.isPause) {
             float horizInput = Input.GetAxis(horizontalInputName) * speed;
@@ -32,7 +34,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
     //CHIEDERE S3E VA BENE USARE CONTROLLER E ONTRIGGERENTER
-    private void OnTriggerEnter(Collider other)
+    protected void OnTriggerEnter(Collider other)
     {
         Debug.Log(other.name);
         if (other.tag == "Trap") { 
@@ -40,7 +42,16 @@ public class PlayerMovement : MonoBehaviour
             Destroy(other.gameObject);
         }
         if (other.name.Contains("FinishLane"))
-            GameManager.instance.YouWin();
+        {
+            handleFinishLane();
+
+        }
+            
     }
 
+    protected virtual void handleFinishLane()
+    {
+        GameManager.instance.YouWin();
+    }
+    
 }

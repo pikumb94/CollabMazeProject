@@ -16,7 +16,6 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public bool isPause = false;
     public int penaltySeconds = 10;
 
-
     private void Awake()
     {
         if (instance == null)
@@ -30,6 +29,18 @@ public class GameManager : MonoBehaviour
     {
         Init();
         InvokeRepeating("DecreaseCounter", 1f, 1f);
+    }
+
+    void OnEnable()
+    {
+        //Tell our 'OnLevelFinishedLoading' function to start listening for a scene change as soon as this script is enabled.
+        SceneManager.sceneLoaded += OnLevelFinishedLoading;
+    }
+
+    void OnDisable()
+    {
+        //Tell our 'OnLevelFinishedLoading' function to stop listening for a scene change as soon as this script is disabled. Remember to always have an unsubscription for every delegate you subscribe to!
+        SceneManager.sceneLoaded -= OnLevelFinishedLoading;
     }
 
     void Update()
@@ -85,7 +96,7 @@ public class GameManager : MonoBehaviour
 
     }
 
-    private void OnLevelWasLoaded(int level)
+    private void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
     {
         Init();
     }
@@ -101,6 +112,7 @@ public class GameManager : MonoBehaviour
         GameUIManager.instance.HideDescriptionPanel();
         remainingSeconds = countdownSeconds;
         GameUIManager.instance.DisplayTimeFormatted();
+ 
     }
 
     public void DecreaseCounter(){
@@ -133,7 +145,7 @@ public class GameManager : MonoBehaviour
         
     }
 
-    void GameIsOver()
+    public void GameIsOver()
     {
         isGameOver = true;
         GameUIManager.instance.DisplayGameOverPanel();

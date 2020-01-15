@@ -62,8 +62,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\InnerCollBehaviour.cs" />
-    <Compile Include="Assets\OuterCollBehaviour.cs" />
     <Compile Include="Assets\ProCore\ProGrids\Classes\pg_Constant.cs" />
     <Compile Include="Assets\ProCore\ProGrids\Classes\pg_Enum.cs" />
     <Compile Include="Assets\ProCore\ProGrids\Classes\pg_IconUtility.cs" />
@@ -71,12 +69,17 @@
     <Compile Include="Assets\ProCore\ProGrids\Classes\pg_SceneMeshRender.cs" />
     <Compile Include="Assets\ProCore\ProGrids\Classes\pg_Util.cs" />
     <Compile Include="Assets\ProCore\ProGrids\MonoBehaviour\pg_IgnoreSnap.cs" />
+    <Compile Include="Assets\RequiredItemsBehaviour.cs" />
     <Compile Include="Assets\Scripts\CameraMovement.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\GameUIManager.cs" />
+    <Compile Include="Assets\Scripts\InnerCollBehaviour.cs" />
     <Compile Include="Assets\Scripts\MetalDoorBehaviour.cs" />
     <Compile Include="Assets\Scripts\OrbitBoxPosition.cs" />
+    <Compile Include="Assets\Scripts\OuterCollBehaviour.cs" />
+    <Compile Include="Assets\Scripts\PlayerCollectBehaviour.cs" />
     <Compile Include="Assets\Scripts\PlayerMovement.cs" />
+    <Compile Include="Assets\Scripts\RequiredItems.cs" />
     <Compile Include="Assets\Scripts\SpawnerManager.cs" />
     <Compile Include="Assets\Scripts\StopwatchManager.cs" />
     <Compile Include="Assets\Scripts\TemporaryDisclaimer.cs" />
