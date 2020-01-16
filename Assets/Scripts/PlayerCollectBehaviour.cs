@@ -66,10 +66,8 @@ public class PlayerCollectBehaviour : PlayerMovement
         int n = 0;
         foreach(string s in collectedItems)
         {
-            Debug.Log(s);
             n++;
         }
-        Debug.Log(n);
     }
 
     protected override void  handleFinishLane()
@@ -79,6 +77,7 @@ public class PlayerCollectBehaviour : PlayerMovement
         foreach(string[] a in v)
         {
             res &= validateAssertion(a);
+            Debug.Log(res);
         }
 
         if (res)
@@ -98,21 +97,17 @@ public class PlayerCollectBehaviour : PlayerMovement
 
         for (int i = 0; i < collectedItems.Count; i++)
         {
-            if(collectedItems[i] == itemsSequence[j])
+            for (j = 0; j < itemsSequence.Length; j++)
             {
-                                    
-                j++;
-
-                if (j == itemsSequence.Length)
-                {
-                    result = true;
+                if (collectedItems[i + j] != itemsSequence[j])
                     break;
-                }
 
             }
-            else
+
+            if (j == itemsSequence.Length)
             {
-                j = 0;
+                result = true;
+                break;
             }
         }
 

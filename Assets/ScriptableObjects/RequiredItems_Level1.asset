@@ -16,5 +16,5 @@ MonoBehaviour:
   - sequence:
     - Prism
   - sequence:
-    - Cube
     - Sphere
+    - Cube

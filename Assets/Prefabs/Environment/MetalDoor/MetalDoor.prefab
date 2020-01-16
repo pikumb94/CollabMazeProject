@@ -62,7 +62,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deltaY: 1.5
-  smoothTime: 0.5
+  smoothTime: 0.25
   hasTrap: 1
   trapPrefab: {fileID: 165874838396656001, guid: 8b10ec244eb3fb244aad749446a69e29,
     type: 3}
