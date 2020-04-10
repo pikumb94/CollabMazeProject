@@ -6,27 +6,27 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/InitialDisclaimer.unity
+    path: Assets/Scenes/PreviousScenes/InitialDisclaimer.unity
     guid: f50f2773e00701b41b6815d29e82dbe4
   - enabled: 1
-    path: Assets/Scenes/Tutorial_SquareRoom(Cube).unity
+    path: Assets/Scenes/PreviousScenes/Tutorial_SquareRoom(Cube).unity
     guid: c5f9ca7c55f4545419c03f6b1a9ea606
   - enabled: 1
-    path: Assets/Scenes/Tutorial_SquareRoom(Sphere).unity
+    path: Assets/Scenes/PreviousScenes/Tutorial_SquareRoom(Sphere).unity
     guid: 3ad40fa15402adb42bb78cda658420c2
   - enabled: 1
-    path: Assets/Scenes/Tutorial_DiamondRoom.unity
+    path: Assets/Scenes/PreviousScenes/Tutorial_DiamondRoom.unity
     guid: 2da8da4c6c9bbe4439ae6f6584b58859
   - enabled: 1
-    path: Assets/Scenes/Tutorial_RectangularRoom.unity
+    path: Assets/Scenes/PreviousScenes/Tutorial_RectangularRoom.unity
     guid: 8e90d9ad948c12c418d11c060bd061ae
   - enabled: 1
-    path: Assets/Scenes/Tutorial_TriangularRoom.unity
+    path: Assets/Scenes/PreviousScenes/Tutorial_TriangularRoom.unity
     guid: 0cde88c350bc16b4fb84049d21277665
   - enabled: 1
-    path: Assets/Scenes/SampleLevel1(easy).unity
+    path: Assets/Scenes/PreviousScenes/SampleLevel1(easy).unity
     guid: 588ce6da86af45448b5159a13277786d
   - enabled: 1
-    path: Assets/Scenes/SampleLevel2(hard).unity
+    path: Assets/Scenes/PreviousScenes/SampleLevel2(hard).unity
     guid: b7d445459ded1d54d9b849141be99306
   m_configObjects: {}
