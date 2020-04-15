@@ -1,18 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
-public class SquareGrid : MonoBehaviour
-{
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+/// <summary>
+/// SquareGrid class defines squared tiles.
+/// </summary>
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+[System.Serializable]
+public class SquareGrid : ITypeGrid
+{
+    
+    public SquareGrid():base(new Vector2Int[4] { new Vector2Int(0, 1), new Vector2Int(1, 0), new Vector2Int(0, -1), new Vector2Int(-1, 0) }, 1f, 1f){
+        offsetX = 1f;
+        offsetY = 1f;
     }
+    
 }

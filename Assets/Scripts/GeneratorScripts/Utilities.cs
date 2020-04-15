@@ -1,20 +1,32 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
+
+/// <summary>
+/// Utility classes and helper functions.
+/// </summary>
+
+/*
+[System.Serializable]
 
 public class Pair<T, U>
 {
+    [SerializeField]
+    public T x;
+    [SerializeField]
+    public U y;
+
     public Pair()
     {
     }
 
-    public Pair(T first, U second)
+    public Pair(T x, U y)
     {
-        this.First = first;
-        this.Second = second;
+        this.x = x;
+        this.y = y;
     }
 
-    public T First { get; set; }
-    public U Second { get; set; }
+    
 
     public override bool Equals(object obj)
     {
@@ -31,13 +43,13 @@ public class Pair<T, U>
 
     public override int GetHashCode()
     {
-        return First.GetHashCode() ^ Second.GetHashCode();
+        return x.GetHashCode() ^ y.GetHashCode();
     }
 
 
     public static bool operator ==(Pair<T, U> p1, Pair<T, U> p2)
     {
-        return ((dynamic)p1.First == p2.First && (dynamic)p1.Second == p2.Second);
+        return ((dynamic)p1.x == p2.x && (dynamic)p1.y == p2.y);
     }
 
     public static bool operator !=(Pair<T, U> p1, Pair<T, U> p2)
@@ -47,11 +59,11 @@ public class Pair<T, U>
 
     public static bool operator <(Pair<T, U> p1, Pair<T, U> p2)
     {
-        return ((dynamic)p1.First < p2.First && (dynamic)p1.Second < p2.Second);
+        return ((dynamic)p1.x < p2.x && (dynamic)p1.y < p2.y);
     }
 
     public static bool operator >(Pair<T, U> p1, Pair<T, U> p2)
     {
         return !(p1<p2) && p1!=p2;
     }
-};
+};*/

@@ -73,8 +73,14 @@
     <Compile Include="Assets\Scripts\CameraMovement.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\GameUIManager.cs" />
+    <Compile Include="Assets\Scripts\GeneratorScripts\ConnectedGenerator.cs" />
+    <Compile Include="Assets\Scripts\GeneratorScripts\ErrorManager.cs" />
+    <Compile Include="Assets\Scripts\GeneratorScripts\GeneratorManager.cs" />
+    <Compile Include="Assets\Scripts\GeneratorScripts\GeneratorUIManager.cs" />
     <Compile Include="Assets\Scripts\GeneratorScripts\IGenerator.cs" />
     <Compile Include="Assets\Scripts\GeneratorScripts\ITypeGrid.cs" />
+    <Compile Include="Assets\Scripts\GeneratorScripts\ParameterManager.cs" />
+    <Compile Include="Assets\Scripts\GeneratorScripts\Singleton.cs" />
     <Compile Include="Assets\Scripts\GeneratorScripts\SquareGrid.cs" />
     <Compile Include="Assets\Scripts\GeneratorScripts\Utilities.cs" />
     <Compile Include="Assets\Scripts\InnerCollBehaviour.cs" />
@@ -94,6 +100,7 @@
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Properties.cginc" />
     <None Include="Assets\ProCore\ProGrids\About\pc_AboutEntry_ProGrids.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Custom-Atlas.shader" />
+    <None Include="Assets\UI Assets\Textures and Sprites\SF UI\Background\LICENSE.txt" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
     <None Include="Assets\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Masking.shader" />

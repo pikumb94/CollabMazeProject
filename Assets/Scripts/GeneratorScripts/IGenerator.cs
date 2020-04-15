@@ -4,36 +4,73 @@ using UnityEngine;
 using System;
 using System.IO;
 
-public abstract class IGenerator : MonoBehaviour
+/// <summary>
+/// IGenerator is an abstract class useful to implement a specific map generator.
+/// </summary>
+
+[Serializable]
+public struct TileObject
+{
+    public char type;
+}
+
+[System.Serializable]
+public abstract class IGenerator
 {
     [SerializeField]
-    protected ITypeGrid TypeGrid=null;
-
+    protected ITypeGrid TypeGrid;
     [SerializeField]
-    protected int rows = 0;
+    public int width= 0;
     [SerializeField]
-    protected int cols = 0;
+    public int height= 0;
 
-    [SerializeField]
-    protected char roomChar = '.';
-    [SerializeField]
-    protected char wallChar = '#';
+    protected const char floorChar = '.';
+    protected const char wallChar = '#';
+    protected const char startChar = '|';
+    protected const char endChar = '^';
 
-    Dictionary<Pair<int, int>, TileObject> map = null;
+    protected TileObject[,] map = null;
 
-    protected bool in_bounds(Pair<int, int> id)
+    protected IGenerator(ITypeGrid i)
     {
-        return 0 <= id.First && id.First < rows && 0 <= id.Second && id.Second < cols;
+        TypeGrid = i;
     }
 
-    protected bool passable(Pair<int, int> id)  {
-        return map[id].type == wallChar;
-    }
-
-    //genericMapObject
-    [Serializable]
-    protected struct TileObject
+    protected bool in_bounds(Vector2Int id)
     {
-        public char type;
+        return 0 <= id.x && id.x < width && 0 <= id.y && id.y < height;
     }
+
+    protected bool passable(Vector2Int id)  {
+        return map[id.x,id.y].type == wallChar;
+    }
+
+    public Vector2Int[] getNeighbours(Vector2Int id)
+    {
+        Vector2Int[] results = new Vector2Int[TypeGrid.getDirs().Length];
+
+        foreach(Vector2Int dir in TypeGrid.getDirs())
+        {
+            Vector2Int next= new Vector2Int( id.x + dir.x, id.y + dir.y);
+            if (in_bounds(next) && passable(next))
+            {
+                results[results.Length]=next;
+            }
+        }
+
+        if ((id.x + id.y) % 2 == 0)
+        {
+            Array.Reverse(results);
+        }
+
+        return results;
+    }
+
+    
+    public int getWidth()
+    {
+        return width;
+    }
+    public abstract TileObject[,] initializeMap();
+    public abstract TileObject[,] generateMap();
 }
