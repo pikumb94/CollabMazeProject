@@ -549,3 +549,5 @@ C:\Users\mon\CollabMazeProject\obj\Debug\Assembly-CSharp.csproj.CoreCompileInput
 C:\Users\mon\CollabMazeProject\obj\Debug\Assembly-CSharp.csproj.CopyComplete
 C:\Users\mon\CollabMazeProject\obj\Debug\Assembly-CSharp.dll
 C:\Users\mon\CollabMazeProject\obj\Debug\Assembly-CSharp.pdb
+C:\Users\mon\CollabMazeProject\Temp\bin\Debug\Unity.2D.Sprite.Editor.dll
+C:\Users\mon\CollabMazeProject\Temp\bin\Debug\Unity.2D.Sprite.Editor.pdb

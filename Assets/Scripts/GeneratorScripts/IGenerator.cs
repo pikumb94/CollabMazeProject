@@ -23,11 +23,21 @@ public abstract class IGenerator
     public int width= 0;
     [SerializeField]
     public int height= 0;
+    [SerializeField]
+    public Vector2Int startPos = new Vector2Int(0, 0);
+    [SerializeField]
+    public Vector2Int endPos;
+    [SerializeField]
+    public int seed;
 
-    protected const char floorChar = '.';
-    protected const char wallChar = '#';
-    protected const char startChar = '|';
-    protected const char endChar = '^';
+    [HideInInspector]
+    public const char roomChar = '.';
+    [HideInInspector]
+    public const char wallChar = '#';
+    [HideInInspector]
+    public const char startChar = '|';
+    [HideInInspector]
+    public const char endChar = '^';
 
     protected TileObject[,] map = null;
 
@@ -36,7 +46,7 @@ public abstract class IGenerator
         TypeGrid = i;
     }
 
-    protected bool in_bounds(Vector2Int id)
+    public bool in_bounds(Vector2Int id)
     {
         return 0 <= id.x && id.x < width && 0 <= id.y && id.y < height;
     }

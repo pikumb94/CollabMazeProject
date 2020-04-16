@@ -9,10 +9,12 @@ using UnityEngine;
 [System.Serializable]
 public class ConnectedGenerator : IGenerator
 {
-    [SerializeField]
-    protected Vector2Int startPos= new Vector2Int(0,0);
-    [SerializeField]
-    protected Vector2Int endPos;
+    [Range(0, 1)]
+    public float obstaclePercent;
+
+    private List<Vector2Int> allTileCoords;
+    private Queue<Vector2Int> shuffledTileCoords;
+    private Vector2Int mapCentre;
 
     public ConnectedGenerator(ITypeGrid i, int w, int h) : base(i)
     {
@@ -48,24 +50,40 @@ public class ConnectedGenerator : IGenerator
 
     public override TileObject[,] initializeMap()
     {
-        map = new TileObject[width, height];
-
+        //Initialize vector of all tile's locations.
+        allTileCoords = new List<Vector2Int>();
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-                map[x, y].type = floorChar;
+                allTileCoords.Add(new Vector2Int(x, y));
+            }
+        }
+        //Shuffle the vector of all tile's locations.
+        shuffledTileCoords = new Queue<Vector2Int>(Utility.ShuffleArray(allTileCoords.ToArray(), seed));
+        mapCentre = new Vector2Int((int)width / 2, (int)height / 2);
+
+
+        map = new TileObject[width, height];
+        //Map initialization.
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                map[x, y].type = roomChar;
             }
         }
 
+        //Fix start position
         if (startPos != null)
         {
             map[startPos.x, startPos.y].type = startChar;
         }
 
+        //Fix end position
         if (endPos != null)
         {
-            map[endPos.x, endPos.y].type = startChar;
+            map[endPos.x, endPos.y].type = endChar;
         }
 
         return map;
