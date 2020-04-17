@@ -17,15 +17,20 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
     [Range(0, 1)]
     public float outlinePercent;
     public int paddingContent;
-    public float scaleFactor;
+    public float scaleFactorResizeButtons;
+    [Header("Connected Generator UI Parameters")]
+    public Slider ObstacleCountSlider;
 
     protected GeneratorUIManager() { }
     // Start is called before the first frame update
     void Start()
     {
-        
+        ObstacleCountSlider.onValueChanged.AddListener(delegate { sliderCallBack(ObstacleCountSlider.value); });
     }
-
+    void sliderCallBack(float value)
+    {
+        GeneratorManager.Instance.connectedGenerator.obstaclePercent = value;
+    }
     // Update is called once per frame
     void Update()
     {
@@ -87,13 +92,13 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
     public void increaseScale(RectTransform t)
     {
         //if(t.sizeDelta.x*t.localScale.x < t.parent.gameObject.GetComponent<RectTransform>().rect.width)
-            t.localScale = t.localScale * scaleFactor;
+            t.localScale = t.localScale * scaleFactorResizeButtons;
     }
 
     public void decreaseScale(RectTransform t)
     {
         //if (t.sizeDelta.x * t.localScale.x > t.parent.gameObject.GetComponent<RectTransform>().rect.width)
-            t.localScale = t.localScale /(scaleFactor);
+            t.localScale = t.localScale /(scaleFactorResizeButtons);
     }
 
     private void applyTileColor(GameObject tileGO, char roomType)

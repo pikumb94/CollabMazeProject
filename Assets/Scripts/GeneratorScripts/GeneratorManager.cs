@@ -12,7 +12,6 @@ public class GeneratorManager : Singleton<GeneratorManager>
     public ConnectedGenerator connectedGenerator;
     public SquareGrid squareGrid;
     public GameObject Content;
-
     protected GeneratorManager() { }
 
     void Start()
@@ -34,7 +33,7 @@ public class GeneratorManager : Singleton<GeneratorManager>
 
             TileObject[,] map = connectedGenerator.initializeMap();
             
-            GeneratorUIManager.Instance.printMap(Content.transform, squareGrid, map);
+            GeneratorUIManager.Instance.printMap(Content.transform, squareGrid, connectedGenerator.generateMap());
 
         } catch (Exception e) {
             ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, e.Message);
