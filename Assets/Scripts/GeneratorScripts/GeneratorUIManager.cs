@@ -9,6 +9,7 @@ using UnityEngine.UI;
 
 public class GeneratorUIManager : Singleton<GeneratorUIManager>
 {
+
     public Color roomColor;
     public Color wallColor;
     public Color startColor;
@@ -20,17 +21,15 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
     public float scaleFactorResizeButtons;
     [Header("Connected Generator UI Parameters")]
     public Slider ObstacleCountSlider;
-
+    InputField i;
     protected GeneratorUIManager() { }
+
+    
     // Start is called before the first frame update
     void Start()
     {
-        ObstacleCountSlider.onValueChanged.AddListener(delegate { sliderCallBack(ObstacleCountSlider.value); });
     }
-    void sliderCallBack(float value)
-    {
-        GeneratorManager.Instance.connectedGenerator.obstaclePercent = value;
-    }
+
     // Update is called once per frame
     void Update()
     {

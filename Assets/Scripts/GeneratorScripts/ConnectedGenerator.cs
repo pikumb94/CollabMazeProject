@@ -18,16 +18,12 @@ public class ConnectedGenerator : IGenerator
 
     public ConnectedGenerator(ITypeGrid i, int w, int h) : base(i)
     {
-        //width = w;
-        //height = h;
         Vector2Int endPos = new Vector2Int(w, h);
         initializeMap();
     }
 
     public ConnectedGenerator(ITypeGrid i, int w, int h, int startPosX, int startPosY) : base(i)
     {
-        ///width = w;
-        //height = h;
         Vector2Int endPos = new Vector2Int(w, h);
         startPos.x = startPosX;
         startPos.y = startPosY;
@@ -37,8 +33,6 @@ public class ConnectedGenerator : IGenerator
 
     public ConnectedGenerator(ITypeGrid i, int w, int h, int startPosX, int startPosY, int endPosX, int endPosY) : base(i)
     {
-        //width = w;
-        //height = h;
         Vector2Int endPos = new Vector2Int(w, h);
         startPos.x = startPosX;
         startPos.y = startPosY;

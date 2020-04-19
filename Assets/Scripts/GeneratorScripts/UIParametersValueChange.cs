@@ -1,0 +1,172 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using System;
+using TMPro;
+
+public class UIParametersValueChange : MonoBehaviour
+{
+    GeneratorManager genM;
+
+    [Header("UI input components")]
+    public TMP_InputField UIWidth;
+    public TMP_InputField UIHeight;
+    public TMP_InputField UIStartX;
+    public TMP_InputField UIStartY;
+    public TMP_InputField UIEndX;
+    public TMP_InputField UIEndY;
+    public TMP_InputField UISeed;
+
+    [Header("UI Generators panels")]
+    public GameObject[] GeneratorParametersPanels;
+
+    private void Start()
+    {
+        genM = GeneratorManager.Instance;
+    }
+
+    public void generalUICallBackText(TMP_InputField UIIF)
+    {
+        
+        if (UIIF == UIWidth)
+        {
+            switch (genM.activeGenerator)
+            {
+                case GeneratorManager.GeneratorEnum.CONNECTED:
+                    genM.connectedGenerator.width=Int32.Parse(UIIF.text);
+                    break;
+                case GeneratorManager.GeneratorEnum.CELLULAR_AUTOMATA:
+                    Console.WriteLine("Put value in CA");
+                    break;
+                default:
+                    ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR,"GeneratorEnum PARAMETER NOT FOUND!");
+                    break;
+            }
+
+        }
+        else if(UIIF== UIHeight)
+        {
+            switch (genM.activeGenerator)
+            {
+                case GeneratorManager.GeneratorEnum.CONNECTED:
+                    genM.connectedGenerator.height = Int32.Parse(UIIF.text);
+                    break;
+                case GeneratorManager.GeneratorEnum.CELLULAR_AUTOMATA:
+                    Console.WriteLine("Put value in CA");
+                    break;
+                default:
+                    ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "GeneratorEnum PARAMETER NOT FOUND!");
+                    break;
+            }
+        }
+        else if (UIIF == UIStartX)
+        {
+            switch (genM.activeGenerator)
+            {
+                case GeneratorManager.GeneratorEnum.CONNECTED:
+                    genM.connectedGenerator.startPos.x = Int32.Parse(UIIF.text);
+                    break;
+                case GeneratorManager.GeneratorEnum.CELLULAR_AUTOMATA:
+                    Console.WriteLine("Put value in CA");
+                    break;
+                default:
+                    ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "GeneratorEnum PARAMETER NOT FOUND!");
+                    break;
+            }
+        }
+        else if (UIIF == UIStartY)
+        {
+            switch (genM.activeGenerator)
+            {
+                case GeneratorManager.GeneratorEnum.CONNECTED:
+                    genM.connectedGenerator.startPos.y = Int32.Parse(UIIF.text);
+                    break;
+                case GeneratorManager.GeneratorEnum.CELLULAR_AUTOMATA:
+                    Console.WriteLine("Put value in CA");
+                    break;
+                default:
+                    ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "GeneratorEnum PARAMETER NOT FOUND!");
+                    break;
+            }
+        }
+        else if (UIIF == UIEndX)
+        {
+            switch (genM.activeGenerator)
+            {
+                case GeneratorManager.GeneratorEnum.CONNECTED:
+                    genM.connectedGenerator.endPos.x = Int32.Parse(UIIF.text);
+                    break;
+                case GeneratorManager.GeneratorEnum.CELLULAR_AUTOMATA:
+                    Console.WriteLine("Put value in CA");
+                    break;
+                default:
+                    ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "GeneratorEnum PARAMETER NOT FOUND!");
+                    break;
+            }
+        }
+        else if (UIIF == UIEndY)
+        {
+            switch (genM.activeGenerator)
+            {
+                case GeneratorManager.GeneratorEnum.CONNECTED:
+                    genM.connectedGenerator.endPos.y = Int32.Parse(UIIF.text);
+                    break;
+                case GeneratorManager.GeneratorEnum.CELLULAR_AUTOMATA:
+                    Console.WriteLine("Put value in CA");
+                    break;
+                default:
+                    ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "GeneratorEnum PARAMETER NOT FOUND!");
+                    break;
+            }
+        }
+        else if (UIIF == UISeed)
+        {
+            switch (genM.activeGenerator)
+            {
+                case GeneratorManager.GeneratorEnum.CONNECTED:
+                    genM.connectedGenerator.seed = Int32.Parse(UIIF.text);
+                    break;
+                case GeneratorManager.GeneratorEnum.CELLULAR_AUTOMATA:
+                    Console.WriteLine("Put value in CA");
+                    break;
+                default:
+                    ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "GeneratorEnum PARAMETER NOT FOUND!");
+                    break;
+            }
+        }
+        else
+        {
+            ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "INPUT FIELD TO REFRESH NOT FOUND!");
+        }
+        
+    }
+
+    public void onGeneratorAlgChange(TMP_Dropdown d)
+    {
+        GeneratorParametersPanels[(int)genM.activeGenerator].SetActive(false);
+        genM.activeGenerator = (GeneratorManager.GeneratorEnum)Enum.ToObject(typeof(GeneratorManager.GeneratorEnum), d.value);
+        GeneratorParametersPanels[(int)genM.activeGenerator].SetActive(true);
+
+        //update all params on UI
+        refreshUIParams();
+
+    }
+
+    public void generalUICallBackValue(Slider s)
+    {
+
+    }
+
+    public void refreshUIParams()
+    {
+        UIWidth.text = genM.GeneratorsVect[(int) genM.activeGenerator].width.ToString();
+        UIHeight.text = genM.GeneratorsVect[(int)genM.activeGenerator].height.ToString();
+        UIStartX.text = genM.GeneratorsVect[(int)genM.activeGenerator].startPos.x.ToString();
+        UIStartY.text = genM.GeneratorsVect[(int)genM.activeGenerator].startPos.y.ToString();
+        UIEndX.text = genM.GeneratorsVect[(int)genM.activeGenerator].endPos.x.ToString();
+        UIEndY.text = genM.GeneratorsVect[(int)genM.activeGenerator].endPos.y.ToString();
+        UISeed.text = genM.GeneratorsVect[(int)genM.activeGenerator].seed.ToString();
+
+    }
+}

@@ -18,7 +18,7 @@ public struct TileObject
 public abstract class IGenerator
 {
     [SerializeField]
-    protected ITypeGrid TypeGrid;
+    public ITypeGrid TypeGrid;
     [SerializeField]
     public int width= 0;
     [SerializeField]
@@ -29,6 +29,8 @@ public abstract class IGenerator
     public Vector2Int endPos;
     [SerializeField]
     public int seed;
+    [SerializeField]
+    public bool useRandomSeed;
 
     [HideInInspector]
     public const char roomChar = '.';
@@ -55,6 +57,7 @@ public abstract class IGenerator
         return map[id.x,id.y].type == wallChar;
     }
 
+    //this version get all neighbours walls excluded
     public Vector2Int[] getNeighbours(Vector2Int id)
     {
         Vector2Int[] results = new Vector2Int[TypeGrid.getDirs().Length];
@@ -76,7 +79,30 @@ public abstract class IGenerator
         return results;
     }
 
-    
+    //this version get all neighbours including walls
+    public Vector2Int[] getAllNeighbours(Vector2Int id)
+    {
+        Vector2Int[] results = new Vector2Int[] { };
+
+        foreach (Vector2Int dir in TypeGrid.getDirs())
+        {
+            Vector2Int next = new Vector2Int(id.x + dir.x, id.y + dir.y);
+            if (in_bounds(next))
+            {
+                //results[results.Length] = next;
+                Array.Resize(ref results, results.Length + 1);
+                results[results.GetUpperBound(0)] = next;
+            }
+        }
+
+        if ((id.x + id.y) % 2 == 0)
+        {
+            Array.Reverse(results);
+        }
+
+        return results;
+    }
+
     public int getWidth()
     {
         return width;

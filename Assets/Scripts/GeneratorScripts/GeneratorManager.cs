@@ -9,13 +9,31 @@ using System;
 
 public class GeneratorManager : Singleton<GeneratorManager>
 {
+    public enum GeneratorEnum { CONNECTED, CELLULAR_AUTOMATA, PRIM, RECURSIVE_BACKTRACKER, PRIM_CONNECTED };
+    [HideInInspector]
+    public GeneratorEnum activeGenerator = GeneratorEnum.CONNECTED;
+    [HideInInspector]
+    public IGenerator[] GeneratorsVect;
+
+    public enum TypeGridEnum { SQUARE, HEXAGON, TRIANGLE };
+    [HideInInspector]
+    public TypeGridEnum activeTypeGrid = TypeGridEnum.SQUARE;
+    [HideInInspector]
+    public ITypeGrid[] TypeGridVect;
+
     public ConnectedGenerator connectedGenerator;
+    public CellularAutomataGenerator cellularAutomataGenerator;
+
+
     public SquareGrid squareGrid;
     public GameObject Content;
-    protected GeneratorManager() { }
+    protected GeneratorManager() {}
 
     void Start()
     {
+        GeneratorsVect = new IGenerator[] { connectedGenerator, cellularAutomataGenerator };
+        TypeGridVect = new ITypeGrid[] { squareGrid};
+        GeneratorUIManager.Instance.gameObject.GetComponent<UIParametersValueChange>().refreshUIParams();
     }
 
     // Update is called once per frame
@@ -28,12 +46,18 @@ public class GeneratorManager : Singleton<GeneratorManager>
     {
 
         try{
-
+            /*
             validateGeneratorParams(connectedGenerator);
 
             TileObject[,] map = connectedGenerator.initializeMap();
             
             GeneratorUIManager.Instance.printMap(Content.transform, squareGrid, connectedGenerator.generateMap());
+*/
+            validateGeneratorParams(GeneratorsVect[(int)activeGenerator]);
+            GeneratorsVect[(int)activeGenerator].TypeGrid = TypeGridVect[(int)activeTypeGrid];
+            TileObject[,] map = GeneratorsVect[(int)activeGenerator].initializeMap();
+
+            GeneratorUIManager.Instance.printMap(Content.transform, TypeGridVect[(int)activeTypeGrid], GeneratorsVect[(int)activeGenerator].generateMap());
 
         } catch (Exception e) {
             ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, e.Message);
