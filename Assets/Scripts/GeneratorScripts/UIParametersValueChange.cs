@@ -20,8 +20,18 @@ public class UIParametersValueChange : MonoBehaviour
 
     public Toggle UIUseSeed;
 
+    [Header("UI Connected input components")]
+    public TMP_InputField UIObstacleCountC;
+
+    [Header("UI Cellular Automata input components")]
+    public TMP_InputField UIObstacleCountCA;
+    public TMP_InputField UIObstacleThreshold;
+    public TMP_InputField UIIterationsNumber;
+    public Toggle UIBorderIsWall;
+
     [Header("UI Generators panels")]
     public GameObject[] GeneratorParametersPanels;
+    public ScrollRect scrollUIParameterPanel;
 
     private void Start()
     {
@@ -137,11 +147,27 @@ public class UIParametersValueChange : MonoBehaviour
                     break;
             }
         }
+        else if (UIIF==UIObstacleCountC)
+        {
+            genM.connectedGenerator.obstaclePercent = float.Parse(UIObstacleCountC.text);
+        }
+        else if (UIIF == UIObstacleCountCA)
+        {
+            genM.cellularAutomataGenerator.obstaclePercent = float.Parse(UIObstacleCountCA.text);
+        }
+        else if (UIIF == UIObstacleThreshold)
+        {
+            genM.cellularAutomataGenerator.thresholdWall = Int32.Parse(UIObstacleThreshold.text);
+        }
+        else if (UIIF == UIIterationsNumber)
+        {
+            genM.cellularAutomataGenerator.iterationsNumber = Int32.Parse(UIIterationsNumber.text);
+        }
         else
         {
             ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "INPUT FIELD TO REFRESH NOT FOUND!");
         }
-        
+
     }
 
     public void onGeneratorAlgChange(TMP_Dropdown d)
@@ -150,6 +176,7 @@ public class UIParametersValueChange : MonoBehaviour
         genM.activeGenerator = (GeneratorManager.GeneratorEnum)Enum.ToObject(typeof(GeneratorManager.GeneratorEnum), d.value);
         GeneratorParametersPanels[(int)genM.activeGenerator].SetActive(true);
 
+        scrollUIParameterPanel.content = GeneratorParametersPanels[(int)genM.activeGenerator].GetComponent<RectTransform>();
         //update all params on UI
         refreshUIParams();
 
@@ -177,8 +204,11 @@ public class UIParametersValueChange : MonoBehaviour
                     break;
             }
         }
-        else
+        else if (t==UIBorderIsWall)
         {
+            genM.cellularAutomataGenerator.borderIsWall = t.isOn;
+        }
+        else{
             ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "INPUT FIELD TO REFRESH NOT FOUND!");
         }
     }
@@ -193,5 +223,21 @@ public class UIParametersValueChange : MonoBehaviour
         UIEndY.text = genM.GeneratorsVect[(int)genM.activeGenerator].endPos.y.ToString();
         UISeed.text = genM.GeneratorsVect[(int)genM.activeGenerator].seed.ToString();
         UIUseSeed.isOn = genM.GeneratorsVect[(int)genM.activeGenerator].useRandomSeed;
+
+        switch (genM.activeGenerator)
+        {
+            case GeneratorManager.GeneratorEnum.CONNECTED:
+                UIObstacleCountC.text = string.Format("{0:N2}", genM.connectedGenerator.obstaclePercent.ToString());
+                break;
+            case GeneratorManager.GeneratorEnum.CELLULAR_AUTOMATA:
+                UIObstacleCountCA.text = string.Format("{0:N2}", genM.cellularAutomataGenerator.obstaclePercent.ToString());
+                UIObstacleThreshold.text = genM.cellularAutomataGenerator.thresholdWall.ToString();
+                UIIterationsNumber.text = genM.cellularAutomataGenerator.iterationsNumber.ToString();
+                UIBorderIsWall.isOn = genM.cellularAutomataGenerator.borderIsWall;
+                break;
+            default:
+                ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "GeneratorEnum PARAMETER NOT FOUND!");
+                break;
+        }
     }
 }

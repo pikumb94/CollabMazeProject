@@ -1,26 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class CursorLoadingScript : MonoBehaviour
+using TMPro;
+public class ChangeTextSlider : MonoBehaviour
 {
-    RectTransform r;
+    TMP_InputField iF;
     // Start is called before the first frame update
     void Start()
     {
-        r = GetComponent<RectTransform>();
+        iF = GetComponent<TMP_InputField>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        r.position = Input.mousePosition;
-    }
+    public void textUpdate(float value) {
 
-    public void enableCursor(bool isActive) {
-        if (isActive)
-            gameObject.SetActive(true);
-        else
-            gameObject.SetActive(false);
+        iF.text = string.Format("{0:N2}", value);
     }
 }
