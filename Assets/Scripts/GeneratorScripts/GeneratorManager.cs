@@ -44,26 +44,23 @@ public class GeneratorManager : Singleton<GeneratorManager>
 
     public void generateButtonPressed()
     {
+        GeneratorUIManager.Instance.disableGenerateButton();
 
         try{
-            /*
-            validateGeneratorParams(connectedGenerator);
-
-            TileObject[,] map = connectedGenerator.initializeMap();
-            
-            GeneratorUIManager.Instance.printMap(Content.transform, squareGrid, connectedGenerator.generateMap());
-*/
             validateGeneratorParams(GeneratorsVect[(int)activeGenerator]);
             GeneratorsVect[(int)activeGenerator].TypeGrid = TypeGridVect[(int)activeTypeGrid];
             TileObject[,] map = GeneratorsVect[(int)activeGenerator].initializeMap();
 
-            GeneratorUIManager.Instance.printMap(Content.transform, TypeGridVect[(int)activeTypeGrid], GeneratorsVect[(int)activeGenerator].generateMap());
+            if(map.GetLength(0)*map.GetLength(1)>625)
+                GeneratorUIManager.Instance.printCompositeMap(Content.transform, TypeGridVect[(int)activeTypeGrid], GeneratorsVect[(int)activeGenerator].generateMap(),0);
+            else
+                GeneratorUIManager.Instance.printMap(Content.transform, TypeGridVect[(int)activeTypeGrid], GeneratorsVect[(int)activeGenerator].generateMap());
 
         } catch (Exception e) {
             ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, e.Message);
         }
 
-        
+        GeneratorUIManager.Instance.enableGenerateButton();
     }
 
     private void validateGeneratorParams(IGenerator g)

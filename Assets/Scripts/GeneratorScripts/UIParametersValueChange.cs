@@ -18,6 +18,8 @@ public class UIParametersValueChange : MonoBehaviour
     public TMP_InputField UIEndY;
     public TMP_InputField UISeed;
 
+    public Toggle UIUseSeed;
+
     [Header("UI Generators panels")]
     public GameObject[] GeneratorParametersPanels;
 
@@ -37,7 +39,7 @@ public class UIParametersValueChange : MonoBehaviour
                     genM.connectedGenerator.width=Int32.Parse(UIIF.text);
                     break;
                 case GeneratorManager.GeneratorEnum.CELLULAR_AUTOMATA:
-                    Console.WriteLine("Put value in CA");
+                    genM.cellularAutomataGenerator.width = Int32.Parse(UIIF.text);
                     break;
                 default:
                     ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR,"GeneratorEnum PARAMETER NOT FOUND!");
@@ -53,7 +55,7 @@ public class UIParametersValueChange : MonoBehaviour
                     genM.connectedGenerator.height = Int32.Parse(UIIF.text);
                     break;
                 case GeneratorManager.GeneratorEnum.CELLULAR_AUTOMATA:
-                    Console.WriteLine("Put value in CA");
+                    genM.cellularAutomataGenerator.height = Int32.Parse(UIIF.text);
                     break;
                 default:
                     ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "GeneratorEnum PARAMETER NOT FOUND!");
@@ -68,7 +70,7 @@ public class UIParametersValueChange : MonoBehaviour
                     genM.connectedGenerator.startPos.x = Int32.Parse(UIIF.text);
                     break;
                 case GeneratorManager.GeneratorEnum.CELLULAR_AUTOMATA:
-                    Console.WriteLine("Put value in CA");
+                    genM.cellularAutomataGenerator.startPos.x = Int32.Parse(UIIF.text);
                     break;
                 default:
                     ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "GeneratorEnum PARAMETER NOT FOUND!");
@@ -83,7 +85,7 @@ public class UIParametersValueChange : MonoBehaviour
                     genM.connectedGenerator.startPos.y = Int32.Parse(UIIF.text);
                     break;
                 case GeneratorManager.GeneratorEnum.CELLULAR_AUTOMATA:
-                    Console.WriteLine("Put value in CA");
+                    genM.cellularAutomataGenerator.startPos.y = Int32.Parse(UIIF.text);
                     break;
                 default:
                     ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "GeneratorEnum PARAMETER NOT FOUND!");
@@ -98,7 +100,7 @@ public class UIParametersValueChange : MonoBehaviour
                     genM.connectedGenerator.endPos.x = Int32.Parse(UIIF.text);
                     break;
                 case GeneratorManager.GeneratorEnum.CELLULAR_AUTOMATA:
-                    Console.WriteLine("Put value in CA");
+                    genM.cellularAutomataGenerator.endPos.x = Int32.Parse(UIIF.text);
                     break;
                 default:
                     ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "GeneratorEnum PARAMETER NOT FOUND!");
@@ -113,7 +115,7 @@ public class UIParametersValueChange : MonoBehaviour
                     genM.connectedGenerator.endPos.y = Int32.Parse(UIIF.text);
                     break;
                 case GeneratorManager.GeneratorEnum.CELLULAR_AUTOMATA:
-                    Console.WriteLine("Put value in CA");
+                    genM.cellularAutomataGenerator.endPos.y = Int32.Parse(UIIF.text);
                     break;
                 default:
                     ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "GeneratorEnum PARAMETER NOT FOUND!");
@@ -128,7 +130,7 @@ public class UIParametersValueChange : MonoBehaviour
                     genM.connectedGenerator.seed = Int32.Parse(UIIF.text);
                     break;
                 case GeneratorManager.GeneratorEnum.CELLULAR_AUTOMATA:
-                    Console.WriteLine("Put value in CA");
+                    genM.cellularAutomataGenerator.seed = Int32.Parse(UIIF.text);
                     break;
                 default:
                     ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "GeneratorEnum PARAMETER NOT FOUND!");
@@ -158,6 +160,29 @@ public class UIParametersValueChange : MonoBehaviour
 
     }
 
+    public void generalUICallBackIsOn(Toggle t)
+    {
+        if (t == UIUseSeed)
+        {
+            switch (genM.activeGenerator)
+            {
+                case GeneratorManager.GeneratorEnum.CONNECTED:
+                    genM.connectedGenerator.useRandomSeed = t.isOn;
+                    break;
+                case GeneratorManager.GeneratorEnum.CELLULAR_AUTOMATA:
+                    genM.cellularAutomataGenerator.useRandomSeed = t.isOn;
+                    break;
+                default:
+                    ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "GeneratorEnum PARAMETER NOT FOUND!");
+                    break;
+            }
+        }
+        else
+        {
+            ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "INPUT FIELD TO REFRESH NOT FOUND!");
+        }
+    }
+
     public void refreshUIParams()
     {
         UIWidth.text = genM.GeneratorsVect[(int) genM.activeGenerator].width.ToString();
@@ -167,6 +192,6 @@ public class UIParametersValueChange : MonoBehaviour
         UIEndX.text = genM.GeneratorsVect[(int)genM.activeGenerator].endPos.x.ToString();
         UIEndY.text = genM.GeneratorsVect[(int)genM.activeGenerator].endPos.y.ToString();
         UISeed.text = genM.GeneratorsVect[(int)genM.activeGenerator].seed.ToString();
-
+        UIUseSeed.isOn = genM.GeneratorsVect[(int)genM.activeGenerator].useRandomSeed;
     }
 }

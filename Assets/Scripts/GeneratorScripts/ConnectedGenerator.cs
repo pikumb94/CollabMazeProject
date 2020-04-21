@@ -56,7 +56,7 @@ public class ConnectedGenerator : IGenerator
             }
         }
         //Shuffle the vector of all tile's locations.
-        shuffledTileCoords = new Queue<Vector2Int>(Utility.ShuffleArray(allTileCoords.ToArray(), seed));
+        shuffledTileCoords = new Queue<Vector2Int>(Utility.ShuffleArray(allTileCoords.ToArray(), useRandomSeed, seed));
         mapCentre = new Vector2Int((int)width / 2, (int)height / 2);
 
 

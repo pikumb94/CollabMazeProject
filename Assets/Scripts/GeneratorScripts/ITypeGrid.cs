@@ -12,8 +12,8 @@ public abstract class ITypeGrid
 {
     public GameObject TilePrefab;
     protected  Vector2Int[] directions;
-    protected  float offsetX;
-    protected  float offsetY;
+    public float offsetX;
+    public float offsetY;
 
     protected ITypeGrid(Vector2Int[] dir, float oX, float oY)
     {
