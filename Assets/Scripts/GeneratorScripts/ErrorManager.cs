@@ -14,6 +14,7 @@ public static class ErrorManager {
         {
             case Error.SOFT_ERROR:
                 Debug.LogError("Unexpected soft error with code " + errorCode + ".");
+                GeneratorUIManager.Instance.showDialogErrorBox("Unexpected soft error with code " + errorCode + ".");
                 break;
             case Error.HARD_ERROR:
                 ErrorManager.ErrorBackToMenu(errorCode);
@@ -33,6 +34,7 @@ public static class ErrorManager {
         {
             case Error.SOFT_ERROR:
                 Debug.LogError("Unexpected soft error. " + errorMessage);
+                GeneratorUIManager.Instance.showDialogErrorBox("Unexpected soft error.\n" + errorMessage.ToString());
                 break;
             case Error.HARD_ERROR:
                 ErrorManager.ErrorBackToMenu(errorMessage);

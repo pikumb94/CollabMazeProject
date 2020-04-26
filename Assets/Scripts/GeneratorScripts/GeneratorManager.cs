@@ -45,8 +45,10 @@ public class GeneratorManager : Singleton<GeneratorManager>
     public void generateButtonPressed()
     {
         GeneratorUIManager.Instance.disableGenerateButton();
+        GeneratorUIManager.Instance.deleteMapOnUI(Content.transform);
 
-        try{
+        try
+        {
             validateGeneratorParams(GeneratorsVect[(int)activeGenerator]);
             GeneratorsVect[(int)activeGenerator].TypeGrid = TypeGridVect[(int)activeTypeGrid];
             TileObject[,] map = GeneratorsVect[(int)activeGenerator].initializeMap();

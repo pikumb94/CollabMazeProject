@@ -13,7 +13,7 @@ public static class Utility
     {
         if (useSeed)
         {
-            seed = (int)Time.time;
+            seed = (int)System.DateTime.Now.Ticks;
         }
 
         System.Random prng = new System.Random(seed);

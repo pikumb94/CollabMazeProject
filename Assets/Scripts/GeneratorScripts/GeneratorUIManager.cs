@@ -19,13 +19,14 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
     public float outlinePercent;
     public int paddingContent;
     public float scaleFactorResizeButtons;
-    
+
     public Button generateButton;
+    public GameObject ErrorDialogBox;
     //public CursorLoadingScript cursorLoadingScript;
 
     protected GeneratorUIManager() { }
 
-    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -40,14 +41,6 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
     public void printMap(Transform t, ITypeGrid g, TileObject[,] map)
     {
 
-        if (t.childCount > 0)
-        {
-            foreach (Transform child in t)
-            {
-                GameObject.Destroy(child.gameObject);
-            }
-        }
-
         t.localScale = Vector3.one;
 
         RectTransform contentRect = t.gameObject.GetComponent<RectTransform>();
@@ -61,19 +54,19 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
         {
             for (int y = 0; y < map.GetLength(1); y++)
             {
-                Vector3 tilePosition = new Vector3((-map.GetLength(0) / 2 + displX + x)*g.offsetX * prefabRect.sizeDelta.x, ( -map.GetLength(1) / 2 + displY + y) * g.offsetY * prefabRect.sizeDelta.y, 0);
+                Vector3 tilePosition = new Vector3((-map.GetLength(0) / 2 + displX + x) * g.offsetX * prefabRect.sizeDelta.x, (-map.GetLength(1) / 2 + displY + y) * g.offsetY * prefabRect.sizeDelta.y, 0);
 
                 GameObject newTile = Instantiate(g.TilePrefab, Vector3.zero, Quaternion.identity) as GameObject;
-                applyTileColor(newTile,map[x,y].type);
+                applyTileColor(newTile, map[x, y].type);
                 RectTransform newTileRect = newTile.GetComponent<RectTransform>();
                 newTileRect.SetParent(contentRect);
-                
+
                 newTileRect.localScale = Vector3.one * (1 - outlinePercent);// * (GetScale(Screen.width, Screen.height, new Vector2(1920,1080), .5f));
                 newTileRect.anchoredPosition = tilePosition;
             }
         }
 
-        contentRect.sizeDelta = new Vector2(map.GetLength(0)*100+ paddingContent, map.GetLength(1)*100+ paddingContent);
+        contentRect.sizeDelta = new Vector2(map.GetLength(0) * 100 + paddingContent, map.GetLength(1) * 100 + paddingContent);
 
         while (contentRect.sizeDelta.x * contentRect.localScale.x < contentRect.parent.gameObject.GetComponent<RectTransform>().rect.width ||
             contentRect.sizeDelta.y * contentRect.localScale.y < contentRect.parent.gameObject.GetComponent<RectTransform>().rect.height)
@@ -90,21 +83,13 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
     public void printCompositeMap(Transform t, ITypeGrid g, TileObject[,] map, int pixelOffset)
     {
 
-        if (t.childCount > 0)
-        {
-            foreach (Transform child in t)
-            {
-                GameObject.Destroy(child.gameObject);
-            }
-        }
-
         t.localScale = Vector3.one;
 
         RectTransform contentRect = t.gameObject.GetComponent<RectTransform>();
         GameObject sampleTile = Instantiate(g.TilePrefab, Vector3.zero, Quaternion.identity) as GameObject;
         Image tileImg = sampleTile.GetComponent<Image>();
 
-        Texture2D prefabTexture = new Texture2D((int)tileImg.mainTexture.width,(int)tileImg.mainTexture.height, TextureFormat.ARGB32, false);
+        Texture2D prefabTexture = new Texture2D((int)tileImg.mainTexture.width, (int)tileImg.mainTexture.height, TextureFormat.ARGB32, false);
         Texture2D a = (Texture2D)tileImg.mainTexture;
         prefabTexture.SetPixels(a.GetPixels());
         Utility.TextureScale.Point(prefabTexture, prefabTexture.width / 4, prefabTexture.height / 4);
@@ -114,7 +99,7 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
         float displX = (map.GetLength(0) % 2 == 0 ? .5f : 0f);
         float displY = (map.GetLength(1) % 2 == 0 ? .5f : 0f);
 
-        Texture2D compositeTexture = new Texture2D(map.GetLength(0)*(int)prefabTexture.width, map.GetLength(1) * (int)prefabTexture.height, TextureFormat.ARGB32, false);
+        Texture2D compositeTexture = new Texture2D(map.GetLength(0) * (int)prefabTexture.width, map.GetLength(1) * (int)prefabTexture.height, TextureFormat.ARGB32, false);
         Color fillColor = Color.clear;
         Color[] fillPixels = new Color[compositeTexture.width * compositeTexture.height];
 
@@ -137,7 +122,7 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
         {
             for (int y = 0; y < map.GetLength(1); y++)
             {
-                Vector3 tilePosition = new Vector3((/*-map.GetLength(0) / 2 + displX */+ x) * g.offsetX * prefabTexture.width, (/*-map.GetLength(1) / 2 + displY + */y) * g.offsetY * prefabTexture.height, 0);
+                Vector3 tilePosition = new Vector3((/*-map.GetLength(0) / 2 + displX */+x) * g.offsetX * prefabTexture.width, (/*-map.GetLength(1) / 2 + displY + */y) * g.offsetY * prefabTexture.height, 0);
 
                 switch (map[x, y].type)
                 {
@@ -158,7 +143,7 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
                         break;
                 }
 
-                
+
             }
         }
 
@@ -195,13 +180,13 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
     public void increaseScale(RectTransform t)
     {
         //if(t.sizeDelta.x*t.localScale.x < t.parent.gameObject.GetComponent<RectTransform>().rect.width)
-            t.localScale = t.localScale * scaleFactorResizeButtons;
+        t.localScale = t.localScale * scaleFactorResizeButtons;
     }
 
     public void decreaseScale(RectTransform t)
     {
         //if (t.sizeDelta.x * t.localScale.x > t.parent.gameObject.GetComponent<RectTransform>().rect.width)
-            t.localScale = t.localScale /(scaleFactorResizeButtons);
+        t.localScale = t.localScale / (scaleFactorResizeButtons);
     }
 
     private void applyTileColor(GameObject tileGO, char roomType)
@@ -231,7 +216,7 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
         generateButton.interactable = false;
         //cursorLoadingScript.enableCursor(true);
         //Cursor.visible = false;
-        
+
     }
 
     public void enableGenerateButton()
@@ -239,5 +224,22 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
         //Cursor.visible = true;
         //cursorLoadingScript.enableCursor(false);
         generateButton.interactable = true;
+    }
+
+    public void deleteMapOnUI(Transform t)
+    {
+        if (t.childCount > 0)
+        {
+            foreach (Transform child in t)
+            {
+                GameObject.Destroy(child.gameObject);
+            }
+        }
+    }
+
+    public void showDialogErrorBox(string s)
+    {
+        ErrorDialogBox.SetActive(true);
+        ErrorDialogBox.transform.Find("ErrorMessage").GetComponent<TMPro.TextMeshProUGUI>().text = s;
     }
 }
