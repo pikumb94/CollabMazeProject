@@ -15,9 +15,10 @@ public abstract class ITypeGrid
     public float offsetX;
     public float offsetY;
 
-    [Header("Map Assembling Variables")]
+    [Header("Map Assembling Objects")]
     public GameObject InGameTilePrefab;
     public GameObject InGameObstaclePrefab;
+    public GameObject InGameEndPrefab;
     public float inGameOffsetX;
     public float inGameOffsetY;
 

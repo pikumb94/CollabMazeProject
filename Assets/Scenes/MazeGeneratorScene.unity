@@ -11306,6 +11306,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4084993660110456478, guid: 7421a5dc4f6cef94186680591d0d4ba7,
         type: 3}
+    - target: {fileID: 1579857713135454309, guid: 30cf5f906140b99489bcb749ffe2090b,
+        type: 3}
+      propertyPath: squareGrid.InGameEndPrefab
+      value: 
+      objectReference: {fileID: 4618292945339320376, guid: a1dd0cb8efc9e644f81567bf1eebf92f,
+        type: 3}
     - target: {fileID: 1579857713135454308, guid: 30cf5f906140b99489bcb749ffe2090b,
         type: 3}
       propertyPath: m_LocalPosition.x
