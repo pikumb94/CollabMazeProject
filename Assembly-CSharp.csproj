@@ -64,6 +64,8 @@
   <ItemGroup>
     <Compile Include="Assets\ChangeTextSlider.cs" />
     <Compile Include="Assets\CursorLoadingScript.cs" />
+    <Compile Include="Assets\HoverDisplayText.cs" />
+    <Compile Include="Assets\MapAssemblerScript.cs" />
     <Compile Include="Assets\ProCore\ProGrids\Classes\pg_Constant.cs" />
     <Compile Include="Assets\ProCore\ProGrids\Classes\pg_Enum.cs" />
     <Compile Include="Assets\ProCore\ProGrids\Classes\pg_IconUtility.cs" />
@@ -85,6 +87,7 @@
     <Compile Include="Assets\Scripts\GeneratorScripts\ITypeGrid.cs" />
     <Compile Include="Assets\Scripts\GeneratorScripts\ParameterManager.cs" />
     <Compile Include="Assets\Scripts\GeneratorScripts\Singleton.cs" />
+    <Compile Include="Assets\Scripts\GeneratorScripts\SingletonDestroyOnLoad.cs" />
     <Compile Include="Assets\Scripts\GeneratorScripts\SquareGrid.cs" />
     <Compile Include="Assets\Scripts\GeneratorScripts\UIParametersValueChange.cs" />
     <Compile Include="Assets\Scripts\GeneratorScripts\Utilities.cs" />

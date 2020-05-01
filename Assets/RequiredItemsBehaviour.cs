@@ -8,6 +8,9 @@ public class RequiredItemsBehaviour : MonoBehaviour
 
     public string[][] GetSequences()
     {
+        if(rI==null)
+            return new string[0][];
+
         string[][] sequences = new string[rI.sequences.Length][];
         for(int i=0; i< rI.sequences.Length; i++)
         {

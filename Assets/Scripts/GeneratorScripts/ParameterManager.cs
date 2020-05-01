@@ -8,9 +8,8 @@ public class ParameterManager : Singleton<ParameterManager> {
     public enum BuildVersion { COMPLETE, GAME_ONLY, EXPERIMENT_CONTROL, EXPERIMENT_ONLY };
 
     // Map data.
-    [HideInInspector] public int GenerationMode { get; set; }
-    [HideInInspector] public string MapDNA { get; set; }
-    [HideInInspector] public bool Flip { get; set; }
+    [HideInInspector] public ITypeGrid GridType { get; set; }
+    [HideInInspector] public TileObject[,] MapToPlay { get; set; }
 
     // Export data.
     [HideInInspector] public bool Export { get; set; }

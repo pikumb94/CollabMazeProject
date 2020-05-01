@@ -17,7 +17,7 @@ public struct TileObject
 [System.Serializable]
 public abstract class IGenerator
 {
-    [SerializeField]
+    [HideInInspector]
     public ITypeGrid TypeGrid;
     [SerializeField]
     public int width= 0;
@@ -31,6 +31,8 @@ public abstract class IGenerator
     public int seed;
     [SerializeField]
     public bool useRandomSeed;
+    [TextArea]
+    public string InfoGenerator = "";
 
     [HideInInspector]
     public const char roomChar = '.';
@@ -109,4 +111,9 @@ public abstract class IGenerator
     }
     public abstract TileObject[,] initializeMap();
     public abstract TileObject[,] generateMap();
+
+    public TileObject[,] getMap()
+    {
+        return map;
+    }
 }

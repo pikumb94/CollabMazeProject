@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public bool isWin = false;
     [HideInInspector] public bool isPause = false;
     public int penaltySeconds = 10;
+    public GameObject Player;
 
     private void Awake()
     {

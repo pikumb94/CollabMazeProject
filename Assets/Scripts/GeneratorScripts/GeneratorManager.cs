@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// GeneratorManager coordinates both UI and logic of every kind of generator attached.
@@ -26,7 +27,11 @@ public class GeneratorManager : Singleton<GeneratorManager>
 
 
     public SquareGrid squareGrid;
+
+    [Header("Others")]
     public GameObject Content;
+    public String AssembledLevelSceneName;
+
     protected GeneratorManager() {}
 
     void Start()
@@ -50,7 +55,7 @@ public class GeneratorManager : Singleton<GeneratorManager>
         try
         {
             validateGeneratorParams(GeneratorsVect[(int)activeGenerator]);
-            GeneratorsVect[(int)activeGenerator].TypeGrid = TypeGridVect[(int)activeTypeGrid];
+            GeneratorsVect[(int)activeGenerator].TypeGrid = TypeGridVect[(int)activeTypeGrid];  //Typegrid change in generator
             TileObject[,] map = GeneratorsVect[(int)activeGenerator].initializeMap();
 
             if(map.GetLength(0)*map.GetLength(1)>625)
@@ -86,5 +91,12 @@ public class GeneratorManager : Singleton<GeneratorManager>
         {
             throw new Exception("End position is outside of the grid.");
         }
+    }
+
+    public void PlayButtonPressed()
+    {
+        ParameterManager.Instance.MapToPlay = GeneratorsVect[(int)activeGenerator].getMap();
+        ParameterManager.Instance.GridType = GeneratorsVect[(int)activeGenerator].TypeGrid;
+        SceneManager.LoadScene(AssembledLevelSceneName);
     }
 }

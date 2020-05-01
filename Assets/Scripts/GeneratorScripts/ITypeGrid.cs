@@ -15,6 +15,12 @@ public abstract class ITypeGrid
     public float offsetX;
     public float offsetY;
 
+    [Header("Map Assembling Variables")]
+    public GameObject InGameTilePrefab;
+    public GameObject InGameObstaclePrefab;
+    public float inGameOffsetX;
+    public float inGameOffsetY;
+
     protected ITypeGrid(Vector2Int[] dir, float oX, float oY)
     {
         directions = dir;

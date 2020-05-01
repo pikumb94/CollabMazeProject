@@ -16,8 +16,6 @@ public class OuterCollBehaviour : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            Debug.Log("Player ESCE!");
-
             foreach (MetalDoorBehaviour m in mDoors)
             {
                 m.hasTrap = true;
