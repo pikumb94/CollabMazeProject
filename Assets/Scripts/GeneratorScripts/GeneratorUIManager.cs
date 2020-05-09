@@ -22,6 +22,7 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
 
     public Button generateButton;
     public GameObject ErrorDialogBox;
+    public GameObject MessageDialogBox;
     //public CursorLoadingScript cursorLoadingScript;
 
     protected GeneratorUIManager() { }
@@ -76,8 +77,6 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
             contentRect.sizeDelta.y * contentRect.localScale.y > contentRect.parent.gameObject.GetComponent<RectTransform>().rect.height)
             decreaseScale(contentRect);
 
-        t.parent.Find("../PlusButton").gameObject.SetActive(true);
-        t.parent.Find("../MinusButton").gameObject.SetActive(true);
     }
 
     public void printCompositeMap(Transform t, ITypeGrid g, TileObject[,] map, int pixelOffset)
@@ -165,8 +164,7 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
             contentRect.sizeDelta.y * contentRect.localScale.y > contentRect.parent.gameObject.GetComponent<RectTransform>().rect.height)
             decreaseScale(contentRect);
 
-        t.parent.Find("../PlusButton").gameObject.SetActive(true);
-        t.parent.Find("../MinusButton").gameObject.SetActive(true);
+        
 
         GameObject.Destroy(sampleTile);
     }
@@ -189,7 +187,7 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
         t.localScale = t.localScale / (scaleFactorResizeButtons);
     }
 
-    private void applyTileColor(GameObject tileGO, char roomType)
+    public void applyTileColor(GameObject tileGO, char roomType)
     {
         switch (roomType)
         {
@@ -241,5 +239,11 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
     {
         ErrorDialogBox.SetActive(true);
         ErrorDialogBox.transform.Find("ErrorMessage").GetComponent<TMPro.TextMeshProUGUI>().text = s;
+    }
+
+    public void showMessageDialogBox(string s)
+    {
+        MessageDialogBox.SetActive(true);
+        MessageDialogBox.transform.Find("MessageDialog").GetComponent<TMPro.TextMeshProUGUI>().text = s;
     }
 }

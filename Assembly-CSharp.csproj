@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\ChangeTextSlider.cs" />
+    <Compile Include="Assets\ClickOnTileScript.cs" />
     <Compile Include="Assets\CursorLoadingScript.cs" />
     <Compile Include="Assets\HoverDisplayText.cs" />
     <Compile Include="Assets\MapAssemblerScript.cs" />

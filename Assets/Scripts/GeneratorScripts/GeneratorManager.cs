@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.IO;
 using UnityEngine.SceneManagement;
 
 /// <summary>
@@ -41,12 +42,6 @@ public class GeneratorManager : Singleton<GeneratorManager>
         GeneratorUIManager.Instance.gameObject.GetComponent<UIParametersValueChange>().refreshUIParams();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void generateButtonPressed()
     {
         GeneratorUIManager.Instance.disableGenerateButton();
@@ -62,6 +57,10 @@ public class GeneratorManager : Singleton<GeneratorManager>
                 GeneratorUIManager.Instance.printCompositeMap(Content.transform, TypeGridVect[(int)activeTypeGrid], GeneratorsVect[(int)activeGenerator].generateMap(),0);
             else
                 GeneratorUIManager.Instance.printMap(Content.transform, TypeGridVect[(int)activeTypeGrid], GeneratorsVect[(int)activeGenerator].generateMap());
+
+            Content.transform.parent.Find("../SaveButton").gameObject.SetActive(true);
+            Content.transform.parent.Find("../PlusButton").gameObject.SetActive(true);
+            Content.transform.parent.Find("../MinusButton").gameObject.SetActive(true);
 
         } catch (Exception e) {
             ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, e.Message);
@@ -98,5 +97,43 @@ public class GeneratorManager : Singleton<GeneratorManager>
         ParameterManager.Instance.MapToPlay = GeneratorsVect[(int)activeGenerator].getMap();
         ParameterManager.Instance.GridType = GeneratorsVect[(int)activeGenerator].TypeGrid;
         SceneManager.LoadScene(AssembledLevelSceneName);
+    }
+
+    // Saves the map in a text file.
+    public void SaveMapButtonPressed()
+    {
+        string textFilePath = Application.persistentDataPath;
+        TileObject[,] map = GeneratorsVect[(int)activeGenerator].getMap();
+        if (textFilePath == null && !Directory.Exists(textFilePath))
+        {
+            ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, "Error while retrieving the folder, please insert a " + "valid path.");
+        }
+        else
+        {
+            try
+            {
+                string textMap = "";
+
+                for (int x = 0; x < map.GetLength(0); x++)
+                {
+                    for (int y = 0; y < map.GetLength(1); y++)
+                    {
+                        textMap = textMap + map[y, map.GetLength(0)-1-x].type;
+                    }
+                    if (x < map.GetLength(1) - 1)
+                    {
+                        textMap = textMap + "\n";
+                    }
+                }
+                string fileName = GeneratorsVect[(int)activeGenerator].seed.ToString() + "map.txt";
+                File.WriteAllText(@textFilePath + "/" + fileName, textMap);
+
+                GeneratorUIManager.Instance.showMessageDialogBox("Map \"" + fileName + "\" successfully saved at:\n" + textFilePath);
+            }
+            catch (Exception)
+            {
+                ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, "Error while saving the map at " + @textFilePath + ", please insert a valid path and check its permissions. ");
+            }
+        }
     }
 }
