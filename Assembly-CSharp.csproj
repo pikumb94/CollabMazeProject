@@ -87,6 +87,7 @@
     <Compile Include="Assets\Scripts\GeneratorScripts\InputFieldDynamicFloat.cs" />
     <Compile Include="Assets\Scripts\GeneratorScripts\ITypeGrid.cs" />
     <Compile Include="Assets\Scripts\GeneratorScripts\ParameterManager.cs" />
+    <Compile Include="Assets\Scripts\GeneratorScripts\PrimGenerator.cs" />
     <Compile Include="Assets\Scripts\GeneratorScripts\Singleton.cs" />
     <Compile Include="Assets\Scripts\GeneratorScripts\SingletonDestroyOnLoad.cs" />
     <Compile Include="Assets\Scripts\GeneratorScripts\SquareGrid.cs" />

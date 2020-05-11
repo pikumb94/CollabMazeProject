@@ -25,6 +25,7 @@ public class GeneratorManager : Singleton<GeneratorManager>
 
     public ConnectedGenerator connectedGenerator;
     public CellularAutomataGenerator cellularAutomataGenerator;
+    public PrimGenerator primGenerator;
 
 
     public SquareGrid squareGrid;
@@ -37,7 +38,7 @@ public class GeneratorManager : Singleton<GeneratorManager>
 
     void Start()
     {
-        GeneratorsVect = new IGenerator[] { connectedGenerator, cellularAutomataGenerator };
+        GeneratorsVect = new IGenerator[] { connectedGenerator, cellularAutomataGenerator, primGenerator };
         TypeGridVect = new ITypeGrid[] { squareGrid};
         GeneratorUIManager.Instance.gameObject.GetComponent<UIParametersValueChange>().refreshUIParams();
     }

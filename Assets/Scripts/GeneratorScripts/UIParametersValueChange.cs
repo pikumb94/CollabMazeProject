@@ -28,6 +28,7 @@ public class UIParametersValueChange : MonoBehaviour
     public TMP_InputField UIObstacleThreshold;
     public TMP_InputField UIIterationsNumber;
     public Toggle UIBorderIsWall;
+    [Header("UI Prim's input components")]
 
     [Header("UI Generators panels")]
     public GameObject[] GeneratorParametersPanels;
@@ -51,6 +52,9 @@ public class UIParametersValueChange : MonoBehaviour
                 case GeneratorManager.GeneratorEnum.CELLULAR_AUTOMATA:
                     genM.cellularAutomataGenerator.width = Int32.Parse(UIIF.text);
                     break;
+                case GeneratorManager.GeneratorEnum.PRIM:
+                    genM.primGenerator.width = Int32.Parse(UIIF.text);
+                    break;
                 default:
                     ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR,"GeneratorEnum PARAMETER NOT FOUND!");
                     break;
@@ -67,6 +71,9 @@ public class UIParametersValueChange : MonoBehaviour
                 case GeneratorManager.GeneratorEnum.CELLULAR_AUTOMATA:
                     genM.cellularAutomataGenerator.height = Int32.Parse(UIIF.text);
                     break;
+                case GeneratorManager.GeneratorEnum.PRIM:
+                    genM.primGenerator.height = Int32.Parse(UIIF.text);
+                    break;
                 default:
                     ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "GeneratorEnum PARAMETER NOT FOUND!");
                     break;
@@ -81,6 +88,9 @@ public class UIParametersValueChange : MonoBehaviour
                     break;
                 case GeneratorManager.GeneratorEnum.CELLULAR_AUTOMATA:
                     genM.cellularAutomataGenerator.startPos.x = Int32.Parse(UIIF.text);
+                    break;
+                case GeneratorManager.GeneratorEnum.PRIM:
+                    genM.primGenerator.startPos.x = Int32.Parse(UIIF.text);
                     break;
                 default:
                     ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "GeneratorEnum PARAMETER NOT FOUND!");
@@ -97,6 +107,9 @@ public class UIParametersValueChange : MonoBehaviour
                 case GeneratorManager.GeneratorEnum.CELLULAR_AUTOMATA:
                     genM.cellularAutomataGenerator.startPos.y = Int32.Parse(UIIF.text);
                     break;
+                case GeneratorManager.GeneratorEnum.PRIM:
+                    genM.primGenerator.startPos.y = Int32.Parse(UIIF.text);
+                    break;
                 default:
                     ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "GeneratorEnum PARAMETER NOT FOUND!");
                     break;
@@ -111,6 +124,9 @@ public class UIParametersValueChange : MonoBehaviour
                     break;
                 case GeneratorManager.GeneratorEnum.CELLULAR_AUTOMATA:
                     genM.cellularAutomataGenerator.endPos.x = Int32.Parse(UIIF.text);
+                    break;
+                case GeneratorManager.GeneratorEnum.PRIM:
+                    genM.primGenerator.endPos.x = Int32.Parse(UIIF.text);
                     break;
                 default:
                     ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "GeneratorEnum PARAMETER NOT FOUND!");
@@ -127,6 +143,9 @@ public class UIParametersValueChange : MonoBehaviour
                 case GeneratorManager.GeneratorEnum.CELLULAR_AUTOMATA:
                     genM.cellularAutomataGenerator.endPos.y = Int32.Parse(UIIF.text);
                     break;
+                case GeneratorManager.GeneratorEnum.PRIM:
+                    genM.primGenerator.endPos.y = Int32.Parse(UIIF.text);
+                    break;
                 default:
                     ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "GeneratorEnum PARAMETER NOT FOUND!");
                     break;
@@ -141,6 +160,9 @@ public class UIParametersValueChange : MonoBehaviour
                     break;
                 case GeneratorManager.GeneratorEnum.CELLULAR_AUTOMATA:
                     genM.cellularAutomataGenerator.seed = Int32.Parse(UIIF.text);
+                    break;
+                case GeneratorManager.GeneratorEnum.PRIM:
+                    genM.primGenerator.seed = Int32.Parse(UIIF.text);
                     break;
                 default:
                     ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "GeneratorEnum PARAMETER NOT FOUND!");
@@ -200,6 +222,9 @@ public class UIParametersValueChange : MonoBehaviour
                 case GeneratorManager.GeneratorEnum.CELLULAR_AUTOMATA:
                     genM.cellularAutomataGenerator.useRandomSeed = t.isOn;
                     break;
+                case GeneratorManager.GeneratorEnum.PRIM:
+                    genM.primGenerator.useRandomSeed = t.isOn;
+                    break;
                 default:
                     ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "GeneratorEnum PARAMETER NOT FOUND!");
                     break;
@@ -235,6 +260,8 @@ public class UIParametersValueChange : MonoBehaviour
                 UIObstacleThreshold.text = genM.cellularAutomataGenerator.thresholdWall.ToString();
                 UIIterationsNumber.text = genM.cellularAutomataGenerator.iterationsNumber.ToString();
                 UIBorderIsWall.isOn = genM.cellularAutomataGenerator.borderIsWall;
+                break;
+            case GeneratorManager.GeneratorEnum.PRIM:
                 break;
             default:
                 ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "GeneratorEnum PARAMETER NOT FOUND!");

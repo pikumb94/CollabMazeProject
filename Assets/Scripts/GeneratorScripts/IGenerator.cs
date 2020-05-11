@@ -56,20 +56,21 @@ public abstract class IGenerator
     }
 
     protected bool passable(Vector2Int id)  {
-        return map[id.x,id.y].type == wallChar;
+        return map[id.x,id.y].type != wallChar;
     }
 
     //this version get all neighbours walls excluded
     public Vector2Int[] getNeighbours(Vector2Int id)
     {
-        Vector2Int[] results = new Vector2Int[TypeGrid.getDirs().Length];
+        Vector2Int[] results = new Vector2Int[/*TypeGrid.getDirs().Length*/] { };
 
         foreach(Vector2Int dir in TypeGrid.getDirs())
         {
             Vector2Int next= new Vector2Int( id.x + dir.x, id.y + dir.y);
             if (in_bounds(next) && passable(next))
             {
-                results[results.Length]=next;
+                Array.Resize(ref results, results.Length + 1);
+                results[results.GetUpperBound(0)] = next;
             }
         }
 
