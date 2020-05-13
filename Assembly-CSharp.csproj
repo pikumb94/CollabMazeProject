@@ -66,7 +66,6 @@
     <Compile Include="Assets\ClickOnTileScript.cs" />
     <Compile Include="Assets\CursorLoadingScript.cs" />
     <Compile Include="Assets\HoverDisplayText.cs" />
-    <Compile Include="Assets\MapAssemblerScript.cs" />
     <Compile Include="Assets\ProCore\ProGrids\Classes\pg_Constant.cs" />
     <Compile Include="Assets\ProCore\ProGrids\Classes\pg_Enum.cs" />
     <Compile Include="Assets\ProCore\ProGrids\Classes\pg_IconUtility.cs" />
@@ -75,8 +74,10 @@
     <Compile Include="Assets\ProCore\ProGrids\Classes\pg_Util.cs" />
     <Compile Include="Assets\ProCore\ProGrids\MonoBehaviour\pg_IgnoreSnap.cs" />
     <Compile Include="Assets\RequiredItemsBehaviour.cs" />
+    <Compile Include="Assets\RoomTraversableScript.cs" />
     <Compile Include="Assets\Scripts\CameraMovement.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
+    <Compile Include="Assets\Scripts\GameManager_Generator.cs" />
     <Compile Include="Assets\Scripts\GameUIManager.cs" />
     <Compile Include="Assets\Scripts\GeneratorScripts\CellularAutomataGenerator.cs" />
     <Compile Include="Assets\Scripts\GeneratorScripts\ConnectedGenerator.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="Assets\Scripts\GeneratorScripts\IGenerator.cs" />
     <Compile Include="Assets\Scripts\GeneratorScripts\InputFieldDynamicFloat.cs" />
     <Compile Include="Assets\Scripts\GeneratorScripts\ITypeGrid.cs" />
+    <Compile Include="Assets\Scripts\GeneratorScripts\MapAssemblerScript.cs" />
     <Compile Include="Assets\Scripts\GeneratorScripts\ParameterManager.cs" />
     <Compile Include="Assets\Scripts\GeneratorScripts\PrimGenerator.cs" />
     <Compile Include="Assets\Scripts\GeneratorScripts\Singleton.cs" />

@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance = null;
     [HideInInspector] public int remainingSeconds;
-    public int countdownSeconds = 300;
+    public int countdownSeconds;
 
     [HideInInspector] public bool isGameOver = false;
     [HideInInspector] public bool isWin = false;
@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         Init();
+        GameUIManager.instance.DisplayTimeFormatted();
         InvokeRepeating("DecreaseCounter", 1f, 1f);
     }
 
@@ -100,9 +101,11 @@ public class GameManager : MonoBehaviour
     private void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
     {
         Init();
+        GameUIManager.instance.DisplayTimeFormatted();
+
     }
 
-    void Init()
+    protected virtual void Init()
     {
         isGameOver = false;
         isWin = false;
@@ -112,7 +115,6 @@ public class GameManager : MonoBehaviour
         GameUIManager.instance.HideYouWinPanel();
         GameUIManager.instance.HideDescriptionPanel();
         remainingSeconds = countdownSeconds;
-        GameUIManager.instance.DisplayTimeFormatted();
  
     }
 

@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using TMPro;
+using System;
 /// <summary>
 /// GeneratorUIManager allows to print the outcome of the generator on the UI
 /// </summary>
@@ -19,12 +20,15 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
     public float outlinePercent;
     public int paddingContent;
     public float scaleFactorResizeButtons;
+    public int thresholdToCompositeImage = 625;
 
     public Button generateButton;
     public GameObject ErrorDialogBox;
     public GameObject MessageDialogBox;
+    public GameObject BeforePlayDialogBox;
     //public CursorLoadingScript cursorLoadingScript;
 
+    public Toggle TrapsOnMapBorderToggle;
     protected GeneratorUIManager() { }
 
 
@@ -245,5 +249,42 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
     {
         MessageDialogBox.SetActive(true);
         MessageDialogBox.transform.Find("MessageDialog").GetComponent<TMPro.TextMeshProUGUI>().text = s;
+    }
+
+    public void savePlayParametersInManager()
+    {
+        TMP_InputField[] ParamsIF = BeforePlayDialogBox.GetComponentsInChildren<TMP_InputField>();
+        Toggle areObsTrav = BeforePlayDialogBox.GetComponentInChildren<Toggle>();
+
+        ParameterManager.Instance.countdownSecondsParam = Int32.Parse(ParamsIF[0].text);
+        ParameterManager.Instance.penaltySecondsParam = Int32.Parse(ParamsIF[1].text);
+        ParameterManager.Instance.areObstacleTraversableParam = areObsTrav.isOn;
+
+    }
+
+    public void DisplayMap(TileObject[,] map,Transform container, ITypeGrid gridType)
+    {
+        if (map.GetLength(0) * map.GetLength(1) > thresholdToCompositeImage)
+            printCompositeMap(container, gridType, map, 0);
+        else
+            printMap(container, gridType, map);
+    }
+
+    public void trapsOnMapBorderHandler(Toggle t)
+    {
+        GeneratorManager GM = GeneratorManager.Instance;
+        if (t.isOn)
+        {
+            GM.DisplayMainMap(GM.getMapWTrapBorder());
+        }
+        else
+        {
+            GM.DisplayMainMap(GM.GeneratorsVect[(int)GM.activeGenerator].getMap());
+        }
+    }
+
+    public bool isTrapsOnMapBorderToggleOn()
+    {
+        return TrapsOnMapBorderToggle.isOn;
     }
 }

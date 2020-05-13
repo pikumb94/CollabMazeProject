@@ -197,7 +197,8 @@ PrefabInstance:
       propertyPath: Player
       value: 
       objectReference: {fileID: 4420122385957169601}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2588017106639211417, guid: 8204de2196e28fc47bda90376f639dab, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 8204de2196e28fc47bda90376f639dab, type: 3}
 --- !u!1 &935291019
 GameObject:
@@ -303,6 +304,31 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1913568943 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2286047149523509557, guid: 8204de2196e28fc47bda90376f639dab,
+    type: 3}
+  m_PrefabInstance: {fileID: 616704105}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1913568944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1913568943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf2645f6b402a64990f6a554f73828a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  remainingSeconds: 0
+  countdownSeconds: 0
+  isGameOver: 0
+  isWin: 0
+  isPause: 0
+  penaltySeconds: 10
+  Player: {fileID: 4420122385957169601}
 --- !u!1 &1947842831
 GameObject:
   m_ObjectHideFlags: 0
@@ -463,6 +489,31 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8105336458097041181, guid: 3c3b685d11d883449aee4f7727bf6cd2,
+        type: 3}
+      propertyPath: m_text
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8105336458097041181, guid: 3c3b685d11d883449aee4f7727bf6cd2,
+        type: 3}
+      propertyPath: m_textInfo.characterCount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8105336458097041181, guid: 3c3b685d11d883449aee4f7727bf6cd2,
+        type: 3}
+      propertyPath: m_textInfo.wordCount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8105336458097041181, guid: 3c3b685d11d883449aee4f7727bf6cd2,
+        type: 3}
+      propertyPath: m_textInfo.lineCount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8105336458097041181, guid: 3c3b685d11d883449aee4f7727bf6cd2,
+        type: 3}
+      propertyPath: m_textInfo.pageCount
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3c3b685d11d883449aee4f7727bf6cd2, type: 3}
 --- !u!1001 &4420122385957169600
@@ -485,7 +536,7 @@ PrefabInstance:
     - target: {fileID: 934940726762424267, guid: de26e223b1da78643ad552bd5ee1217d,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: -20
       objectReference: {fileID: 0}
     - target: {fileID: 934940726762424267, guid: de26e223b1da78643ad552bd5ee1217d,
         type: 3}

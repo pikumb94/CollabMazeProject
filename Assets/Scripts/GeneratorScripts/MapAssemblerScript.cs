@@ -23,11 +23,12 @@ public class MapAssemblerScript : MonoBehaviour
                         Instantiate(pMan.GridType.InGameTilePrefab, new Vector3(pMan.GridType.inGameOffsetX * i, 0, pMan.GridType.inGameOffsetY * j), Quaternion.identity);
                         break;
                     case IGenerator.wallChar:
-                        Instantiate(pMan.GridType.InGameObstaclePrefab, new Vector3(pMan.GridType.inGameOffsetX * i, 0, pMan.GridType.inGameOffsetY * j), Quaternion.identity);
+                        GameObject TrapRoomGO = Instantiate(pMan.GridType.InGameObstaclePrefab, new Vector3(pMan.GridType.inGameOffsetX * i, 0, pMan.GridType.inGameOffsetY * j), Quaternion.identity);
+                        TrapRoomGO.GetComponent<RoomTraversableScript>().setTraversableObjectsState(!ParameterManager.Instance.areObstacleTraversableParam);//if obstacle are traversable I've to deactivate so the condition is negated
                         break;
                     case IGenerator.startChar:
                         Instantiate(pMan.GridType.InGameTilePrefab, new Vector3(pMan.GridType.inGameOffsetX * i, 0, pMan.GridType.inGameOffsetY * j), Quaternion.identity);
-                        GameManager.instance.Player.transform.position = new Vector3(pMan.GridType.inGameOffsetX * i, 1, pMan.GridType.inGameOffsetY * j);
+                        GameManager_Generator.instance.Player.transform.position = new Vector3(pMan.GridType.inGameOffsetX * i, 1, pMan.GridType.inGameOffsetY * j);
                         break;
                     case IGenerator.endChar:
                         Instantiate(pMan.GridType.InGameEndPrefab, new Vector3(pMan.GridType.inGameOffsetX * i, 0, pMan.GridType.inGameOffsetY * j), Quaternion.identity);

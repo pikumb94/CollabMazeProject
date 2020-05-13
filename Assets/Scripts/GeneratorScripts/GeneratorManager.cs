@@ -11,7 +11,7 @@ using UnityEngine.SceneManagement;
 
 public class GeneratorManager : Singleton<GeneratorManager>
 {
-    public enum GeneratorEnum { CONNECTED, CELLULAR_AUTOMATA, PRIM, RECURSIVE_BACKTRACKER, PRIM_CONNECTED };
+    public enum GeneratorEnum { CONNECTED, CELLULAR_AUTOMATA, PRIM, PRIM_CONNECTED };
     [HideInInspector]
     public GeneratorEnum activeGenerator = GeneratorEnum.CONNECTED;
     [HideInInspector]
@@ -34,6 +34,7 @@ public class GeneratorManager : Singleton<GeneratorManager>
     public GameObject Content;
     public String AssembledLevelSceneName;
 
+    private TileObject[,] tmpMapWBorder;
     protected GeneratorManager() {}
 
     void Start()
@@ -53,11 +54,15 @@ public class GeneratorManager : Singleton<GeneratorManager>
             validateGeneratorParams(GeneratorsVect[(int)activeGenerator]);
             GeneratorsVect[(int)activeGenerator].TypeGrid = TypeGridVect[(int)activeTypeGrid];  //Typegrid change in generator
             TileObject[,] map = GeneratorsVect[(int)activeGenerator].initializeMap();
-
+            /*
             if(map.GetLength(0)*map.GetLength(1)>625)
                 GeneratorUIManager.Instance.printCompositeMap(Content.transform, TypeGridVect[(int)activeTypeGrid], GeneratorsVect[(int)activeGenerator].generateMap(),0);
             else
                 GeneratorUIManager.Instance.printMap(Content.transform, TypeGridVect[(int)activeTypeGrid], GeneratorsVect[(int)activeGenerator].generateMap());
+            */
+            GeneratorsVect[(int)activeGenerator].generateMap();
+            tmpMapWBorder = null; //since there's a new map, free the version with borders
+            DisplayMainMap((GeneratorUIManager.Instance.isTrapsOnMapBorderToggleOn() ? getMapWTrapBorder() : GeneratorsVect[(int)activeGenerator].getMap()));
 
             Content.transform.parent.Find("../SaveButton").gameObject.SetActive(true);
             Content.transform.parent.Find("../PlusButton").gameObject.SetActive(true);
@@ -68,6 +73,12 @@ public class GeneratorManager : Singleton<GeneratorManager>
         }
 
         GeneratorUIManager.Instance.enableGenerateButton();
+    }
+
+    public void DisplayMainMap(TileObject[,] map)
+    {
+        GeneratorUIManager.Instance.deleteMapOnUI(Content.transform);
+        GeneratorUIManager.Instance.DisplayMap(map, Content.transform, TypeGridVect[(int)activeTypeGrid]);
     }
 
     private void validateGeneratorParams(IGenerator g)
@@ -95,7 +106,8 @@ public class GeneratorManager : Singleton<GeneratorManager>
 
     public void PlayButtonPressed()
     {
-        ParameterManager.Instance.MapToPlay = GeneratorsVect[(int)activeGenerator].getMap();
+        GeneratorUIManager.Instance.savePlayParametersInManager();
+        ParameterManager.Instance.MapToPlay = (GeneratorUIManager.Instance.isTrapsOnMapBorderToggleOn()? getMapWTrapBorder():GeneratorsVect[(int)activeGenerator].getMap());
         ParameterManager.Instance.GridType = GeneratorsVect[(int)activeGenerator].TypeGrid;
         SceneManager.LoadScene(AssembledLevelSceneName);
     }
@@ -136,5 +148,41 @@ public class GeneratorManager : Singleton<GeneratorManager>
                 ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, "Error while saving the map at " + @textFilePath + ", please insert a valid path and check its permissions. ");
             }
         }
+    }
+
+    public TileObject[,] getMapWTrapBorder()
+    {
+        return (tmpMapWBorder==null?CreateMapWithBorder(): tmpMapWBorder);
+    }
+
+    private TileObject[,] CreateMapWithBorder()
+    {
+        switch(activeTypeGrid)
+        {
+            case TypeGridEnum.SQUARE:
+                TileObject[,] Map =GeneratorsVect[(int)activeGenerator].getMap();
+                tmpMapWBorder = new TileObject[Map.GetLength(0) + 2, Map.GetLength(1) + 2];
+
+                for (int i = 0; i < tmpMapWBorder.GetLength(0); i++)
+                {
+                    for (int j = 0; j < tmpMapWBorder.GetLength(1); j++)
+                    {
+                        if (i > 0 && i < tmpMapWBorder.GetLength(0) - 1 && j > 0 && j < tmpMapWBorder.GetLength(1) - 1)
+                            tmpMapWBorder[i, j].type = Map[i - 1, j - 1].type;
+                        else
+                            tmpMapWBorder[i, j].type = IGenerator.wallChar;
+                    }
+                }
+            break;
+            case TypeGridEnum.HEXAGON:
+            break;
+            case TypeGridEnum.TRIANGLE:
+            break;
+            default:
+                ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, "Incorrect grid type.");
+            break;
+        }
+
+        return tmpMapWBorder;
     }
 }

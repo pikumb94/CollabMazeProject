@@ -11,6 +11,11 @@ public class ParameterManager : Singleton<ParameterManager> {
     [HideInInspector] public ITypeGrid GridType { get; set; }
     [HideInInspector] public TileObject[,] MapToPlay { get; set; }
 
+    // Map data.
+    [HideInInspector] public int countdownSecondsParam { get; set; }
+    [HideInInspector] public int penaltySecondsParam { get; set; }
+    [HideInInspector] public bool areObstacleTraversableParam { get; set; }
+
     // Export data.
     [HideInInspector] public bool Export { get; set; }
     [HideInInspector] public string ExportPath { get; set; }

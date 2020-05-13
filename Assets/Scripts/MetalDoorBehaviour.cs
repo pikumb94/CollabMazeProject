@@ -22,6 +22,7 @@ public class MetalDoorBehaviour : MonoBehaviour
     GameObject trapGObject;
     bool hasHit;
     float speedTrap = 6f;
+
     /*
     private void Awake()
     {
@@ -106,4 +107,5 @@ public class MetalDoorBehaviour : MonoBehaviour
         }
         
     }
+
 }
