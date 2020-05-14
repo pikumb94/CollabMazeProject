@@ -9,9 +9,38 @@ using System.IO;
 /// </summary>
 
 [Serializable]
-public struct TileObject
+public struct TileObject: IEquatable<TileObject>
 {
     public char type;
+
+    public static bool operator ==(TileObject obj1, TileObject obj2)
+    {
+        return obj1.Equals(obj2);
+    }
+
+    public static bool operator !=(TileObject obj1, TileObject obj2)
+    {
+        return !(obj1 == obj2);
+    }
+
+    public bool Equals(TileObject other)
+    {
+        if (ReferenceEquals(null, other))
+        {
+            return false;
+        }
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return type == other.type;
+    }
+
+    public override bool Equals(object obj)
+    {
+        return base.Equals((TileObject)obj);
+    }
 }
 
 [System.Serializable]
@@ -110,8 +139,10 @@ public abstract class IGenerator
     {
         return width;
     }
+
     public abstract TileObject[,] initializeMap();
     public abstract TileObject[,] generateMap();
+    public virtual TileObject[,] postprocessMap() { return map; } //a postprocessing operation of map is optionally available for inherited classes
 
     public TileObject[,] getMap()
     {

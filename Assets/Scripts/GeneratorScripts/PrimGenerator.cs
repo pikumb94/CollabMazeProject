@@ -11,20 +11,14 @@ using System.Linq;
 public class PrimGenerator : IGenerator
 {
     [Range(0, 1)]
-    public float obstaclePercent;
-
-    public int iterationsNumber;
-
-    public int thresholdWall=4;
-
-    public bool borderIsWall;
+    public float obstacleToRemovePercent;
 
     [HideInInspector]
     public const char pillarChar = 'I';
 
     private Tuple<int, int, int> GridColoring = Tuple.Create<int,int,int>(2,0,2);
     private char[,] ColorLookupTable;
-
+    private HashSet<Vector2Int> wallSet;
     public PrimGenerator(ITypeGrid i, int w, int h) : base(i)
     {
         Vector2Int endPos = new Vector2Int(w, h);
@@ -76,7 +70,7 @@ public class PrimGenerator : IGenerator
         //Select a room from the set of rooms, and add it to the "path": in our case the start position
         pathSet.Add(new Vector2Int(startPos.x, startPos.y));
 
-        HashSet<Vector2Int> wallSet = new HashSet<Vector2Int>();
+        wallSet = new HashSet<Vector2Int>();
         //Add the four walls of the previous added room to the "wall list". 
         //This is the list that we keep processing until it is empty.
         insertWallsInSet(wallSet, new Vector2Int(startPos.x, startPos.y));
@@ -133,6 +127,9 @@ public class PrimGenerator : IGenerator
             {
                 if(map[x, y].type == endChar)
                 map[x, y].type = wallChar;
+
+                if (map[x, y].type == wallChar)
+                    wallSet.Add(new Vector2Int(x, y));
             }
         }
 
@@ -145,6 +142,7 @@ public class PrimGenerator : IGenerator
         //Fix end position
         if (endPos != null)
         {
+            wallSet.Remove(new Vector2Int(endPos.x, endPos.y));
             map[endPos.x, endPos.y].type = endChar;
         }
 
@@ -159,5 +157,23 @@ public class PrimGenerator : IGenerator
             if (map[v.x, v.y].type == wallChar)
                 wallSet.Add(v);
         }
+    }
+
+    public override TileObject[,] postprocessMap()
+    {
+        if (obstacleToRemovePercent > 0)
+        {
+            int n = (int)(obstacleToRemovePercent * (float)wallSet.Count);
+            System.Random pseudoRandom = new System.Random(seed.GetHashCode());//IS PSEUDORANDOM
+
+            while (n > 0)
+            {
+                Vector2Int wallToRemove = wallSet.ElementAt(pseudoRandom.Next(0, wallSet.Count));
+                map[wallToRemove.x, wallToRemove.y].type = roomChar;
+                wallSet.Remove(wallToRemove);
+                n--;
+            }
+        }
+        return map;
     }
 }

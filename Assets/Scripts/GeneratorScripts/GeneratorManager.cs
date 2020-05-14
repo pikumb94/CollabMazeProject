@@ -61,6 +61,7 @@ public class GeneratorManager : Singleton<GeneratorManager>
                 GeneratorUIManager.Instance.printMap(Content.transform, TypeGridVect[(int)activeTypeGrid], GeneratorsVect[(int)activeGenerator].generateMap());
             */
             GeneratorsVect[(int)activeGenerator].generateMap();
+            GeneratorsVect[(int)activeGenerator].postprocessMap();
             tmpMapWBorder = null; //since there's a new map, free the version with borders
             DisplayMainMap((GeneratorUIManager.Instance.isTrapsOnMapBorderToggleOn() ? getMapWTrapBorder() : GeneratorsVect[(int)activeGenerator].getMap()));
 

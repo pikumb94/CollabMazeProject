@@ -27,8 +27,9 @@ public class UIParametersValueChange : MonoBehaviour
     public TMP_InputField UIObstacleCountCA;
     public TMP_InputField UIObstacleThreshold;
     public TMP_InputField UIIterationsNumber;
-    public Toggle UIBorderIsWall;
+    public Toggle UIborderIsObstacle;
     [Header("UI Prim's input components")]
+    public TMP_InputField UIObstacleToRemove;
 
     [Header("UI Generators panels")]
     public GameObject[] GeneratorParametersPanels;
@@ -173,6 +174,10 @@ public class UIParametersValueChange : MonoBehaviour
         {
             genM.connectedGenerator.obstaclePercent = float.Parse(UIObstacleCountC.text);
         }
+        else if (UIIF == UIObstacleToRemove)
+        {
+            genM.primGenerator.obstacleToRemovePercent = float.Parse(UIObstacleToRemove.text);
+        }
         else if (UIIF == UIObstacleCountCA)
         {
             genM.cellularAutomataGenerator.obstaclePercent = float.Parse(UIObstacleCountCA.text);
@@ -230,9 +235,9 @@ public class UIParametersValueChange : MonoBehaviour
                     break;
             }
         }
-        else if (t==UIBorderIsWall)
+        else if (t==UIborderIsObstacle)
         {
-            genM.cellularAutomataGenerator.borderIsWall = t.isOn;
+            genM.cellularAutomataGenerator.borderIsObstacle = t.isOn;
         }
         else{
             ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "INPUT FIELD TO REFRESH NOT FOUND!");
@@ -259,9 +264,10 @@ public class UIParametersValueChange : MonoBehaviour
                 UIObstacleCountCA.text = string.Format("{0:N2}", genM.cellularAutomataGenerator.obstaclePercent.ToString());
                 UIObstacleThreshold.text = genM.cellularAutomataGenerator.thresholdWall.ToString();
                 UIIterationsNumber.text = genM.cellularAutomataGenerator.iterationsNumber.ToString();
-                UIBorderIsWall.isOn = genM.cellularAutomataGenerator.borderIsWall;
+                UIborderIsObstacle.isOn = genM.cellularAutomataGenerator.borderIsObstacle;
                 break;
             case GeneratorManager.GeneratorEnum.PRIM:
+                UIObstacleToRemove.text = string.Format("{0:N2}", genM.primGenerator.obstacleToRemovePercent.ToString());
                 break;
             default:
                 ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "GeneratorEnum PARAMETER NOT FOUND!");
