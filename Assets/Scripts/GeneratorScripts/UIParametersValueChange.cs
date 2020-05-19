@@ -25,9 +25,9 @@ public class UIParametersValueChange : MonoBehaviour
 
     [Header("UI Cellular Automata input components")]
     public TMP_InputField UIObstacleCountCA;
-    public TMP_InputField UIObstacleThreshold;
     public TMP_InputField UIIterationsNumber;
-    public Toggle UIborderIsObstacle;
+    public TMP_InputField UIObstacleThreshold;
+        public Toggle UIborderIsObstacle;
     [Header("UI Prim's input components")]
     public TMP_InputField UIObstacleToRemove;
 
@@ -207,6 +207,33 @@ public class UIParametersValueChange : MonoBehaviour
         //update all params on UI
         GeneratorUIManager.Instance.deleteMapOnUI(GeneratorManager.Instance.Content.transform);
         refreshUIParams();
+
+    }
+
+    private void setNavigationOnParamPanel(TMP_Dropdown d)
+    {
+        Selectable s = d.gameObject.GetComponent<Selectable>();
+        Navigation customNav = new Navigation();
+        customNav.mode = Navigation.Mode.Explicit;
+        
+        switch (genM.activeGenerator)
+            {
+                case GeneratorManager.GeneratorEnum.CONNECTED:
+                    customNav.selectOnDown = UIObstacleCountC.gameObject.GetComponent<Selectable>();
+                    s.navigation = customNav;
+            break;
+                case GeneratorManager.GeneratorEnum.CELLULAR_AUTOMATA:
+                    customNav.selectOnDown = UIObstacleCountCA.gameObject.GetComponent<Selectable>();
+                    s.navigation = customNav;
+                break;
+                case GeneratorManager.GeneratorEnum.PRIM:
+                    customNav.selectOnDown = UIObstacleToRemove.gameObject.GetComponent<Selectable>();
+                    s.navigation = customNav;
+                break;
+            default:
+                    ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "GeneratorEnum PARAMETER NOT FOUND!");
+            break;
+        }
 
     }
 

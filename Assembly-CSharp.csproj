@@ -106,6 +106,7 @@
     <Compile Include="Assets\Scripts\StopwatchManager.cs" />
     <Compile Include="Assets\Scripts\TemporaryDisclaimer.cs" />
     <Compile Include="Assets\Scripts\TrapBehaviour.cs" />
+    <Compile Include="Assets\TabNavigation.cs" />
     <None Include="Assets\ProCore\ProGrids\Shader\pg_GridShader.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />

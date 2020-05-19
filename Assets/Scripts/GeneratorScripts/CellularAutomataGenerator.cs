@@ -15,7 +15,7 @@ public class CellularAutomataGenerator : IGenerator
 
     public int iterationsNumber;
 
-    public int thresholdWall=4;
+    public int thresholdWall=5;
 
     public bool borderIsObstacle;
 
@@ -106,7 +106,7 @@ public class CellularAutomataGenerator : IGenerator
             {
                 int neighbourWallTiles = GetSurroundingWallCount(x, y);
 
-                if (neighbourWallTiles > thresholdWall)
+                if (neighbourWallTiles >= thresholdWall)
                     //map[x, y].type = wallChar;
                     locationsWall.Push(new Vector2Int(x, y));
                 else if (neighbourWallTiles < thresholdWall)
@@ -145,7 +145,7 @@ public class CellularAutomataGenerator : IGenerator
                 
             }
         }*/
-        Vector2Int[] Neighbours = getAllNeighbours(new Vector2Int(gridX, gridY));
+        Vector2Int[] Neighbours = getAllMooreNeighbours(new Vector2Int(gridX, gridY));//we use Moore neighbourhood
 
         foreach (Vector2Int neigh in Neighbours)
         {
@@ -153,7 +153,7 @@ public class CellularAutomataGenerator : IGenerator
         }
 
         if(borderIsObstacle)
-            wallCount = wallCount + (TypeGrid.getDirs().Length - Neighbours.Length);
+            wallCount = wallCount + (TypeGrid.getDirs().Length + TypeGrid.getDiags().Length - Neighbours.Length);
 
         return wallCount;
     }

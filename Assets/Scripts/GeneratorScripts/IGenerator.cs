@@ -135,6 +135,41 @@ public abstract class IGenerator
         return results;
     }
 
+    //this version get all neighbours including walls
+    public Vector2Int[] getAllMooreNeighbours(Vector2Int id)
+    {
+        Vector2Int[] results = new Vector2Int[] { };
+
+        foreach (Vector2Int dir in TypeGrid.getDirs())
+        {
+            Vector2Int next = new Vector2Int(id.x + dir.x, id.y + dir.y);
+            if (in_bounds(next))
+            {
+                //results[results.Length] = next;
+                Array.Resize(ref results, results.Length + 1);
+                results[results.GetUpperBound(0)] = next;
+            }
+        }
+
+        foreach (Vector2Int dir in TypeGrid.getDiags())
+        {
+            Vector2Int next = new Vector2Int(id.x + dir.x, id.y + dir.y);
+            if (in_bounds(next))
+            {
+                //results[results.Length] = next;
+                Array.Resize(ref results, results.Length + 1);
+                results[results.GetUpperBound(0)] = next;
+            }
+        }
+
+        if ((id.x + id.y) % 2 == 0)
+        {
+            Array.Reverse(results);
+        }
+
+        return results;
+    }
+
     public int getWidth()
     {
         return width;

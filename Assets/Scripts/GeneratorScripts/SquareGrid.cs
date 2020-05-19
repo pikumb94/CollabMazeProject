@@ -11,7 +11,8 @@ using UnityEngine;
 public class SquareGrid : ITypeGrid
 {
     
-    public SquareGrid():base(new Vector2Int[4] { new Vector2Int(0, 1), new Vector2Int(1, 0), new Vector2Int(0, -1), new Vector2Int(-1, 0) }, 1f, 1f){
+    public SquareGrid():base(new Vector2Int[4] { new Vector2Int(0, 1), new Vector2Int(1, 0), new Vector2Int(0, -1), new Vector2Int(-1, 0) },
+        new Vector2Int[4] { new Vector2Int(1, 1), new Vector2Int(1, -1), new Vector2Int(-1, -1), new Vector2Int(-1, 1) }, 1f, 1f){
         offsetX = 1f;
         offsetY = 1f;
     }
