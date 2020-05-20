@@ -12,6 +12,9 @@ using System.IO;
 public struct TileObject: IEquatable<TileObject>
 {
     public char type;
+    int? cost;
+
+    public int Cost { get { return cost ?? -1; } set { cost = value; } }
 
     public static bool operator ==(TileObject obj1, TileObject obj2)
     {

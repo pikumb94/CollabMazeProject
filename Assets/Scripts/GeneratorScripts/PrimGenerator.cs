@@ -77,7 +77,8 @@ public class PrimGenerator : IGenerator
 
         if (useRandomSeed)
         {
-            seed = (int)Time.time;
+            System.Random rand = new System.Random((int)DateTime.Now.Ticks);
+            seed = rand.Next(Int32.MinValue, Int32.MaxValue);
         }
 
         System.Random pseudoRandom = new System.Random(seed.GetHashCode());

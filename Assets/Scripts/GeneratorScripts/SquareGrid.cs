@@ -16,5 +16,9 @@ public class SquareGrid : ITypeGrid
         offsetX = 1f;
         offsetY = 1f;
     }
-    
+
+    public override int heuristic(Vector2Int a, Vector2Int b)
+    {
+        return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
+    }
 }

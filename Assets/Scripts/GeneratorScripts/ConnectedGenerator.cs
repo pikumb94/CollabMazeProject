@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System;
 /// <summary>
 /// This map generator can generate a map where all room tiles are connected.
 /// </summary>
@@ -55,8 +55,15 @@ public class ConnectedGenerator : IGenerator
                     allTileCoords.Add(new Vector2Int(x, y));
             }
         }
+
+        if (useRandomSeed)
+        {
+            System.Random rand = new System.Random((int)DateTime.Now.Ticks);
+            seed = rand.Next(Int32.MinValue,Int32.MaxValue);
+        }
+
         //Shuffle the vector of all tile's locations.
-        shuffledTileCoords = new Queue<Vector2Int>(Utility.ShuffleArray(allTileCoords.ToArray(), useRandomSeed, seed));
+        shuffledTileCoords = new Queue<Vector2Int>(Utility.ShuffleArray(allTileCoords.ToArray(), seed));
         mapCentre = new Vector2Int((int)width / 2, (int)height / 2);
 
 

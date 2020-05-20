@@ -35,6 +35,7 @@ public class GeneratorManager : Singleton<GeneratorManager>
     public String AssembledLevelSceneName;
 
     private TileObject[,] tmpMapWBorder;
+    private MapEvaluator mapEvaluator = new MapEvaluator();//we initialize ASAP
     protected GeneratorManager() {}
 
     void Start()
@@ -65,11 +66,19 @@ public class GeneratorManager : Singleton<GeneratorManager>
             tmpMapWBorder = null; //since there's a new map, free the version with borders
             DisplayMainMap((GeneratorUIManager.Instance.isTrapsOnMapBorderToggleOn() ? getMapWTrapBorder() : GeneratorsVect[(int)activeGenerator].getMap()));
 
+            if (GeneratorsVect[(int)activeGenerator].useRandomSeed)
+                GeneratorUIManager.Instance.gameObject.GetComponent<UIParametersValueChange>().refreshUIParams();
+
+            DataMap dataMap = mapEvaluator.computeMetrics(GeneratorsVect[(int)activeGenerator].getMap(), GeneratorsVect[(int)activeGenerator].TypeGrid, GeneratorsVect[(int)activeGenerator].startPos, GeneratorsVect[(int)activeGenerator].endPos);
+
             Content.transform.parent.Find("../SaveButton").gameObject.SetActive(true);
             Content.transform.parent.Find("../PlusButton").gameObject.SetActive(true);
             Content.transform.parent.Find("../MinusButton").gameObject.SetActive(true);
 
-        } catch (Exception e) {
+            
+
+        }
+        catch (Exception e) {
             ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, e.Message);
         }
 

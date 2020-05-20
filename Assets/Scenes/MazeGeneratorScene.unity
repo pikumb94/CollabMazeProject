@@ -18629,6 +18629,11 @@ PrefabInstance:
       propertyPath: m_Pivot.x
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 515840394875981898, guid: d3ca1dba3c847c941a2367ff22476417,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 110
+      objectReference: {fileID: 0}
     - target: {fileID: 515840394875981899, guid: d3ca1dba3c847c941a2367ff22476417,
         type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target

@@ -40,4 +40,9 @@ public abstract class ITypeGrid
     {
         return diagonals;
     }
+
+    public virtual int heuristic(Vector2Int a, Vector2Int b) {
+        ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "You're using a heuristic function that is not implemented correctly.");
+        return -1;
+    }
 }

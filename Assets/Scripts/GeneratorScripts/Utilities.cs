@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Threading;
+using System;
 
 /// <summary>
 /// Utility classes and helper functions.
@@ -9,12 +10,8 @@ using System.Threading;
 public static class Utility
 {
 
-    public static T[] ShuffleArray<T>(T[] array, bool useSeed ,int seed)
+    public static T[] ShuffleArray<T>(T[] array,int seed)
     {
-        if (useSeed)
-        {
-            seed = (int)System.DateTime.Now.Ticks;
-        }
 
         System.Random prng = new System.Random(seed);
 
@@ -97,6 +94,99 @@ public static class Utility
         var scale = canvasRect.sizeDelta;
         return Vector3.Scale(centerBasedViewPortPosition, scale);
     }
+
+
+    public static bool in_bounds_General(Vector2Int id, int width, int height)
+    {
+        return 0 <= id.x && id.x < width && 0 <= id.y && id.y < height;
+    }
+
+    public static bool passable_General(Vector2Int id, TileObject[,] map)
+    {
+        return map[id.x, id.y].type != IGenerator.wallChar;
+    }
+
+    //this version get all neighbours walls excluded: is a more general version
+    public static Vector2Int[] getNeighbours_General(TileObject[,] map, Vector2Int id, ITypeGrid TypeGrid, int width, int height)
+    {
+        Vector2Int[] results = new Vector2Int[] { };
+
+        foreach (Vector2Int dir in TypeGrid.getDirs())
+        {
+            Vector2Int next = new Vector2Int(id.x + dir.x, id.y + dir.y);
+            if (in_bounds_General(next, width, height) && passable_General(id, map))
+            {
+                Array.Resize(ref results, results.Length + 1);
+                results[results.GetUpperBound(0)] = next;
+            }
+        }
+
+        if ((id.x + id.y) % 2 == 0)
+        {
+            Array.Reverse(results);
+        }
+
+        return results;
+    }
+
+    //this version get all neighbours including walls: is a more general version
+    public static Vector2Int[] getAllNeighbours_General(Vector2Int id, ITypeGrid TypeGrid, int width, int height)
+    {
+        Vector2Int[] results = new Vector2Int[] { };
+
+        foreach (Vector2Int dir in TypeGrid.getDirs())
+        {
+            Vector2Int next = new Vector2Int(id.x + dir.x, id.y + dir.y);
+            if (in_bounds_General(next, width, height))
+            {
+                Array.Resize(ref results, results.Length + 1);
+                results[results.GetUpperBound(0)] = next;
+            }
+        }
+
+        if ((id.x + id.y) % 2 == 0)
+        {
+            Array.Reverse(results);
+        }
+
+        return results;
+    }
+
+    //this version get all neighbours including walls: is a more general version
+    public static Vector2Int[] getAllMooreNeighbours_General(Vector2Int id, ITypeGrid TypeGrid, int width, int height)
+    {
+        Vector2Int[] results = new Vector2Int[] { };
+
+        foreach (Vector2Int dir in TypeGrid.getDirs())
+        {
+            Vector2Int next = new Vector2Int(id.x + dir.x, id.y + dir.y);
+            if (in_bounds_General(next, width, height))
+            {
+                //results[results.Length] = next;
+                Array.Resize(ref results, results.Length + 1);
+                results[results.GetUpperBound(0)] = next;
+            }
+        }
+
+        foreach (Vector2Int dir in TypeGrid.getDiags())
+        {
+            Vector2Int next = new Vector2Int(id.x + dir.x, id.y + dir.y);
+            if (in_bounds_General(next, width, height))
+            {
+                //results[results.Length] = next;
+                Array.Resize(ref results, results.Length + 1);
+                results[results.GetUpperBound(0)] = next;
+            }
+        }
+
+        if ((id.x + id.y) % 2 == 0)
+        {
+            Array.Reverse(results);
+        }
+
+        return results;
+    }
+
 
     public static Texture2D AlphaBlend(this Texture2D aBottom, Texture2D aTop)
     {
@@ -325,6 +415,8 @@ public static class Utility
                               c1.b + (c2.b - c1.b) * value,
                               c1.a + (c2.a - c1.a) * value);
         }
+
+        
     }
 }
 
