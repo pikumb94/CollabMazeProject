@@ -31,15 +31,20 @@ public class GeneratorManager : Singleton<GeneratorManager>
     public SquareGrid squareGrid;
 
     [Header("Others")]
-    public GameObject Content;
+    public GameObject MapHolder;
     public String AssembledLevelSceneName;
 
+    [HideInInspector]
+    public GameObject Content;
+    [HideInInspector]
+    public bool isAutosolverOn=false;
     private TileObject[,] tmpMapWBorder;
     private MapEvaluator mapEvaluator = new MapEvaluator();//we initialize ASAP
     protected GeneratorManager() {}
 
     void Start()
     {
+        Content = MapHolder.transform.Find("BorderMask/Content").gameObject;
         GeneratorsVect = new IGenerator[] { connectedGenerator, cellularAutomataGenerator, primGenerator };
         TypeGridVect = new ITypeGrid[] { squareGrid};
         GeneratorUIManager.Instance.gameObject.GetComponent<UIParametersValueChange>().refreshUIParams();
@@ -64,19 +69,18 @@ public class GeneratorManager : Singleton<GeneratorManager>
             GeneratorsVect[(int)activeGenerator].generateMap();
             GeneratorsVect[(int)activeGenerator].postprocessMap();
             tmpMapWBorder = null; //since there's a new map, free the version with borders
-            DisplayMainMap((GeneratorUIManager.Instance.isTrapsOnMapBorderToggleOn() ? getMapWTrapBorder() : GeneratorsVect[(int)activeGenerator].getMap()));
 
             if (GeneratorsVect[(int)activeGenerator].useRandomSeed)
                 GeneratorUIManager.Instance.gameObject.GetComponent<UIParametersValueChange>().refreshUIParams();
 
             DataMap dataMap = mapEvaluator.computeMetrics(GeneratorsVect[(int)activeGenerator].getMap(), GeneratorsVect[(int)activeGenerator].TypeGrid, GeneratorsVect[(int)activeGenerator].startPos, GeneratorsVect[(int)activeGenerator].endPos);
-
+            /*
             Content.transform.parent.Find("../SaveButton").gameObject.SetActive(true);
             Content.transform.parent.Find("../PlusButton").gameObject.SetActive(true);
             Content.transform.parent.Find("../MinusButton").gameObject.SetActive(true);
-
-            
-
+            */
+            DisplayMainMap((GeneratorUIManager.Instance.isTrapsOnMapBorderToggleOn() ? getMapWTrapBorder() : GeneratorsVect[(int)activeGenerator].getMap()));
+            GeneratorUIManager.Instance.showUIGameObjectsOnMapHolder(MapHolder.transform, dataMap.isTraversable);
         }
         catch (Exception e) {
             ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, e.Message);

@@ -206,6 +206,7 @@ public class UIParametersValueChange : MonoBehaviour
         scrollUIParameterPanel.content = GeneratorParametersPanels[(int)genM.activeGenerator].GetComponent<RectTransform>();
         //update all params on UI
         GeneratorUIManager.Instance.deleteMapOnUI(GeneratorManager.Instance.Content.transform);
+        GeneratorUIManager.Instance.hideUIGameObjectsOnMapHolder(GeneratorManager.Instance.MapHolder.transform);
         refreshUIParams();
 
     }
@@ -300,5 +301,13 @@ public class UIParametersValueChange : MonoBehaviour
                 ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "GeneratorEnum PARAMETER NOT FOUND!");
                 break;
         }
+    }
+
+    public void toggleUIAutosolver(Animator a)
+    {
+        bool isOn = a.GetBool("isOn");
+        isOn = !isOn;
+        a.SetBool("isOn", isOn);
+        GeneratorManager.Instance.isAutosolverOn = isOn;
     }
 }

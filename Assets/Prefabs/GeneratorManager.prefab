@@ -52,6 +52,14 @@ MonoBehaviour:
     endPos: {x: 7, y: 7}
     seed: 0
     useRandomSeed: 0
+    InfoGenerator: '
+
+      This generator produce a map where all free tiles are connected.
+
+
+      Obstacle Percentage: initial percentage of obstacles in the map.
+
+'
     obstaclePercent: 0.5
   cellularAutomataGenerator:
     width: 8
@@ -60,13 +68,61 @@ MonoBehaviour:
     endPos: {x: 7, y: 7}
     seed: 0
     useRandomSeed: 0
+    InfoGenerator: '
+
+      The cellular automata produce a cave-like map.
+
+
+      Obstacle Percentage: initial percentage of obstacles in the map.
+
+
+      Iterations Number: number of iterations in the CA algorithm.
+
+
+      Threshold Wall: number wall neighbours above this value, makes the tile a wall
+      while under this value the tile is a room.
+
+
+      Border is a wall: consider the neighbours on the map''s borders all walls or
+      all rooms.
+
+'
     obstaclePercent: 0.5
     iterationsNumber: 1
-    thresholdWall: 2
-    borderIsWall: 0
+    thresholdWall: 5
+    borderIsObstacle: 0
+    roomThreshold: 0
+    obstacleThreshold: 0
+  primGenerator:
+    width: 8
+    height: 8
+    startPos: {x: 0, y: 0}
+    endPos: {x: 7, y: 7}
+    seed: 0
+    useRandomSeed: 0
+    InfoGenerator: '
+
+      Prim''s generator produces a perfect maze following the Prim''s algorithm.
+
+
+      Removing obstacles percentage: specify the percentage of obstacles to delete
+      in order to make a non-perfect maze.
+
+'
+    obstacleToRemovePercent: 0
   squareGrid:
     TilePrefab: {fileID: 3119713619649153738, guid: 28fef6663ea8d214b86e483dda042e5f,
       type: 3}
     offsetX: 1
     offsetY: 1
+    InGameTilePrefab: {fileID: 2378154990392213909, guid: f64c2e51b6b8c61428c21e2a97fc0469,
+      type: 3}
+    InGameObstaclePrefab: {fileID: 4084993660110456478, guid: 7421a5dc4f6cef94186680591d0d4ba7,
+      type: 3}
+    InGameEndPrefab: {fileID: 4618292945339320376, guid: a1dd0cb8efc9e644f81567bf1eebf92f,
+      type: 3}
+    inGameOffsetX: 13
+    inGameOffsetY: 13
+  MapHolder: {fileID: 0}
   Content: {fileID: 0}
+  AssembledLevelSceneName: PlayGeneratedLevel

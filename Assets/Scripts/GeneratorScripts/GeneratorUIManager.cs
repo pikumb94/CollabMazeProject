@@ -16,6 +16,9 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
     public Color startColor;
     public Color endColor;
 
+    public Color correctMessageColor;
+    public Color errorMessageColor;
+
     [Range(0, 1)]
     public float outlinePercent;
     public int paddingContent;
@@ -211,6 +214,69 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
                 ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, "Room type does not match with any of the predefined types.");
                 break;
         }
+    }
+
+    public void showUIGameObjectsOnMapHolder(Transform mapHolderTransform, bool isMapCorrect)
+    {
+        mapHolderTransform.Find("SaveButton").gameObject.SetActive(true);
+        mapHolderTransform.Find("PlusButton").gameObject.SetActive(true);
+        mapHolderTransform.Find("MinusButton").gameObject.SetActive(true);
+        GameObject DialogBoxGO = mapHolderTransform.Find("BorderMask/MapDataBox").gameObject;
+        Animator animatorDB = DialogBoxGO.GetComponent<Animator>();
+
+        if (isMapCorrect) {
+            mapHolderTransform.GetComponent<Image>().color = correctMessageColor;
+            DialogBoxGO.GetComponent<Image>().color = correctMessageColor;
+
+            if (animatorDB != null)
+            {
+                animatorDB.SetBool("Show",true);
+                animatorDB.SetBool("Error", false);
+            }
+            else
+            {
+                throw new Exception("Animator is missing on "+ DialogBoxGO .name+ " Game Object.");
+            }
+            
+        }
+        else
+        {
+            mapHolderTransform.GetComponent<Image>().color = errorMessageColor;
+            DialogBoxGO.GetComponent<Image>().color = errorMessageColor;
+
+            if (animatorDB != null)
+            {
+                animatorDB.SetBool("Show", true);
+                animatorDB.SetBool("Error", true);
+            }
+            else
+            {
+                throw new Exception("Animator is missing on " + DialogBoxGO.name + " Game Object.");
+            }
+        }
+    }
+
+    public void hideUIGameObjectsOnMapHolder(Transform mapHolderTransform)
+    {
+        mapHolderTransform.Find("SaveButton").gameObject.SetActive(false);
+        mapHolderTransform.Find("PlusButton").gameObject.SetActive(false);
+        mapHolderTransform.Find("MinusButton").gameObject.SetActive(false);
+        GameObject DialogBoxGO = mapHolderTransform.Find("BorderMask/MapDataBox").gameObject;
+        Animator animatorDB = DialogBoxGO.GetComponent<Animator>();
+
+        mapHolderTransform.GetComponent<Image>().color = correctMessageColor;
+        DialogBoxGO.GetComponent<Image>().color = correctMessageColor;
+
+        if (animatorDB != null)
+        {
+            animatorDB.SetBool("Show", false);
+        }
+        else
+        {
+            throw new Exception("Animator is missing on " + DialogBoxGO.name + " Game Object.");
+        }
+
+
     }
 
     public void disableGenerateButton()

@@ -26,6 +26,17 @@ public static class Utility
         return array;
     }
 
+    public static void buildRoomsOnMap(TileObject[,] map, Vector2Int[] walls)
+    {
+        int i = 0;
+
+        while (i < walls.Length)
+        {
+            map[walls[i].x, walls[i].y].type = IGenerator.roomChar;
+            i++;
+        }
+    }
+
     //Creates a plane without any texture
     public static GameObject CreatePlane(float width, float height)
     {
@@ -417,6 +428,7 @@ public static class Utility
         }
 
         
+
     }
 }
 

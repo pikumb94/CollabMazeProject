@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8359235380875017395}
   - component: {fileID: 8359235380875017392}
   - component: {fileID: 8359235380875017394}
+  - component: {fileID: 910452262}
   m_Layer: 0
   m_Name: GeneratorUIManager
   m_TagString: Untagged
@@ -48,10 +49,17 @@ MonoBehaviour:
   wallColor: {r: 1, g: 0, b: 0, a: 1}
   startColor: {r: 0, g: 0, b: 1, a: 1}
   endColor: {r: 0, g: 1, b: 0, a: 1}
+  correctMessageColor: {r: 0.3137255, g: 0.8941177, b: 0.7254902, a: 1}
+  errorMessageColor: {r: 0.8117648, g: 0.40000004, b: 0.47450984, a: 1}
   outlinePercent: 0.05
   paddingContent: 200
   scaleFactorResizeButtons: 1.5
+  thresholdToCompositeImage: 625
   generateButton: {fileID: 0}
+  ErrorDialogBox: {fileID: 0}
+  MessageDialogBox: {fileID: 0}
+  BeforePlayDialogBox: {fileID: 0}
+  TrapsOnMapBorderToggle: {fileID: 0}
 --- !u!114 &8359235380875017394
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74,10 +82,25 @@ MonoBehaviour:
   UIUseSeed: {fileID: 0}
   UIObstacleCountC: {fileID: 0}
   UIObstacleCountCA: {fileID: 0}
-  UIObstacleThreshold: {fileID: 0}
   UIIterationsNumber: {fileID: 0}
-  UIBorderIsWall: {fileID: 0}
+  UIObstacleThreshold: {fileID: 0}
+  UIborderIsObstacle: {fileID: 0}
+  UIObstacleToRemove: {fileID: 0}
   GeneratorParametersPanels:
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 0}
   scrollUIParameterPanel: {fileID: 0}
+--- !u!114 &910452262
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8359235380875017393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2cb9d4bde7febce4e918bb0ffaeef0be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  findFirstSelectable: 0
