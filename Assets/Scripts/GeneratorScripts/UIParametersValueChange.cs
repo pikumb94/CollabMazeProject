@@ -206,7 +206,7 @@ public class UIParametersValueChange : MonoBehaviour
         scrollUIParameterPanel.content = GeneratorParametersPanels[(int)genM.activeGenerator].GetComponent<RectTransform>();
         //update all params on UI
         GeneratorUIManager.Instance.deleteMapOnUI(GeneratorManager.Instance.Content.transform);
-        GeneratorUIManager.Instance.hideUIGameObjectsOnMapHolder(GeneratorManager.Instance.MapHolder.transform);
+        GeneratorUIManager.Instance.hideUIMapInfo(GeneratorManager.Instance.MapHolder.transform);
         refreshUIParams();
 
     }

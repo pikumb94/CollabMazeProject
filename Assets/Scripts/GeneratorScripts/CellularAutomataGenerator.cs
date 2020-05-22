@@ -165,38 +165,13 @@ public class CellularAutomataGenerator : IGenerator
         if (obstacleThreshold > 0 || roomThreshold > 0)
         {
 
-            HashSet<Vector2Int> AlreadyVisitedCells = new HashSet<Vector2Int>();
+            
             List<HashSet<Vector2Int>> ObstacleConnectedRegions = new List<HashSet<Vector2Int>>();
             List<HashSet<Vector2Int>> RoomConnectedRegions = new List<HashSet<Vector2Int>>();
 
-            for (int x = 0; x < width; x++)
-            {
-                for (int y = 0; y < height; y++)
-                {
+            MapEvaluator.findRoomObstacleConnectedRegions(RoomConnectedRegions, ObstacleConnectedRegions,map, TypeGrid);
 
-                    if (!AlreadyVisitedCells.Contains(new Vector2Int(x, y)))
-                    {
-                        HashSet<Vector2Int> fFHS = floodFillGenMap(new Vector2Int(x, y));
-                        AlreadyVisitedCells.UnionWith(fFHS);
-
-                        if (map[x, y].type != wallChar)
-                        {
-                            RoomConnectedRegions.Add(fFHS);
-                        }
-
-                        if (map[x, y].type == wallChar)
-                        {
-                            ObstacleConnectedRegions.Add(fFHS);
-                        }
-                    }
-
-                    if (AlreadyVisitedCells.Count == width * height)
-                        break;
-                }
-                if (AlreadyVisitedCells.Count == width * height)
-                    break;
-            }
-
+            //Postprocess the regions if above the respective thresholds
             if (roomThreshold > 0)
             {
                 foreach(HashSet<Vector2Int> rCR in RoomConnectedRegions)
@@ -241,33 +216,5 @@ public class CellularAutomataGenerator : IGenerator
         return map;
     }
 
-    private HashSet<Vector2Int> floodFillGenMap(Vector2Int startCell)
-    {
-        HashSet<Vector2Int> FloodedCells = new HashSet<Vector2Int>() {startCell};
 
-        Queue<Vector2Int> queue = new Queue<Vector2Int>() {};
-        queue.Enqueue(startCell);
-
-        TileObject t = map[startCell.x, startCell.y];
-
-        while (queue.Count > 0)
-        {
-            Vector2Int Cell = queue.Dequeue();
-            Vector2Int[] Cells = getAllNeighbours(Cell);
-
-            foreach(Vector2Int c in Cells)
-            {
-                if(t==map[c.x, c.y])
-                {
-                    
-                    if(!FloodedCells.Contains(c))
-                        queue.Enqueue(c);
-                    FloodedCells.Add(c);
-                }
-
-            }
-        }
-
-        return FloodedCells;
-    }
 }

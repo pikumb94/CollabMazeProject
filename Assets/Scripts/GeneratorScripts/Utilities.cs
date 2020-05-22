@@ -125,7 +125,7 @@ public static class Utility
         foreach (Vector2Int dir in TypeGrid.getDirs())
         {
             Vector2Int next = new Vector2Int(id.x + dir.x, id.y + dir.y);
-            if (in_bounds_General(next, width, height) && passable_General(id, map))
+            if (in_bounds_General(next, width, height) && passable_General(next, map))
             {
                 Array.Resize(ref results, results.Length + 1);
                 results[results.GetUpperBound(0)] = next;
@@ -163,7 +163,7 @@ public static class Utility
         return results;
     }
 
-    //this version get all neighbours including walls: is a more general version
+    //this version get all moore neighbours including walls: is a more general version
     public static Vector2Int[] getAllMooreNeighbours_General(Vector2Int id, ITypeGrid TypeGrid, int width, int height)
     {
         Vector2Int[] results = new Vector2Int[] { };

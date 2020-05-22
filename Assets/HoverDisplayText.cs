@@ -21,7 +21,6 @@ public class HoverDisplayText : MonoBehaviour
 
     public void OnMouseEnterCallback()
     {
-        Debug.Log("Mouse ENTER");
         isMouseHover = true;
 
         TextComp.text = GeneratorManager.Instance.GeneratorsVect[(int)GeneratorManager.Instance.activeGenerator].InfoGenerator;
@@ -39,7 +38,6 @@ public class HoverDisplayText : MonoBehaviour
 
     public void OnMouseExitCallback()
     {
-        Debug.Log("Mouse EXIT");
         isMouseHover = false;
         DisplayDialogBox();
     }

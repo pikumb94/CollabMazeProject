@@ -578,7 +578,7 @@ GameObject:
   - component: {fileID: 111662044}
   - component: {fileID: 111662043}
   m_Layer: 5
-  m_Name: MessageDialog (1)
+  m_Name: DataDialogBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

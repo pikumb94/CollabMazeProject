@@ -216,7 +216,7 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
         }
     }
 
-    public void showUIGameObjectsOnMapHolder(Transform mapHolderTransform, bool isMapCorrect)
+    public void showUIMapInfo(Transform mapHolderTransform, DataMap DataM)
     {
         mapHolderTransform.Find("SaveButton").gameObject.SetActive(true);
         mapHolderTransform.Find("PlusButton").gameObject.SetActive(true);
@@ -224,7 +224,10 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
         GameObject DialogBoxGO = mapHolderTransform.Find("BorderMask/MapDataBox").gameObject;
         Animator animatorDB = DialogBoxGO.GetComponent<Animator>();
 
-        if (isMapCorrect) {
+        TextMeshProUGUI textDataDB = mapHolderTransform.Find("BorderMask/MapDataBox/DataDialogBox").gameObject.GetComponent<TextMeshProUGUI>();
+        textDataDB.text = MapEvaluator.aggregateDataMap(DataM);
+
+        if (DataM.isTraversable) {
             mapHolderTransform.GetComponent<Image>().color = correctMessageColor;
             DialogBoxGO.GetComponent<Image>().color = correctMessageColor;
 
@@ -256,7 +259,7 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
         }
     }
 
-    public void hideUIGameObjectsOnMapHolder(Transform mapHolderTransform)
+    public void hideUIMapInfo(Transform mapHolderTransform)
     {
         mapHolderTransform.Find("SaveButton").gameObject.SetActive(false);
         mapHolderTransform.Find("PlusButton").gameObject.SetActive(false);
