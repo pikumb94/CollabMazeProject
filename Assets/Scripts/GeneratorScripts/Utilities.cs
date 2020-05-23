@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Threading;
 using System;
-
+using UnityEngine.UI.Extensions;
+using System.Linq;
 /// <summary>
 /// Utility classes and helper functions.
 /// </summary>
@@ -35,6 +36,26 @@ public static class Utility
             map[walls[i].x, walls[i].y].type = IGenerator.roomChar;
             i++;
         }
+    }
+
+    //Display a lines on the UI given a collection of points. Requires a game object LineGameObj with a UILineRenderer component
+    public static void displaySegmentedLineUI(GameObject LineGameObj, RectTransform destination, Vector2Int[] Points, Vector2 originPos, float offset)
+    {
+        LineGameObj.transform.SetParent(destination.transform);
+        LineGameObj.transform.position = destination.transform.position;
+        LineGameObj.transform.localScale = Vector3.one;
+        UILineRenderer LineRenderer = LineGameObj.GetComponent<UILineRenderer>();
+        Vector2[] PointsF = Array.ConvertAll(Points, item => (Vector2)item);
+
+        for (int i = Points.Length-1; i >=0 ; i--)
+        {
+            float dx = Points[i].x - Points[Points.Length - 1].x;
+            float dy = Points[i].y - Points[Points.Length - 1].y;
+
+            Vector2 pUI = new Vector2(originPos.x + offset * dx, originPos.y + offset * dy);
+            PointsF[i] = pUI;
+        }
+        LineRenderer.Points = PointsF;
     }
 
     //Creates a plane without any texture

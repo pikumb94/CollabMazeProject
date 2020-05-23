@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UI.Extensions;
 using TMPro;
 using System;
 /// <summary>
@@ -32,8 +33,12 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
     //public CursorLoadingScript cursorLoadingScript;
 
     public Toggle TrapsOnMapBorderToggle;
-    protected GeneratorUIManager() { }
+    public GameObject LineUIPrefab;
 
+    private Vector2 originUIMap;
+
+    protected GeneratorUIManager() { }
+    
 
     // Start is called before the first frame update
     void Start()
@@ -58,6 +63,8 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
 
         RectTransform prefabRect = g.TilePrefab.GetComponent<RectTransform>();
 
+        
+
         for (int x = 0; x < map.GetLength(0); x++)
         {
             for (int y = 0; y < map.GetLength(1); y++)
@@ -71,6 +78,9 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
 
                 newTileRect.localScale = Vector3.one * (1 - outlinePercent);// * (GetScale(Screen.width, Screen.height, new Vector2(1920,1080), .5f));
                 newTileRect.anchoredPosition = tilePosition;
+
+                if (map[x, y].type == IGenerator.startChar)
+                    originUIMap = new Vector2(tilePosition.x, tilePosition.y);
             }
         }
 
@@ -140,6 +150,7 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
                         break;
                     case IGenerator.startChar:
                         Utility.CompositeTopOnBottomAtPos(compositeTexture, textureTileStart, new Vector2Int((int)tilePosition.x, (int)tilePosition.y));
+                        originUIMap = new Vector2(tilePosition.x, tilePosition.y);
                         break;
                     case IGenerator.endChar:
                         Utility.CompositeTopOnBottomAtPos(compositeTexture, textureTileEnd, new Vector2Int((int)tilePosition.x, (int)tilePosition.y));
@@ -148,7 +159,7 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
                         ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, "Room type does not match with any of the predefined types.");
                         break;
                 }
-
+                    
 
             }
         }
@@ -216,8 +227,11 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
         }
     }
 
-    public void showUIMapInfo(Transform mapHolderTransform, DataMap DataM)
+    public void showUIMapInfo(Transform mapHolderTransform, DataMap DataM, ITypeGrid t)
     {
+        GameObject LineGO = Instantiate(LineUIPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        Utility.displaySegmentedLineUI(LineGO, mapHolderTransform.Find("BorderMask/Content").GetComponent<RectTransform>(), DataM.solutionSteps, originUIMap, t.TilePrefab.GetComponent<RectTransform>().sizeDelta.x);
+
         mapHolderTransform.Find("SaveButton").gameObject.SetActive(true);
         mapHolderTransform.Find("PlusButton").gameObject.SetActive(true);
         mapHolderTransform.Find("MinusButton").gameObject.SetActive(true);
@@ -308,6 +322,23 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
         }
     }
 
+    public UILineRenderer[] deleteMapOnUIExceptLines(Transform t)
+    {
+        List<UILineRenderer> listLines = new List<UILineRenderer>();
+        if (t.childCount > 0)
+        {
+            foreach (Transform child in t)
+            {
+                UILineRenderer line = child.GetComponent<UILineRenderer>();
+                if (line == null)
+                    GameObject.Destroy(child.gameObject);
+                else
+                    listLines.Add(line);
+            }
+        }
+        return listLines.ToArray();
+    }
+
     public void showDialogErrorBox(string s)
     {
         ErrorDialogBox.SetActive(true);
@@ -342,14 +373,18 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
     public void trapsOnMapBorderHandler(Toggle t)
     {
         GeneratorManager GM = GeneratorManager.Instance;
+        UILineRenderer[] Lines;
         if (t.isOn)
         {
-            GM.DisplayMainMap(GM.getMapWTrapBorder());
+            Lines=GM.DisplayMainMapKeepLines(GM.getMapWTrapBorder());
         }
         else
         {
-            GM.DisplayMainMap(GM.GeneratorsVect[(int)GM.activeGenerator].getMap());
+            Lines=GM.DisplayMainMapKeepLines(GM.GeneratorsVect[(int)GM.activeGenerator].getMap());
         }
+
+        foreach (UILineRenderer l in Lines)
+            l.transform.SetAsLastSibling();
     }
 
     public bool isTrapsOnMapBorderToggleOn()

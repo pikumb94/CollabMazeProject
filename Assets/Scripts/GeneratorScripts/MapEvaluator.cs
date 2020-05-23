@@ -49,7 +49,7 @@ public static class MapEvaluator
         Vector2Int[] solSteps= Search_AStar(map, TypeGrid, start, end);
         if (solSteps.First()!=end && GeneratorManager.Instance.isAutosolverOn)
         {
-            Utility.buildRoomsOnMap(map, walkSquareGrid(solSteps.Last(), end));
+            Utility.buildRoomsOnMap(map, walkSquareGrid(solSteps.First(), end));
             map[end.x, end.y].type = IGenerator.endChar;
             solSteps = Search_AStar(map, TypeGrid, start, end);
         }

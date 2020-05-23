@@ -68,6 +68,19 @@
     <Compile Include="Assets\ProCore\ProGrids\Editor\pg_ParameterWindow.cs" />
     <Compile Include="Assets\ProCore\ProGrids\Editor\pg_Preferences.cs" />
     <Compile Include="Assets\ProCore\ProGrids\Editor\pg_ToggleContent.cs" />
+    <Compile Include="Assets\unity-ui-extensions\Editor\AccordionElementEditor.cs" />
+    <Compile Include="Assets\unity-ui-extensions\Editor\BezierLineRendererEditor.cs" />
+    <Compile Include="Assets\unity-ui-extensions\Editor\BoxSliderEditor.cs" />
+    <Compile Include="Assets\unity-ui-extensions\Editor\CanvasGroupActivator.cs" />
+    <Compile Include="Assets\unity-ui-extensions\Editor\CUIBezierCurveEditor.cs" />
+    <Compile Include="Assets\unity-ui-extensions\Editor\CUIGraphicEditor.cs" />
+    <Compile Include="Assets\unity-ui-extensions\Editor\CUIImageEditor.cs" />
+    <Compile Include="Assets\unity-ui-extensions\Editor\CUITextEditor.cs" />
+    <Compile Include="Assets\unity-ui-extensions\Editor\NonDrawingGraphicEditor.cs" />
+    <Compile Include="Assets\unity-ui-extensions\Editor\ReadOnlyDrawer.cs" />
+    <Compile Include="Assets\unity-ui-extensions\Editor\TextPicEditor.cs" />
+    <Compile Include="Assets\unity-ui-extensions\Editor\uGUITools.cs" />
+    <Compile Include="Assets\unity-ui-extensions\Editor\UIExtensionsMenuOptions.cs" />
     <Reference Include="UnityEditor.TestRunner">
       <HintPath>C:/Users/mon/CollabMazeProject/Library/ScriptAssemblies/UnityEditor.TestRunner.dll</HintPath>
     </Reference>

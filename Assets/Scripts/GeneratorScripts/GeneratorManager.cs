@@ -79,7 +79,7 @@ public class GeneratorManager : Singleton<GeneratorManager>
             Content.transform.parent.Find("../MinusButton").gameObject.SetActive(true);
             */
             DisplayMainMap((GeneratorUIManager.Instance.isTrapsOnMapBorderToggleOn() ? getMapWTrapBorder() : GeneratorsVect[(int)activeGenerator].getMap()));
-            GeneratorUIManager.Instance.showUIMapInfo(MapHolder.transform, dataMap);
+            GeneratorUIManager.Instance.showUIMapInfo(MapHolder.transform, dataMap, GeneratorsVect[(int)activeGenerator].TypeGrid);
         }
         catch (Exception e) {
             ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, e.Message);
@@ -92,6 +92,13 @@ public class GeneratorManager : Singleton<GeneratorManager>
     {
         GeneratorUIManager.Instance.deleteMapOnUI(Content.transform);
         GeneratorUIManager.Instance.DisplayMap(map, Content.transform, TypeGridVect[(int)activeTypeGrid]);
+    }
+
+    public UnityEngine.UI.Extensions.UILineRenderer[] DisplayMainMapKeepLines(TileObject[,] map)
+    {
+        UnityEngine.UI.Extensions.UILineRenderer[] Lines = GeneratorUIManager.Instance.deleteMapOnUIExceptLines(Content.transform);
+        GeneratorUIManager.Instance.DisplayMap(map, Content.transform, TypeGridVect[(int)activeTypeGrid]);
+        return Lines;
     }
 
     private void validateGeneratorParams(IGenerator g)

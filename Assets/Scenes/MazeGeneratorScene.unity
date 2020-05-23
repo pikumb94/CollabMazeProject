@@ -473,7 +473,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.0009918213, y: 0}
+  m_AnchoredPosition: {x: -0.0009918213, y: 0.0009765625}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &110243757
@@ -7310,7 +7310,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 880783590}
   m_HandleRect: {fileID: 880783589}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -15970,7 +15970,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -17, y: 0}
+  m_AnchoredPosition: {x: -17, y: -0.0008577693}
   m_SizeDelta: {x: 183.8, y: 274.55}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1901378778
@@ -19834,6 +19834,12 @@ PrefabInstance:
       propertyPath: TrapsOnMapBorderToggle
       value: 
       objectReference: {fileID: 1549518976}
+    - target: {fileID: 8359235380875017392, guid: f2c1e9c44fc4f0740bf973fedb2dc95d,
+        type: 3}
+      propertyPath: LineUIPrefab
+      value: 
+      objectReference: {fileID: 5588708215894382372, guid: 884abcee22b6ed545bd5d78492687bc7,
+        type: 3}
     - target: {fileID: 8359235380875017394, guid: f2c1e9c44fc4f0740bf973fedb2dc95d,
         type: 3}
       propertyPath: UIWidth
