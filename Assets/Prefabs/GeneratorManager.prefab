@@ -57,7 +57,7 @@ MonoBehaviour:
       This generator produce a map where all free tiles are connected.
 
 
-      Obstacle Percentage: initial percentage of obstacles in the map.
+      Walls Percentage: initial percentage of walls in the map.
 
 '
     obstaclePercent: 0.5
@@ -73,7 +73,7 @@ MonoBehaviour:
       The cellular automata produce a cave-like map.
 
 
-      Obstacle Percentage: initial percentage of obstacles in the map.
+      Wall Percentage: initial percentage of walls in the map.
 
 
       Iterations Number: number of iterations in the CA algorithm.
@@ -85,6 +85,14 @@ MonoBehaviour:
 
       Border is a wall: consider the neighbours on the map''s borders all walls or
       all rooms.
+
+
+      Room Threshold: connected regions of room equal or below this threshold turns
+      into walls.
+
+
+      Wall Threshold: connected regions of walls equal or below this threshold turns
+      into rooms.
 
 '
     obstaclePercent: 0.5
@@ -105,8 +113,8 @@ MonoBehaviour:
       Prim''s generator produces a perfect maze following the Prim''s algorithm.
 
 
-      Removing obstacles percentage: specify the percentage of obstacles to delete
-      in order to make a non-perfect maze.
+      Removing walls percentage: specify the percentage of walls to delete in order
+      to make a non-perfect maze.
 
 '
     obstacleToRemovePercent: 0
@@ -124,5 +132,6 @@ MonoBehaviour:
     inGameOffsetX: 13
     inGameOffsetY: 13
   MapHolder: {fileID: 0}
-  Content: {fileID: 0}
   AssembledLevelSceneName: PlayGeneratedLevel
+  Content: {fileID: 0}
+  isAutosolverOn: 0
