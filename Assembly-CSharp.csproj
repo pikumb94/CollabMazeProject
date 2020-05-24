@@ -104,7 +104,7 @@
     <Compile Include="Assets\Scripts\GeneratorScripts\SingletonDestroyOnLoad.cs" />
     <Compile Include="Assets\Scripts\GeneratorScripts\SquareGrid.cs" />
     <Compile Include="Assets\Scripts\GeneratorScripts\UIParametersValueChange.cs" />
-    <Compile Include="Assets\Scripts\GeneratorScripts\Utilities.cs" />
+    <Compile Include="Assets\Scripts\GeneratorScripts\Utility.cs" />
     <Compile Include="Assets\Scripts\InnerCollBehaviour.cs" />
     <Compile Include="Assets\Scripts\MetalDoorBehaviour.cs" />
     <Compile Include="Assets\Scripts\OrbitBoxPosition.cs" />

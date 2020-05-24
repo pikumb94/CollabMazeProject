@@ -26,8 +26,8 @@ public static class MapEvaluator
         string obstaclesCountString= "Walls: " + dM.obstaclesCount;
         string deadendCountString = "DeadEnds: "+dM.deadendCount;
         string chockeCountString="Chokes: "+dM.chockeCount;
-        string obsToRoomIndexString="Walls/Rooms: "+dM.obsToRoomIndex;
-        string obstacleClusteringString="Room Cluster Index: "+dM.obstacleClusteringIndex;
+        string obsToRoomIndexString="Walls/Rooms: "+ dM.obsToRoomIndex.ToString("0.###");
+        string obstacleClusteringString="Room Cluster Index: "+dM.obstacleClusteringIndex.ToString("0.###");
 
         string separator = "   ";
         string result = totalStepsString;

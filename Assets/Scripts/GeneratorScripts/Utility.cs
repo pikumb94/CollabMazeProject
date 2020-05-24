@@ -58,6 +58,40 @@ public static class Utility
         LineRenderer.Points = PointsF;
     }
 
+    public static Vector3 GetGUIElementOffset(RectTransform rect)
+    {
+        Rect screenBounds = new Rect(0f, 0f, Screen.width, Screen.height);
+        Vector3[] objectCorners = new Vector3[4];
+        rect.GetWorldCorners(objectCorners);
+
+        var xnew = 0f;
+        var ynew = 0f;
+        var znew = 0f;
+
+        for (int i = 0; i < objectCorners.Length; i++)
+        {
+            if (objectCorners[i].x < screenBounds.xMin)
+            {
+                xnew = screenBounds.xMin - objectCorners[i].x;
+            }
+            if (objectCorners[i].x > screenBounds.xMax)
+            {
+                xnew = screenBounds.xMax - objectCorners[i].x;
+            }
+            if (objectCorners[i].y < screenBounds.yMin)
+            {
+                ynew = screenBounds.yMin - objectCorners[i].y;
+            }
+            if (objectCorners[i].y > screenBounds.yMax)
+            {
+                ynew = screenBounds.yMax - objectCorners[i].y;
+            }
+        }
+
+        return new Vector3(xnew, ynew, znew);
+
+    }
+
     //Creates a plane without any texture
     public static GameObject CreatePlane(float width, float height)
     {
