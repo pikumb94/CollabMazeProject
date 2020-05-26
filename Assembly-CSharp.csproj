@@ -63,9 +63,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\ChangeTextSlider.cs" />
+    <Compile Include="Assets\CheckMouseClick.cs" />
     <Compile Include="Assets\ClickOnTileScript.cs" />
-    <Compile Include="Assets\CursorLoadingScript.cs" />
+    <Compile Include="Assets\DragHandler.cs" />
+    <Compile Include="Assets\DropHandler.cs" />
     <Compile Include="Assets\HoverDisplayText.cs" />
+    <Compile Include="Assets\LoadClipsInOverrideController.cs" />
     <Compile Include="Assets\ProCore\ProGrids\Classes\pg_Constant.cs" />
     <Compile Include="Assets\ProCore\ProGrids\Classes\pg_Enum.cs" />
     <Compile Include="Assets\ProCore\ProGrids\Classes\pg_IconUtility.cs" />
@@ -88,6 +91,7 @@
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\GameManager_Generator.cs" />
     <Compile Include="Assets\Scripts\GameUIManager.cs" />
+    <Compile Include="Assets\Scripts\GeneratorScripts\AliasGeneratorManager.cs" />
     <Compile Include="Assets\Scripts\GeneratorScripts\CellularAutomataGenerator.cs" />
     <Compile Include="Assets\Scripts\GeneratorScripts\ConnectedGenerator.cs" />
     <Compile Include="Assets\Scripts\GeneratorScripts\ErrorManager.cs" />

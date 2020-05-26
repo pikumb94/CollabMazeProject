@@ -182,6 +182,8 @@ public abstract class IGenerator
     public abstract TileObject[,] generateMap();
     public virtual TileObject[,] postprocessMap() { return map; } //a postprocessing operation of map is optionally available for inherited classes
 
+    public virtual TileObject[,] generateRemainingMap(HashSet<Vector2Int> CollisionCells) { return map; } //SWITCH TO ABSTRACT AS SOON AS POSSIBLE  
+
     public TileObject[,] getMap()
     {
         return map;

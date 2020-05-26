@@ -39,6 +39,8 @@ public class GeneratorManager : Singleton<GeneratorManager>
     [HideInInspector]
     public bool isAutosolverOn=false;
     private TileObject[,] tmpMapWBorder;
+    private DataMap dataMap;
+
     protected GeneratorManager() {}
 
     void Start()
@@ -72,7 +74,7 @@ public class GeneratorManager : Singleton<GeneratorManager>
             if (GeneratorsVect[(int)activeGenerator].useRandomSeed)
                 GeneratorUIManager.Instance.gameObject.GetComponent<UIParametersValueChange>().refreshUIParams();
 
-            DataMap dataMap = MapEvaluator.computeMetrics(GeneratorsVect[(int)activeGenerator].getMap(), GeneratorsVect[(int)activeGenerator].TypeGrid, GeneratorsVect[(int)activeGenerator].startPos, GeneratorsVect[(int)activeGenerator].endPos);
+            dataMap = MapEvaluator.computeMetrics(GeneratorsVect[(int)activeGenerator].getMap(), GeneratorsVect[(int)activeGenerator].TypeGrid, GeneratorsVect[(int)activeGenerator].startPos, GeneratorsVect[(int)activeGenerator].endPos);
             /*
             Content.transform.parent.Find("../SaveButton").gameObject.SetActive(true);
             Content.transform.parent.Find("../PlusButton").gameObject.SetActive(true);
@@ -131,7 +133,24 @@ public class GeneratorManager : Singleton<GeneratorManager>
         ParameterManager.Instance.GridType = GeneratorsVect[(int)activeGenerator].TypeGrid;
         SceneManager.LoadScene(AssembledLevelSceneName);
     }
-
+    public void BeforePlayButtonPressed(GameObject BeforePlayBox)
+    {
+        if (dataMap != null && Content.transform.childCount>0) { 
+            if (dataMap.isTraversable)
+            {
+                BeforePlayBox.SetActive(true);
+                //BeforePlayBox.SetActive();
+            }
+            else
+            {
+                ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, "No path from start to end. Generate another map or regenerate enabling the autosolver.");
+            }
+        }
+        else
+        {
+            ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, "Map not present. Generate a map first.");
+        }
+    }
     // Saves the map in a text file.
     public void SaveMapButtonPressed()
     {

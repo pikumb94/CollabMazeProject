@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CursorLoadingScript : MonoBehaviour
+public class ChangeTextSlider : MonoBehaviour
 {
     RectTransform r;
     // Start is called before the first frame update
@@ -12,10 +12,10 @@ public class CursorLoadingScript : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    /*void Update()
     {
-        r.position = Input.mousePosition;
-    }
+        //r.position = Input.mousePosition;
+    }*/
 
     public void enableCursor(bool isActive) {
         if (isActive)

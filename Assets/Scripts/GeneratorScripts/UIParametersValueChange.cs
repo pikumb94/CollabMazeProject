@@ -305,9 +305,7 @@ public class UIParametersValueChange : MonoBehaviour
 
     public void toggleUIAutosolver(Animator a)
     {
-        bool isOn = a.GetBool("isOn");
-        isOn = !isOn;
-        a.SetBool("isOn", isOn);
-        GeneratorManager.Instance.isAutosolverOn = isOn;
+        
+        GeneratorManager.Instance.isAutosolverOn = GeneratorUIManager.Instance.toggleUIAnimator(a);
     }
 }

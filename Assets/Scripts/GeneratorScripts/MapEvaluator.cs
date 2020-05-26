@@ -15,6 +15,30 @@ public struct DataMap
 
     public float obsToRoomIndex;
     public float obstacleClusteringIndex;
+
+    public static bool operator ==(DataMap lhs, DataMap rhs)
+    {
+        // Check for null on left side.
+        if (Object.ReferenceEquals(lhs, null))
+        {
+            if (Object.ReferenceEquals(rhs, null))
+            {
+                // null == null = true.
+                return true;
+            }
+
+            // Only the left side is null.
+            return false;
+        }
+        // Equals handles case of null on right side.
+        return lhs.Equals(rhs);
+    }
+
+    public static bool operator !=(DataMap lhs, DataMap rhs)
+    {
+        return !(lhs == rhs);
+    }
+
 }
 
 public static class MapEvaluator

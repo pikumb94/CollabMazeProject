@@ -391,4 +391,41 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
     {
         return TrapsOnMapBorderToggle.isOn;
     }
+
+    public bool toggleUIAnimator(Animator a)
+    {
+        bool isOn = a.GetBool("isOn");
+        isOn = !isOn;
+        a.SetBool("isOn", isOn);
+        return isOn;
+    }
+
+    public void loadAliasParamsInParamManager(GameObject ParamsContainer)
+    {
+        ParameterManager p = ParameterManager.Instance;
+        TMP_InputField[] InpFields = ParamsContainer.GetComponentsInChildren<TMP_InputField>();
+        Toggle t = ParamsContainer.GetComponentInChildren<Toggle>();
+        TMP_Dropdown DropD = ParamsContainer.GetComponentInChildren<TMP_Dropdown>();
+
+        p.aliasNum = Int32.Parse(InpFields[0].text);
+        p.minStepsSolution = Int32.Parse(InpFields[1].text);
+        p.maxStepsSolution = Int32.Parse(InpFields[2].text);
+        p.allowAutosolverForAlias = t.isOn;
+        if (DropD.value == 0)
+        {
+            p.considerSimilar = true;
+            p.considerNovelty = false;
+        }
+        else if (DropD.value == 1)
+        {
+            p.considerSimilar = false;
+            p.considerNovelty = true;
+        }
+        else if (DropD.value >= 2)
+        {
+            p.considerSimilar = true;
+            p.considerNovelty = true;
+        }
+
+    }
 }

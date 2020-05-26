@@ -5,6 +5,7 @@ using System.Threading;
 using System;
 using UnityEngine.UI.Extensions;
 using System.Linq;
+using UnityEngine.EventSystems;
 /// <summary>
 /// Utility classes and helper functions.
 /// </summary>
@@ -25,6 +26,48 @@ public static class Utility
         }
 
         return array;
+    }
+
+    public static bool rectOverlaps(RectTransform rectTrans1, RectTransform rectTrans2)
+    {
+        //Rect rect1 = new Rect(rectTrans1.localPosition.x, rectTrans1.localPosition.y, rectTrans1.rect.width, rectTrans1.rect.height);
+        //Rect rect2 = new Rect(rectTrans2.localPosition.x, rectTrans2.localPosition.y, rectTrans2.rect.width, rectTrans2.rect.height);
+
+        return GetWorldSapceRect(rectTrans1).Overlaps(GetWorldSapceRect(rectTrans2));
+    }
+
+    public static Rect GetWorldSapceRect(RectTransform rt)
+    {
+        var r = rt.rect;
+        r.center = rt.TransformPoint(r.center);
+        r.size = rt.TransformVector(r.size);
+        return r;
+    }
+
+    ///Returns 'true' if we touched or hovering on Unity UI element.
+    public static bool IsPointerOverUIElement()
+    {
+        return IsPointerOverUIElement(GetEventSystemRaycastResults());
+    }
+    ///Returns 'true' if we touched or hovering on Unity UI element.
+    public static bool IsPointerOverUIElement(List<RaycastResult> eventSystemRaysastResults)
+    {
+        for (int index = 0; index < eventSystemRaysastResults.Count; index++)
+        {
+            RaycastResult curRaysastResult = eventSystemRaysastResults[index];
+            if (curRaysastResult.gameObject.layer == LayerMask.NameToLayer("UI"))
+                return true;
+        }
+        return false;
+    }
+    ///Gets all event systen raycast results of current mouse or touch position.
+    public static List<RaycastResult> GetEventSystemRaycastResults()
+    {
+        PointerEventData eventData = new PointerEventData(EventSystem.current);
+        eventData.position = Input.mousePosition;
+        List<RaycastResult> raysastResults = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventData, raysastResults);
+        return raysastResults;
     }
 
     public static void buildRoomsOnMap(TileObject[,] map, Vector2Int[] walls)
