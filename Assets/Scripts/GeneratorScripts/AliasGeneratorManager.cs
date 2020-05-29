@@ -77,6 +77,7 @@ public class AliasGeneratorManager : Singleton<AliasGeneratorManager>
         if (kMaxStep > kMinStep)
         {
             HashSet<Vector2Int> toBacktrack= new HashSet<Vector2Int>();
+            HashSet<Vector2Int> nextBacktrack = new HashSet<Vector2Int>();
             foreach (Vector2Int p in K_CollisionSet[kMaxStep])
             {
                 Vector2Int x = p + startCell;
@@ -101,27 +102,35 @@ public class AliasGeneratorManager : Singleton<AliasGeneratorManager>
                 //backtrack and reconstruct the paths
                 for(i=0; i<kMaxStep-kMinStep; i++)
                 {
+                    
                     foreach(Vector2Int v in toBacktrack)
                     {
                         HashSet<Vector2Int> a = new HashSet<Vector2Int>(Utility.getAllNeighbours_General(v, TypeGrid, aliasMap.GetLength(0), aliasMap.GetLength(1)));
                         HashSet<Vector2Int> TmpSet = new HashSet<Vector2Int>(K_CollisionSet[kMaxStep - i - 1]);
                         TmpSet.IntersectWith(a);
 
-                        if (TmpSet.Count == 1)
+                        if (TmpSet.Count == 1) {
                             UnionCollisionSet.UnionWith(TmpSet);
+                            nextBacktrack.UnionWith(TmpSet);
+                        }
+                            
                     }
 
                     foreach (Vector2Int v in toBacktrack)
                     {
+                        if (!nextBacktrack.Contains(v))
+                        {
+                            HashSet<Vector2Int> a = new HashSet<Vector2Int>(Utility.getAllNeighbours_General(v, TypeGrid, aliasMap.GetLength(0), aliasMap.GetLength(1)));
+                            HashSet<Vector2Int> TmpSet = new HashSet<Vector2Int>(K_CollisionSet[kMaxStep - i - 1]);
+                            TmpSet.IntersectWith(a);
+                            TmpSet.Except(UnionCollisionSet);
 
-                        HashSet<Vector2Int> a = new HashSet<Vector2Int>(Utility.getAllNeighbours_General(v, TypeGrid, aliasMap.GetLength(0), aliasMap.GetLength(1)));
-                        HashSet<Vector2Int> TmpSet = new HashSet<Vector2Int>(K_CollisionSet[kMaxStep - i - 1]);
-                        TmpSet.IntersectWith(a);
-                        TmpSet.Except(UnionCollisionSet);
-
-                        if(TmpSet.Count>0)
-                            UnionCollisionSet.Add(TmpSet.ElementAt(pseudoRandom.Next(0, TmpSet.Count)));
+                            Vector2Int e = TmpSet.ElementAt(pseudoRandom.Next(0, TmpSet.Count));
+                            UnionCollisionSet.Add(e);
+                            nextBacktrack.Add(e);
+                        }
                     }
+                    toBacktrack = new HashSet<Vector2Int>(nextBacktrack);
                 }
             }
         }
