@@ -41,7 +41,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8993162846631318381
 CanvasRenderer:
@@ -449,6 +449,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canvas: {fileID: 0}
   ToMoveGameObj: {fileID: 8993162846631318386}
+  OriginalParent: {fileID: 0}
 --- !u!1 &8993162847487597977
 GameObject:
   m_ObjectHideFlags: 0
@@ -569,7 +570,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 8359235380875017392, guid: f2c1e9c44fc4f0740bf973fedb2dc95d,
+          type: 3}
         m_MethodName: decreaseScale
         m_Mode: 2
         m_Arguments:
@@ -896,7 +898,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 8359235380875017392, guid: f2c1e9c44fc4f0740bf973fedb2dc95d,
+          type: 3}
         m_MethodName: increaseScale
         m_Mode: 2
         m_Arguments:
@@ -923,7 +926,7 @@ GameObject:
   - component: {fileID: 8993162848270123576}
   - component: {fileID: 8993162848270123577}
   m_Layer: 5
-  m_Name: MapDataInfoHover (1)
+  m_Name: MapDataInfoHover
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

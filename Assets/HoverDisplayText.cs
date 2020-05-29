@@ -16,8 +16,11 @@ public class HoverDisplayText : MonoBehaviour
 
     void Start()
     {
-        TextComp = DialogBoxInfo.GetComponentInChildren<TextMeshProUGUI>();
-        BoxRect = DialogBoxInfo.GetComponent<RectTransform>();
+        if(DialogBoxInfo!= null)
+        {
+            TextComp = DialogBoxInfo.GetComponentInChildren<TextMeshProUGUI>();
+            BoxRect = DialogBoxInfo.GetComponent<RectTransform>();
+        }
 
     }
 

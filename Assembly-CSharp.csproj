@@ -77,6 +77,7 @@
     <Compile Include="Assets\ProCore\ProGrids\Classes\pg_Util.cs" />
     <Compile Include="Assets\ProCore\ProGrids\MonoBehaviour\pg_IgnoreSnap.cs" />
     <Compile Include="Assets\RequiredItemsBehaviour.cs" />
+    <Compile Include="Assets\ResizeMainMap.cs" />
     <Compile Include="Assets\RoomTraversableScript.cs" />
     <Compile Include="Assets\Scripts\CameraMovement.cs" />
     <Compile Include="Assets\Scripts\ExternalScripts\Priority Queue\FastPriorityQueue.cs" />

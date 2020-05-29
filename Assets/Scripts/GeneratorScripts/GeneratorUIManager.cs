@@ -84,15 +84,7 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
             }
         }
 
-        contentRect.sizeDelta = new Vector2(map.GetLength(0) * 100 + paddingContent, map.GetLength(1) * 100 + paddingContent);
-
-        while (contentRect.sizeDelta.x * contentRect.localScale.x < contentRect.parent.gameObject.GetComponent<RectTransform>().rect.width ||
-            contentRect.sizeDelta.y * contentRect.localScale.y < contentRect.parent.gameObject.GetComponent<RectTransform>().rect.height)
-            increaseScale(contentRect);
-
-        while (contentRect.sizeDelta.x * contentRect.localScale.x > contentRect.parent.gameObject.GetComponent<RectTransform>().rect.width ||
-            contentRect.sizeDelta.y * contentRect.localScale.y > contentRect.parent.gameObject.GetComponent<RectTransform>().rect.height)
-            decreaseScale(contentRect);
+        ScaleToFitContainerWPadding(contentRect, map, g);
 
     }
 
@@ -174,15 +166,7 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
         //contentRect.sizeDelta = new Vector2(map.GetLength(0) * prefabRect.sizeDelta.x, map.GetLength(1) * prefabRect.sizeDelta.y);
         contentRect.sizeDelta = NewObj.GetComponent<RectTransform>().sizeDelta;
 
-        while (contentRect.sizeDelta.x * contentRect.localScale.x < contentRect.parent.gameObject.GetComponent<RectTransform>().rect.width ||
-            contentRect.sizeDelta.y * contentRect.localScale.y < contentRect.parent.gameObject.GetComponent<RectTransform>().rect.height)
-            increaseScale(contentRect);
-
-        while (contentRect.sizeDelta.x * contentRect.localScale.x > contentRect.parent.gameObject.GetComponent<RectTransform>().rect.width ||
-            contentRect.sizeDelta.y * contentRect.localScale.y > contentRect.parent.gameObject.GetComponent<RectTransform>().rect.height)
-            decreaseScale(contentRect);
-
-        
+        ScaleToFitContainer(contentRect);
 
         GameObject.Destroy(sampleTile);
     }
@@ -191,6 +175,54 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
     {
         return Mathf.Pow(width / scalerReferenceResolution.x, 1f - scalerMatchWidthOrHeight) *
                Mathf.Pow(height / scalerReferenceResolution.y, scalerMatchWidthOrHeight);
+    }
+
+    public void ScaleToFitContainerWPadding(RectTransform contentRect, TileObject[,] map, ITypeGrid tG)
+    {
+        RectTransform prefabRect = tG.TilePrefab.GetComponent<RectTransform>();
+        contentRect.localScale = Vector3.one;
+        contentRect.sizeDelta = new Vector2(map.GetLength(0) * prefabRect.sizeDelta.x + paddingContent, map.GetLength(1) * prefabRect.sizeDelta.y + paddingContent);
+
+        ScaleToFitContainer(contentRect);
+    }
+
+    public void ScaleToFitContainer(RectTransform contentRect)
+    {
+        bool hasDecreased = false;
+        while (contentRect.sizeDelta.x * contentRect.localScale.x > contentRect.parent.gameObject.GetComponent<RectTransform>().rect.width ||
+            contentRect.sizeDelta.y * contentRect.localScale.y > contentRect.parent.gameObject.GetComponent<RectTransform>().rect.height) {
+
+            decreaseScale(contentRect);
+            hasDecreased = true;
+        }
+        if (hasDecreased)
+            return;
+
+        while (contentRect.sizeDelta.x * contentRect.localScale.x < contentRect.parent.gameObject.GetComponent<RectTransform>().rect.width ||
+            contentRect.sizeDelta.y * contentRect.localScale.y < contentRect.parent.gameObject.GetComponent<RectTransform>().rect.height)
+            increaseScale(contentRect);
+
+        decreaseScale(contentRect);
+    }
+
+    public void ScaleToFitContainer(RectTransform contentRect, Rect containerRect)
+    {
+        bool hasDecreased = false;
+        while (contentRect.sizeDelta.x * contentRect.localScale.x > containerRect.width ||
+            contentRect.sizeDelta.y * contentRect.localScale.y > containerRect.height)
+        {
+
+            decreaseScale(contentRect);
+            hasDecreased = true;
+        }
+        if (hasDecreased)
+            return;
+
+        while (contentRect.sizeDelta.x * contentRect.localScale.x < containerRect.width ||
+            contentRect.sizeDelta.y * contentRect.localScale.y < containerRect.height)
+            increaseScale(contentRect);
+
+        decreaseScale(contentRect);
     }
 
     public void increaseScale(RectTransform t)
@@ -402,11 +434,19 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
 
     public void loadAliasParamsInParamManager(GameObject ParamsContainer)
     {
+        GeneratorManager genM = GeneratorManager.Instance;
         ParameterManager p = ParameterManager.Instance;
         TMP_InputField[] InpFields = ParamsContainer.GetComponentsInChildren<TMP_InputField>();
         Toggle t = ParamsContainer.GetComponentInChildren<Toggle>();
         TMP_Dropdown DropD = ParamsContainer.GetComponentInChildren<TMP_Dropdown>();
 
+        //Save map params
+        p.MapToPlay = (GeneratorUIManager.Instance.isTrapsOnMapBorderToggleOn() ? genM.getMapWTrapBorder() : genM.GeneratorsVect[(int)genM.activeGenerator].getMap());
+        p.GridType = genM.GeneratorsVect[(int)genM.activeGenerator].TypeGrid;
+        p.StartCell = genM.GeneratorsVect[(int)genM.activeGenerator].startPos;
+        p.EndCell = genM.GeneratorsVect[(int)genM.activeGenerator].endPos;
+
+        //Save alias generation params
         p.aliasNum = Int32.Parse(InpFields[0].text);
         p.minStepsSolution = Int32.Parse(InpFields[1].text);
         p.maxStepsSolution = Int32.Parse(InpFields[2].text);

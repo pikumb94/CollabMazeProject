@@ -10217,11 +10217,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 847052579}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f938ec7e9adf794092d97392951c678, type: 3}
+  m_Script: {fileID: 11500000, guid: a0ef12292ec301e42a3a99fff0aec6d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clipOverrides:
-  - {fileID: 7400000, guid: c5d8a12a341ffe640901421818184a66, type: 2}
 --- !u!95 &847052584
 Animator:
   serializedVersion: 3
@@ -10232,7 +10230,7 @@ Animator:
   m_GameObject: {fileID: 847052579}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 22100000, guid: 3990684cf2de43d4ab2752fa9092eafa, type: 2}
+  m_Controller: {fileID: 9100000, guid: 4bc6618a8a4839c449b618ddc0b1f399, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -11512,7 +11510,7 @@ GameObject:
   - component: {fileID: 929905569}
   m_Layer: 5
   m_Name: Canvas
-  m_TagString: Untagged
+  m_TagString: Canvas
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13528,6 +13526,17 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 765034371}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 2124498410}
+        m_MethodName: CollabGameGeneration
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -19322,7 +19331,7 @@ GameObject:
   - component: {fileID: 1598053984}
   m_Layer: 5
   m_Name: DialogBox
-  m_TagString: Untagged
+  m_TagString: DialogBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -24780,6 +24789,8 @@ MonoBehaviour:
   - {fileID: 732616942}
   - {fileID: 1021805148}
   - {fileID: 1170254856}
+  AliasPrefab: {fileID: 8993162846631318386, guid: 29c0946a43450a44698aea120cc4181b,
+    type: 3}
 --- !u!4 &2124498411
 Transform:
   m_ObjectHideFlags: 0
@@ -26675,6 +26686,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 5588708215894382372, guid: 884abcee22b6ed545bd5d78492687bc7,
         type: 3}
+    - target: {fileID: 8359235380875017392, guid: f2c1e9c44fc4f0740bf973fedb2dc95d,
+        type: 3}
+      propertyPath: scaleFactorResizeButtons
+      value: 1.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 8359235380875017392, guid: f2c1e9c44fc4f0740bf973fedb2dc95d,
+        type: 3}
+      propertyPath: paddingContent
+      value: 300
+      objectReference: {fileID: 0}
     - target: {fileID: 8359235380875017394, guid: f2c1e9c44fc4f0740bf973fedb2dc95d,
         type: 3}
       propertyPath: UIWidth

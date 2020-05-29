@@ -191,6 +191,53 @@ public static class MapEvaluator
         return SolutionPath.ToArray();
     }
 
+    public static HashSet<Vector2Int>[] BuildKCollisionVec(TileObject[,] map, ITypeGrid TypeGrid, Vector2Int start, int lookahead)
+    {
+        int i;
+        HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
+        visited.Add(start);
+
+        HashSet <Vector2Int>[] KCollisionCells= new HashSet<Vector2Int>[lookahead+1];//plus 1 since the 0 position is the cells found at zero steps i.e. start cell and so on
+
+
+        for (i = 0; i < KCollisionCells.Length; i++)
+        {
+            KCollisionCells[i] = new HashSet<Vector2Int>();
+        }
+
+        KCollisionCells[0].Add(start);
+
+        i = 1;
+        while (i<=lookahead)
+        {
+            
+            foreach(Vector2Int curr in KCollisionCells[i-1])
+            {
+                if(map[curr.x, curr.y].type != IGenerator.wallChar)
+                {
+                    foreach (Vector2Int next in Utility.getAllNeighbours_General(curr, TypeGrid, map.GetLength(0), map.GetLength(1)))
+                    {
+
+                        if (!visited.Contains(next))
+                        {
+                            KCollisionCells[i].Add(next-start);//start is subtracted since the collision list must be absolute and not relative wrt startcell of mainmap
+                            visited.Add(next);
+
+                        }
+
+                    }
+                }
+                
+            }
+
+
+            i++;
+        }
+
+
+
+        return KCollisionCells;
+    }
     //It returnes the connected squares that lay on the segment that go from p0 to p1 orthogonally adjacent
     public static Vector2Int[] walkSquareGrid(Vector2Int p0, Vector2Int p1)
     {

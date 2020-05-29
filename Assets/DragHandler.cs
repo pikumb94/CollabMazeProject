@@ -6,19 +6,21 @@ using UnityEngine.EventSystems;
 
 public class DragHandler : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    [SerializeField] private Canvas canvas;
-    [SerializeField] private GameObject ToMoveGameObj;
+    public Canvas canvas;
+    public GameObject ToMoveGameObj;
 
     private RectTransform rectTransform;
     private CanvasGroup canvasGroup;
-    private GameObject OriginalParent;
+    [HideInInspector]
+    public GameObject OriginalParent;
     private bool inDropArea=false;
 
     private void Awake()
     {
         rectTransform = ToMoveGameObj.GetComponent<RectTransform>();
         canvasGroup = ToMoveGameObj.GetComponent<CanvasGroup>();
-        OriginalParent = ToMoveGameObj.transform.parent.gameObject;
+        if(ToMoveGameObj.transform.parent != null)
+            OriginalParent = ToMoveGameObj.transform.parent.gameObject;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -74,4 +76,6 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
         sr.enabled = false;
         ToMoveGameObj.transform.SetParent(canvas.transform);
     }
+
+     
 }

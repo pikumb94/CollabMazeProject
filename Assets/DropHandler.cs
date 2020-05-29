@@ -6,6 +6,12 @@ using UnityEngine.UI;
 
 public class DropHandler : MonoBehaviour, IDropHandler
 {
+    private Rect rectCellContainer;
+    public void Awake()
+    {
+        GridLayoutGroup GrLGr = GetComponent<GridLayoutGroup>();
+        rectCellContainer = new Rect(Vector2.zero, GrLGr.cellSize);
+    }
     public void OnDrop(PointerEventData eventData)
     {
 
@@ -14,14 +20,20 @@ public class DropHandler : MonoBehaviour, IDropHandler
 
         if (RectTransformUtility.RectangleContainsScreenPoint(GetComponent<RectTransform>(), Input.mousePosition))
         {
-            eventData.pointerDrag.transform.parent.GetComponent<ScrollRect>().enabled = true;
+            if(eventData.pointerDrag.transform.parent.GetComponent<ScrollRect>()!=null)
+                eventData.pointerDrag.transform.parent.GetComponent<ScrollRect>().enabled = true;
             eventData.pointerDrag.transform.parent.parent.SetParent(transform);
+            
         }
 
         Image i = GetComponent<Image>();
         Color c = Color.white;
         c.a = 0f;
         i.color = c;
+
+
+        RectTransform contentRect = eventData.pointerDrag.transform.parent.Find("Content").GetComponent<RectTransform>();
+        GeneratorUIManager.Instance.ScaleToFitContainer(contentRect, rectCellContainer);
     }
     /*
     public void OnEndDrag(PointerEventData eventData)

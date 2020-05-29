@@ -131,21 +131,7 @@ public class CellularAutomataGenerator : IGenerator
     int GetSurroundingWallCount(int gridX, int gridY)
     {
         int wallCount = 0;
-        /*
-        for (int neighbourX = gridX - 1; neighbourX <= gridX + 1; neighbourX++)
-        {
-            for (int neighbourY = gridY - 1; neighbourY <= gridY + 1; neighbourY++)
-            {
-                if (neighbourX >= 0 && neighbourX < width && neighbourY >= 0 && neighbourY < height)
-                {
-                    if (neighbourX != gridX || neighbourY != gridY)
-                    {
-                        wallCount += (map[neighbourX,neighbourY].type==wallChar) ? 1 : 0;
-                    }
-                }
-                
-            }
-        }*/
+
         Vector2Int[] Neighbours = getAllMooreNeighbours(new Vector2Int(gridX, gridY));//we use Moore neighbourhood
 
         foreach (Vector2Int neigh in Neighbours)
@@ -216,5 +202,8 @@ public class CellularAutomataGenerator : IGenerator
         return map;
     }
 
-
+    public override TileObject[,] generateAliasMap(TileObject[,] MainMap, HashSet<Vector2Int> CollisionCells)
+    {
+        return base.generateAliasMap(MainMap, CollisionCells);
+    }
 }
