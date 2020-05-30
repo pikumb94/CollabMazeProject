@@ -76,7 +76,7 @@ public abstract class IGenerator
     public const char endChar = '^';
 
     protected TileObject[,] map = null;
-
+    protected TileObject[,] tmpMapWBorder = null;
     protected IGenerator(ITypeGrid i)
     {
         TypeGrid = i;
@@ -173,6 +173,38 @@ public abstract class IGenerator
         return results;
     }
 
+    
+
+    private TileObject[,] CreateMapWithBorder()
+    {
+        switch (TypeGrid.gridType)
+        {
+            case ITypeGrid.TypeGridEnum.SQUARE:
+                tmpMapWBorder = new TileObject[map.GetLength(0) + 2, map.GetLength(1) + 2];
+
+                for (int i = 0; i < tmpMapWBorder.GetLength(0); i++)
+                {
+                    for (int j = 0; j < tmpMapWBorder.GetLength(1); j++)
+                    {
+                        if (i > 0 && i < tmpMapWBorder.GetLength(0) - 1 && j > 0 && j < tmpMapWBorder.GetLength(1) - 1)
+                            tmpMapWBorder[i, j].type = map[i - 1, j - 1].type;
+                        else
+                            tmpMapWBorder[i, j].type = IGenerator.wallChar;
+                    }
+                }
+                break;
+            case ITypeGrid.TypeGridEnum.HEXAGON:
+                break;
+            case ITypeGrid.TypeGridEnum.TRIANGLE:
+                break;
+            default:
+                ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, "Incorrect grid type.");
+                break;
+        }
+
+        return tmpMapWBorder;
+    }
+
     public int getWidth()
     {
         return width;
@@ -184,8 +216,22 @@ public abstract class IGenerator
 
     public virtual TileObject[,] generateAliasMap(TileObject[,] MainMap,HashSet<Vector2Int> CollisionCells) { return map; } //SWITCH TO ABSTRACT AS SOON AS POSSIBLE  
 
+    public virtual TileObject[,] generateMapGeneral(bool isTrapsOnMapBorder) {
+
+        initializeMap();
+        generateMap();
+        postprocessMap();
+        return (isTrapsOnMapBorder ? getMapWTrapBorder() : getMap());
+    }
+
+
     public TileObject[,] getMap()
     {
         return map;
+    }
+
+    public TileObject[,] getMapWTrapBorder()
+    {
+        return (tmpMapWBorder == null ? CreateMapWithBorder() : tmpMapWBorder);
     }
 }

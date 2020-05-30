@@ -66,6 +66,19 @@ public static class MapEvaluator
         return result;
     }
 
+    public static Vector2Int[] isEndReachable(TileObject[,] map, ITypeGrid TypeGrid, Vector2Int start, Vector2Int end, bool IsAutoSOn)
+    {
+        Vector2Int[] solSteps = Search_AStar(map, TypeGrid, start, end);
+        if (solSteps.First() != end && IsAutoSOn)
+        {
+            Utility.buildRoomsOnMap(map, walkSquareGrid(solSteps.First(), end));
+            map[end.x, end.y].type = IGenerator.endChar;
+            solSteps = Search_AStar(map, TypeGrid, start, end);
+        }
+
+        return solSteps;
+    }
+
     public static DataMap computeMetrics(TileObject[,] map, ITypeGrid TypeGrid, Vector2Int start, Vector2Int end)
     {
         DataMap dm = new DataMap();
@@ -189,6 +202,37 @@ public static class MapEvaluator
 
         //if a path exists, the last cell is the end one
         return SolutionPath.ToArray();
+    }
+
+    private static float functionPointsDifference(Vector2 pI, Vector2 pJ)
+    {
+        //float diff = (pI - pJ).magnitude;
+        //return Mathf.Pow(2.0f, (-2.0f * diff));
+        return (1 / Mathf.Sqrt(2 * Mathf.PI)) * Mathf.Exp(-.5f * (pI - pJ).sqrMagnitude);
+    }
+
+    public static float BinaryMapSimilarity(TileObject[,] mainMap, TileObject[,] Alias, Vector2Int startMainMap, Vector2Int startAlias)
+    {
+        float similarity=0f;
+
+        int lX = Mathf.Min(startMainMap.x, startAlias.x);
+        int hX = Mathf.Min(mainMap.GetLength(0)-startMainMap.x-1, Alias.GetLength(0)-startAlias.x-1);
+        int lY = Mathf.Min(startMainMap.y, startAlias.y);
+        int hY = Mathf.Min(mainMap.GetLength(1) - startMainMap.y-1, Alias.GetLength(1) - startAlias.y-1);
+
+
+        for (int i = -lX; i <= hX; i++)
+        {
+            for (int j = lY; j <= hY; j++)
+            {
+                if ((mainMap[startMainMap.x + i, startMainMap.y + j].type == IGenerator.wallChar ? 1 : 0) - (Alias[startAlias.x + i, startAlias.y + j].type == IGenerator.wallChar ? 1 : 0) != 0)
+                    similarity += functionPointsDifference(new Vector2(startMainMap.x + i, startMainMap.y + j), new Vector2(startAlias.x + i, startAlias.y + j));
+                    
+            }
+        }
+
+
+        return similarity;
     }
 
     public static HashSet<Vector2Int>[] BuildKCollisionVec(TileObject[,] map, ITypeGrid TypeGrid, Vector2Int start, int lookahead)

@@ -960,8 +960,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -24782,6 +24782,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46c398b2cdef2c248820446e23498311, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BatchAliasNumber: 5
   AliasToggleAnimations:
   - {fileID: 847052579}
   - {fileID: 453105829}
@@ -26680,22 +26681,6 @@ PrefabInstance:
       propertyPath: TrapsOnMapBorderToggle
       value: 
       objectReference: {fileID: 1549518976}
-    - target: {fileID: 8359235380875017392, guid: f2c1e9c44fc4f0740bf973fedb2dc95d,
-        type: 3}
-      propertyPath: LineUIPrefab
-      value: 
-      objectReference: {fileID: 5588708215894382372, guid: 884abcee22b6ed545bd5d78492687bc7,
-        type: 3}
-    - target: {fileID: 8359235380875017392, guid: f2c1e9c44fc4f0740bf973fedb2dc95d,
-        type: 3}
-      propertyPath: scaleFactorResizeButtons
-      value: 1.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 8359235380875017392, guid: f2c1e9c44fc4f0740bf973fedb2dc95d,
-        type: 3}
-      propertyPath: paddingContent
-      value: 300
-      objectReference: {fileID: 0}
     - target: {fileID: 8359235380875017394, guid: f2c1e9c44fc4f0740bf973fedb2dc95d,
         type: 3}
       propertyPath: UIWidth

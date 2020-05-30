@@ -47,6 +47,7 @@ public class PrimGenerator : IGenerator
 
     public override TileObject[,] initializeMap()
     {
+        tmpMapWBorder = null;
         ColorLookupTable = new char[/*GridColoring.Item1, GridColoring.Item3*/,] { { roomChar, wallChar}, { wallChar, endChar}};
 
         map = new TileObject[width, height];
@@ -176,5 +177,14 @@ public class PrimGenerator : IGenerator
             }
         }
         return map;
+    }
+
+    public TileObject[,] generateMapGeneral(bool isTrapsOnMapBorder, float obsToRemPerc, bool useS, int Seed)
+    {
+        obstacleToRemovePercent = obsToRemPerc;
+        useRandomSeed = useS;
+        seed = Seed;
+
+        return base.generateMapGeneral(isTrapsOnMapBorder);
     }
 }

@@ -52,14 +52,16 @@ MonoBehaviour:
   correctMessageColor: {r: 0.3137255, g: 0.8941177, b: 0.7254902, a: 1}
   errorMessageColor: {r: 0.8117648, g: 0.40000004, b: 0.47450984, a: 1}
   outlinePercent: 0.05
-  paddingContent: 200
-  scaleFactorResizeButtons: 1.5
+  paddingContent: 300
+  scaleFactorResizeButtons: 1.25
   thresholdToCompositeImage: 625
   generateButton: {fileID: 0}
   ErrorDialogBox: {fileID: 0}
   MessageDialogBox: {fileID: 0}
   BeforePlayDialogBox: {fileID: 0}
   TrapsOnMapBorderToggle: {fileID: 0}
+  LineUIPrefab: {fileID: 5588708215894382372, guid: 884abcee22b6ed545bd5d78492687bc7,
+    type: 3}
 --- !u!114 &8359235380875017394
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -12,6 +12,7 @@ public class ParameterManager : Singleton<ParameterManager> {
     [HideInInspector] public TileObject[,] MapToPlay { get; set; }
     [HideInInspector] public Vector2Int StartCell { get; set; }
     [HideInInspector] public Vector2Int EndCell { get; set; }
+    [HideInInspector] public bool IsTrapsOnMapBorder { get; set; }
 
     // Gameplay data.
     [HideInInspector] public int countdownSecondsParam { get; set; }

@@ -44,6 +44,7 @@ public class ConnectedGenerator : IGenerator
 
     public override TileObject[,] initializeMap()
     {
+        tmpMapWBorder = null;
         //Initialize vector of all tile's locations.
         allTileCoords = new List<Vector2Int>();
         for (int x = 0; x < width; x++)
@@ -165,4 +166,12 @@ public class ConnectedGenerator : IGenerator
         return targetAccessibleTileCount == accessibleTileCount;
     }
 
+    public TileObject[,] generateMapGeneral(bool isTrapsOnMapBorder, float obsPerc, bool useS, int Seed)
+    {
+        obstaclePercent = obsPerc;
+        useRandomSeed = useS;
+        seed = Seed;
+
+        return base.generateMapGeneral(isTrapsOnMapBorder);
+    }
 }

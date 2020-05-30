@@ -408,7 +408,7 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
         UILineRenderer[] Lines;
         if (t.isOn)
         {
-            Lines=GM.DisplayMainMapKeepLines(GM.getMapWTrapBorder());
+            Lines=GM.DisplayMainMapKeepLines(GM.GeneratorsVect[(int)GM.activeGenerator].getMapWTrapBorder());
         }
         else
         {
@@ -441,7 +441,7 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
         TMP_Dropdown DropD = ParamsContainer.GetComponentInChildren<TMP_Dropdown>();
 
         //Save map params
-        p.MapToPlay = (GeneratorUIManager.Instance.isTrapsOnMapBorderToggleOn() ? genM.getMapWTrapBorder() : genM.GeneratorsVect[(int)genM.activeGenerator].getMap());
+        p.MapToPlay = (GeneratorUIManager.Instance.isTrapsOnMapBorderToggleOn() ? genM.GeneratorsVect[(int)genM.activeGenerator].getMapWTrapBorder() : genM.GeneratorsVect[(int)genM.activeGenerator].getMap());
         p.GridType = genM.GeneratorsVect[(int)genM.activeGenerator].TypeGrid;
         p.StartCell = genM.GeneratorsVect[(int)genM.activeGenerator].startPos;
         p.EndCell = genM.GeneratorsVect[(int)genM.activeGenerator].endPos;

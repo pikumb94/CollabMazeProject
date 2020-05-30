@@ -10,11 +10,13 @@ using UnityEngine;
 [System.Serializable]
 public abstract class ITypeGrid
 {
+    public enum TypeGridEnum { SQUARE, HEXAGON, TRIANGLE };
     public GameObject TilePrefab;
     protected  Vector2Int[] directions;
     protected Vector2Int[] diagonals;
     public float offsetX;
     public float offsetY;
+    public TypeGridEnum gridType;
 
     [Header("Map Assembling Objects")]
     public GameObject InGameTilePrefab;

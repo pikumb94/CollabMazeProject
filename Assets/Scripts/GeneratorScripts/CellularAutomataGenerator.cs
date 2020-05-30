@@ -50,7 +50,7 @@ public class CellularAutomataGenerator : IGenerator
 
     public override TileObject[,] initializeMap()
     {
-
+        tmpMapWBorder = null;
         map = new TileObject[width, height];
         //Map initialization.
         for (int x = 0; x < width; x++)
@@ -205,5 +205,19 @@ public class CellularAutomataGenerator : IGenerator
     public override TileObject[,] generateAliasMap(TileObject[,] MainMap, HashSet<Vector2Int> CollisionCells)
     {
         return base.generateAliasMap(MainMap, CollisionCells);
+    }
+
+    public TileObject[,] generateMapGeneral(bool isTrapsOnMapBorder, float obsPercent, int iterNumb, int threshWall, bool brdIsObs, int roomThresh, int obsThresh, bool useS, int Seed)
+    {
+        obstaclePercent = obsPercent;
+        iterationsNumber = iterNumb;
+        thresholdWall = threshWall;
+        borderIsObstacle = brdIsObs;
+        roomThreshold = roomThresh;
+        obstacleThreshold = obsThresh;
+        useRandomSeed = useS;
+        seed = Seed;
+
+        return base.generateMapGeneral(isTrapsOnMapBorder);
     }
 }

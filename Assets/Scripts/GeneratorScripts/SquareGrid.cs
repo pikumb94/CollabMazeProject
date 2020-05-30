@@ -15,6 +15,7 @@ public class SquareGrid : ITypeGrid
         new Vector2Int[4] { new Vector2Int(1, 1), new Vector2Int(1, -1), new Vector2Int(-1, -1), new Vector2Int(-1, 1) }, 1f, 1f){
         offsetX = 1f;
         offsetY = 1f;
+        gridType = TypeGridEnum.SQUARE;
     }
 
     public override int heuristic(Vector2Int a, Vector2Int b)
