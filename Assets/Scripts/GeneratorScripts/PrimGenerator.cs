@@ -179,11 +179,9 @@ public class PrimGenerator : IGenerator
         return map;
     }
 
-    public TileObject[,] generateMapGeneral(bool isTrapsOnMapBorder, float obsToRemPerc, bool useS, int Seed)
+    public TileObject[,] generateMapGeneral(bool isTrapsOnMapBorder, float obsToRemPerc)
     {
         obstacleToRemovePercent = obsToRemPerc;
-        useRandomSeed = useS;
-        seed = Seed;
 
         return base.generateMapGeneral(isTrapsOnMapBorder);
     }

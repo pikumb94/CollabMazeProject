@@ -166,11 +166,9 @@ public class ConnectedGenerator : IGenerator
         return targetAccessibleTileCount == accessibleTileCount;
     }
 
-    public TileObject[,] generateMapGeneral(bool isTrapsOnMapBorder, float obsPerc, bool useS, int Seed)
+    public TileObject[,] generateMapGeneral(bool isTrapsOnMapBorder, float obsPerc)
     {
         obstaclePercent = obsPerc;
-        useRandomSeed = useS;
-        seed = Seed;
 
         return base.generateMapGeneral(isTrapsOnMapBorder);
     }

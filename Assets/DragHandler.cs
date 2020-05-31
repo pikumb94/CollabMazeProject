@@ -14,18 +14,23 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
     [HideInInspector]
     public GameObject OriginalParent;
     private bool inDropArea=false;
+    private Color defaultColor;
+
+    [HideInInspector]
+    public KeyValuePair<int, TileObject[,]> MapOnDrag;
 
     private void Awake()
     {
         rectTransform = ToMoveGameObj.GetComponent<RectTransform>();
         canvasGroup = ToMoveGameObj.GetComponent<CanvasGroup>();
-        if(ToMoveGameObj.transform.parent != null)
-            OriginalParent = ToMoveGameObj.transform.parent.gameObject;
+
+        defaultColor = AliasGeneratorManager.Instance.AliasDragAreas[0].GetComponent<Image>().color;//default color of map content is the first of the list in alias manager
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
         Debug.Log("OnBeginDrag");
+        MapOnDrag = OriginalParent.GetComponent<MapListManager>().removeMapFromDictionary(ToMoveGameObj.GetInstanceID());
         canvasGroup.alpha = .6f;
         canvasGroup.blocksRaycasts = false;
     }
@@ -38,29 +43,36 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
 
         foreach (RectTransform r in AliasGeneratorManager.Instance.AliasDragAreas)
         {
+
             Image i = r.GetComponent<Image>();
-            if (Utility.rectOverlaps(rectTransform, r) && RectTransformUtility.RectangleContainsScreenPoint(r, Input.mousePosition)) {
+            if (r.GetComponent<DropHandler>().droppable && Utility.rectOverlaps(rectTransform, r) && RectTransformUtility.RectangleContainsScreenPoint(r, Input.mousePosition))
+            {
                 Color c = Color.white;
                 c.a = .25f;
                 i.color = c;
                 inDropArea |= true;
             }
-            else {
-                Color c = Color.white;
-                c.a = 0f;
-                i.color = c;
+            else
+            {
+                //Color c = Color.white;
+                //c.a = 0f;
+                i.color = defaultColor;
             }
+
+            
         }
     }
-    
+
     public void OnEndDrag(PointerEventData eventData)
     {
         Debug.Log("OnEndDrag");
         canvasGroup.alpha = 1f;
         canvasGroup.blocksRaycasts = true;
 
-        if (!inDropArea)
+        if (!inDropArea) {
+            //OriginalParent.GetComponent<MapListManager>().removeMapFromDictionary(ToMoveGameObj.GetInstanceID());
             Destroy(ToMoveGameObj);
+        }
     }
     
     public void OnPointerDown(PointerEventData eventData)

@@ -7,9 +7,25 @@ using System;
 using System.Linq;
 using Priority_Queue;
 
+struct StructuredAlias
+{
+    public TileObject[,] AliasMap;
+    public Vector2Int start;
+    public Vector2Int end;
+    public float similarityDistance;
+
+    public StructuredAlias(TileObject[,] a, Vector2Int b, Vector2Int c, float d)
+    {
+        AliasMap = a;
+        start = b;
+        end = c;
+        similarityDistance = d;
+    }
+}
+
 public class AliasGeneratorManager : Singleton<AliasGeneratorManager>
 {
-    static readonly int MAX_ALIAS = 500;
+    static readonly int MAX_ALIAS = 1000;
     static readonly int MAX_ALIASMASKS = 5;
 
     public int BatchAliasNumber = 5;
@@ -17,14 +33,15 @@ public class AliasGeneratorManager : Singleton<AliasGeneratorManager>
 
     public GameObject[] AliasToggleAnimations;
     public RectTransform[] AliasDragAreas;
-    private HashSet<Vector2Int>[] K_CollisionSet;// = MapEvaluator.BuildKCollisionVec(mainMap, TypeGrid, startCell, Mathf.Max(kMinStep, kMaxStep)); //FIND RELATIVE TO THE START CELL 
+    private HashSet<Vector2Int>[] K_CollisionSet;
     public GameObject AliasPrefab;
 
     private TileObject[,] mainMap;
     private ITypeGrid gridType;
-    protected AliasGeneratorManager() { }
-
     private GeneratorManager genMan;
+    private SimplePriorityQueue<TileObject[,]> SimilarMapsQueue;
+
+    protected AliasGeneratorManager() { }
 
     private void Awake()
     {
@@ -68,27 +85,30 @@ public class AliasGeneratorManager : Singleton<AliasGeneratorManager>
             
         //Map initialization.
         int i = 0;
-        int seed = 0;
 
-        SimplePriorityQueue<TileObject[,]> SimilarMapsQueue = new SimplePriorityQueue<TileObject[,]>();
+        SimilarMapsQueue = new SimplePriorityQueue<TileObject[,]>();
+
+        Vector2Int startAlias = ParameterManager.Instance.StartCell;
+        Vector2Int endAlias = ParameterManager.Instance.EndCell;
+        genMan.connectedGenerator.setBaseGeneratorParameters(gridType, width, height, startAlias, endAlias, 0, true);
+        genMan.cellularAutomataGenerator.setBaseGeneratorParameters(gridType, width, height, startAlias, endAlias, 0, true);
+        genMan.primGenerator.setBaseGeneratorParameters(gridType, width, height, startAlias, endAlias, 0, true);
 
         while (i < MAX_ALIAS)
         {
             //define here the width, height, start and end  of the chosen map
             TileObject[,] aliasMap = new TileObject[width, height];
-            Vector2Int startAlias = ParameterManager.Instance.StartCell;
-            Vector2Int endAlias = ParameterManager.Instance.EndCell;
 
             switch (i%3)
             {
                 case 0:
-                    aliasMap = genMan.connectedGenerator.generateMapGeneral(ParameterManager.Instance.IsTrapsOnMapBorder,(float) pRNG_Alias.NextDouble(), true, 0);
+                    aliasMap = genMan.connectedGenerator.generateMapGeneral(ParameterManager.Instance.IsTrapsOnMapBorder,(float) pRNG_Alias.NextDouble());
                     break;
                 case 1:
-                    aliasMap = genMan.cellularAutomataGenerator.generateMapGeneral(ParameterManager.Instance.IsTrapsOnMapBorder, (float)pRNG_Alias.NextDouble(), 1+i%5, 5, i%2==1, 0, 0, true, 0);
+                    aliasMap = genMan.cellularAutomataGenerator.generateMapGeneral(ParameterManager.Instance.IsTrapsOnMapBorder, (float)pRNG_Alias.NextDouble(), 1+i%5, 5, i%2==1, 0, 0);
                     break;
                 case 2:
-                    aliasMap = genMan.primGenerator.generateMapGeneral(ParameterManager.Instance.IsTrapsOnMapBorder, (float)pRNG_Alias.NextDouble(), true, 0);
+                    aliasMap = genMan.primGenerator.generateMapGeneral(ParameterManager.Instance.IsTrapsOnMapBorder, (float)pRNG_Alias.NextDouble());
                     break;
                 default:
                     ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "AliasManager: no map generator found.");
@@ -122,33 +142,62 @@ public class AliasGeneratorManager : Singleton<AliasGeneratorManager>
                 }
             }
 
-            if(MapEvaluator.isEndReachable(aliasMap, gridType, startAlias, endAlias, ParameterManager.Instance.allowAutosolverForAlias).First() == endAlias)//if the map has a path from start to end, add it
-                SimilarMapsQueue.Enqueue(aliasMap, MapEvaluator.BinaryMapSimilarity(mainMap, aliasMap, startMainMap, startAlias));
-
+            if (MapEvaluator.isEndReachable(aliasMap, gridType, startAlias, endAlias, ParameterManager.Instance.allowAutosolverForAlias).First() == endAlias)
+            {//if the map has a path from start to end, add it
+                float dst = MapEvaluator.BinaryMapSimilarity(mainMap, aliasMap, startMainMap, startAlias);
+                
+                SimilarMapsQueue.Enqueue(aliasMap, dst);
+            }
             i++;
         }
 
         i = 0;
+        TileObject[,] tmpStrAlias;
         while (i< ParameterManager.Instance.aliasNum)
         {
-            renderAliasOnUI(AliasDragAreas[0], ParameterManager.Instance.GridType, SimilarMapsQueue.Dequeue());
+            
+            float dst = SimilarMapsQueue.GetPriority(SimilarMapsQueue.First());
+            tmpStrAlias = SimilarMapsQueue.Dequeue();
+            
+            renderAliasOnUI(AliasDragAreas[0].GetChild(0).GetComponent<RectTransform>(), ParameterManager.Instance.GridType, new StructuredAlias(tmpStrAlias,startMainMap,ParameterManager.Instance.EndCell, dst));
             i++;
         }
 
         i = 0;
         while (i < BatchAliasNumber)
         {
-            renderAliasOnUI(AliasDragAreas[1], ParameterManager.Instance.GridType, SimilarMapsQueue.Dequeue());
+            float dst = SimilarMapsQueue.GetPriority(SimilarMapsQueue.First());
+            tmpStrAlias = SimilarMapsQueue.Dequeue();
+
+            renderAliasOnUI(AliasDragAreas[1].GetChild(0).GetComponent<RectTransform>(), ParameterManager.Instance.GridType, new StructuredAlias(tmpStrAlias, startMainMap, ParameterManager.Instance.EndCell, dst));
             i++;
         }
 
         i = 0;
         while (i < BatchAliasNumber)
         {
-            renderAliasOnUI(AliasDragAreas[2], ParameterManager.Instance.GridType, SimilarMapsQueue.Last());
+            tmpStrAlias = SimilarMapsQueue.Last();
+            float dst = SimilarMapsQueue.GetPriority(tmpStrAlias);
+            SimilarMapsQueue.Remove(tmpStrAlias);
+
+            renderAliasOnUI(AliasDragAreas[2].GetChild(0).GetComponent<RectTransform>(), ParameterManager.Instance.GridType, new StructuredAlias(tmpStrAlias, startMainMap, ParameterManager.Instance.EndCell, dst));
+            
             i++;
         }
+        
+        //reset horizontal and vertical bars if exists
+        ScrollRect sR = AliasDragAreas[0].GetComponent<ScrollRect>();
+        if (sR != null)
+        {
+            Scrollbar hSb = sR.horizontalScrollbar;
+            Scrollbar vSb = sR.verticalScrollbar;
 
+            if (hSb != null)
+                hSb.value = .99f;
+
+            if (vSb != null)
+                vSb.value = .99f;
+        }
     }
 
     //Needs K_CollisionSet to be relative to the (0,0) cell!
@@ -239,24 +288,43 @@ public class AliasGeneratorManager : Singleton<AliasGeneratorManager>
         return UnionCollisionSet;
     }
 
-    private void renderAliasOnUI(RectTransform container, ITypeGrid typeGrid,TileObject[,] Alias)
+    private void renderAliasOnUI(RectTransform container, ITypeGrid typeGrid, StructuredAlias alias)
     {
         GameObject AliasGO = Instantiate(AliasPrefab, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+
+        container.parent.GetComponent<MapListManager>().addMapToDictionary(alias.AliasMap,AliasGO.GetInstanceID());
+
         AliasGO.transform.SetParent(container, false);
         Transform t = AliasGO.transform.Find("BorderMask/Content");
         RectTransform contentRect = t.GetComponent<RectTransform>();
         RectTransform prefabRect = typeGrid.TilePrefab.GetComponent<RectTransform>();
         initAliasGameObject(AliasGO);
-        GeneratorUIManager.Instance.DisplayMap(Alias, t, ParameterManager.Instance.GridType);
+        GeneratorUIManager.Instance.DisplayMap(alias.AliasMap, t, ParameterManager.Instance.GridType);
 
         GeneratorUIManager.Instance.ScaleToFitContainer(contentRect, new Rect(Vector2.zero, container.GetComponent<GridLayoutGroup>().cellSize));
+
+        AliasGO.GetComponentInChildren<HoverDisplayText>().textToDisplay = MapEvaluator.aggregateAliasDataMap(MapEvaluator.computeMetrics(alias.AliasMap, typeGrid, alias.start, alias.end), alias.similarityDistance);
+
     }
 
     private void initAliasGameObject(GameObject AliasGO)
     {
+        HoverDisplayText scriptHoverDisplay =  AliasGO.GetComponentInChildren<HoverDisplayText>();
         DragHandler dHand = AliasGO.GetComponentInChildren<DragHandler>();
-        AliasGO.GetComponentInChildren<HoverDisplayText>().DialogBoxInfo = GameObject.FindGameObjectWithTag("DialogBox");
-        dHand.OriginalParent = dHand.ToMoveGameObj.transform.parent.gameObject;
+        scriptHoverDisplay.DialogBoxInfo = GameObject.FindGameObjectWithTag("DialogBox");
+
+        dHand.OriginalParent = dHand.ToMoveGameObj.transform.parent.parent.gameObject; 
         dHand.canvas = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Canvas>();
+    }
+
+    public void backToMapGeneratorHandler()
+    {
+        foreach (RectTransform rect in AliasDragAreas) { 
+            GeneratorUIManager.Instance.deleteMapOnUI(rect.GetChild(0));
+            rect.GetComponent<MapListManager>().dictionaryMap.Clear();
+        }
+
+        K_CollisionSet = null;
+        SimilarMapsQueue = null;
     }
 }

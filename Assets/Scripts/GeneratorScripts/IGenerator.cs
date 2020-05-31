@@ -224,6 +224,16 @@ public abstract class IGenerator
         return (isTrapsOnMapBorder ? getMapWTrapBorder() : getMap());
     }
 
+    public void setBaseGeneratorParameters(ITypeGrid a, int b , int c, Vector2Int d, Vector2Int e, int f, bool g)
+    {
+         TypeGrid=a;
+         width=b ;
+         height = c;
+         startPos = d;
+         endPos=e;
+         seed=f;
+         useRandomSeed=g;
+    }
 
     public TileObject[,] getMap()
     {

@@ -6,46 +6,50 @@ using UnityEngine.UI;
 
 public class DropHandler : MonoBehaviour, IDropHandler
 {
+    public bool droppable;
     private Rect rectCellContainer;
-    public void Awake()
+    private Color defaultColor;
+
+    private Dictionary<int, TileObject[,]> dicMaps;
+    
+    public void Start()
     {
-        GridLayoutGroup GrLGr = GetComponent<GridLayoutGroup>();
+        GridLayoutGroup GrLGr = GetComponentInChildren<GridLayoutGroup>();
         rectCellContainer = new Rect(Vector2.zero, GrLGr.cellSize);
+        defaultColor = GetComponent<Image>().color;
+        dicMaps = GetComponent<MapListManager>().dictionaryMap;
     }
     public void OnDrop(PointerEventData eventData)
     {
-
         Debug.Log("ONDROP");
-        CanvasGroup canvasGroup = eventData.pointerDrag.GetComponent<CanvasGroup>();
-
-        if (RectTransformUtility.RectangleContainsScreenPoint(GetComponent<RectTransform>(), Input.mousePosition))
+        if (droppable && eventData.pointerDrag.name.Contains("DragNDrop"))
         {
-            if(eventData.pointerDrag.transform.parent.GetComponent<ScrollRect>()!=null)
-                eventData.pointerDrag.transform.parent.GetComponent<ScrollRect>().enabled = true;
-            eventData.pointerDrag.transform.parent.parent.SetParent(transform);
             
+            CanvasGroup canvasGroup = eventData.pointerDrag.GetComponent<CanvasGroup>();
+            GameObject AliasElement = eventData.pointerDrag.transform.parent.parent.gameObject;
+            //if (RectTransformUtility.RectangleContainsScreenPoint(GetComponent<RectTransform>(), Input.mousePosition)){
+            if (eventData.pointerDrag.transform.parent.GetComponent<ScrollRect>() != null)
+                eventData.pointerDrag.transform.parent.GetComponent<ScrollRect>().enabled = true;
+
+            AliasElement.transform.SetParent(transform.GetChild(0).transform);
+
+            //}
+            if (!dicMaps.ContainsKey(AliasElement.GetInstanceID()))
+            {
+                dicMaps.Add(AliasElement.GetInstanceID(), eventData.pointerDrag.GetComponent<DragHandler>().MapOnDrag.Value);
+                eventData.pointerDrag.GetComponent<DragHandler>().OriginalParent = gameObject;
+            }
+                
+            Image i = GetComponent<Image>();
+            //Color c = Color.white;
+            //c.a = 0f;
+            i.color = defaultColor;
+
+
+            RectTransform contentRect = eventData.pointerDrag.transform.parent.Find("Content").GetComponent<RectTransform>();
+            GeneratorUIManager.Instance.ScaleToFitContainer(contentRect, rectCellContainer);
         }
-
-        Image i = GetComponent<Image>();
-        Color c = Color.white;
-        c.a = 0f;
-        i.color = c;
-
-
-        RectTransform contentRect = eventData.pointerDrag.transform.parent.Find("Content").GetComponent<RectTransform>();
-        GeneratorUIManager.Instance.ScaleToFitContainer(contentRect, rectCellContainer);
+        
     }
-    /*
-    public void OnEndDrag(PointerEventData eventData)
-    {
-        Debug.Log("ONDROP");
 
-        CanvasGroup canvasGroup = eventData.pointerDrag.GetComponent<CanvasGroup>();
-
-        if (RectTransformUtility.RectangleContainsScreenPoint(GetComponent<RectTransform>(), Input.mousePosition))
-        {
-            eventData.pointerDrag.GetComponentInChildren<ScrollRect>().enabled = true;
-            eventData.pointerDrag.transform.SetParent(transform);
-        }
-    }*/
 }

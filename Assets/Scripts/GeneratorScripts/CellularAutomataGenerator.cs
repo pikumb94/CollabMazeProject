@@ -207,7 +207,7 @@ public class CellularAutomataGenerator : IGenerator
         return base.generateAliasMap(MainMap, CollisionCells);
     }
 
-    public TileObject[,] generateMapGeneral(bool isTrapsOnMapBorder, float obsPercent, int iterNumb, int threshWall, bool brdIsObs, int roomThresh, int obsThresh, bool useS, int Seed)
+    public TileObject[,] generateMapGeneral(bool isTrapsOnMapBorder, float obsPercent, int iterNumb, int threshWall, bool brdIsObs, int roomThresh, int obsThresh)
     {
         obstaclePercent = obsPercent;
         iterationsNumber = iterNumb;
@@ -215,8 +215,6 @@ public class CellularAutomataGenerator : IGenerator
         borderIsObstacle = brdIsObs;
         roomThreshold = roomThresh;
         obstacleThreshold = obsThresh;
-        useRandomSeed = useS;
-        seed = Seed;
 
         return base.generateMapGeneral(isTrapsOnMapBorder);
     }

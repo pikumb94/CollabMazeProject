@@ -44,6 +44,29 @@ public struct DataMap
 public static class MapEvaluator
 {
 
+    public static string aggregateAliasDataMap(DataMap dM, float similarityMetric)
+    {
+        string similarityMetricString = "SimilarityDistance: " + similarityMetric.ToString("0.###");
+        string totalStepsString = "Steps: " + dM.totalSteps;
+        string obstaclesCountString = "Walls: " + dM.obstaclesCount;
+        string deadendCountString = "DeadEnds: " + dM.deadendCount;
+        string chockeCountString = "Chokes: " + dM.chockeCount;
+        string obsToRoomIndexString = "Walls/Rooms: " + dM.obsToRoomIndex.ToString("0.###");
+        string obstacleClusteringString = "Room Cluster Index: " + dM.obstacleClusteringIndex.ToString("0.###");
+
+        string separator = "\n";
+        string result = "\n"+similarityMetricString;
+        string[] ArrayDataString = new string[] { totalStepsString, obstaclesCountString, deadendCountString, chockeCountString, obsToRoomIndexString, obstacleClusteringString };
+
+
+        foreach (string s in ArrayDataString)
+        {
+            result = result + separator + s;
+        }
+
+        return result;
+    }
+
     public static string aggregateDataMap(DataMap dM)
     {
         string totalStepsString="Steps: "+ dM.totalSteps;
@@ -206,9 +229,8 @@ public static class MapEvaluator
 
     private static float functionPointsDifference(Vector2 pI, Vector2 pJ)
     {
-        //float diff = (pI - pJ).magnitude;
-        //return Mathf.Pow(2.0f, (-2.0f * diff));
-        return (1 / Mathf.Sqrt(2 * Mathf.PI)) * Mathf.Exp(-.5f * (pI - pJ).sqrMagnitude);
+        return Mathf.Pow(2.0f, (-3.0f * (pI - pJ).magnitude));//NOW IS -3!
+        //return (1 / Mathf.Sqrt(2 * Mathf.PI)) * Mathf.Exp(-.5f * (pI - pJ).sqrMagnitude);
     }
 
     public static float BinaryMapSimilarity(TileObject[,] mainMap, TileObject[,] Alias, Vector2Int startMainMap, Vector2Int startAlias)
@@ -220,7 +242,7 @@ public static class MapEvaluator
         int lY = Mathf.Min(startMainMap.y, startAlias.y);
         int hY = Mathf.Min(mainMap.GetLength(1) - startMainMap.y-1, Alias.GetLength(1) - startAlias.y-1);
 
-
+        /*
         for (int i = -lX; i <= hX; i++)
         {
             for (int j = lY; j <= hY; j++)
@@ -229,8 +251,22 @@ public static class MapEvaluator
                     similarity += functionPointsDifference(new Vector2(startMainMap.x + i, startMainMap.y + j), new Vector2(startAlias.x + i, startAlias.y + j));
                     
             }
-        }
+        }*/
 
+        for (int i = -lX; i <= hX; i++)
+        {
+            for (int j = -lY; j <= hY; j++)
+            {
+                for (int h = -lX; h <= hX; h++)
+                {
+                    for (int k = -lY; k <= hY; k++)
+                    {
+                        if ((mainMap[startMainMap.x + i, startMainMap.y + j].type == IGenerator.wallChar ? 1 : 0) - (Alias[startAlias.x + h, startAlias.y + k].type == IGenerator.wallChar ? 1 : 0) != 0)
+                            similarity += functionPointsDifference(new Vector2(startMainMap.x + i, startMainMap.y + j), new Vector2(startAlias.x + h, startAlias.y + k));
+                    }
+                }
+            }
+        }
 
         return similarity;
     }

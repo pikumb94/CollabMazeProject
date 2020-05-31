@@ -69,6 +69,7 @@
     <Compile Include="Assets\DropHandler.cs" />
     <Compile Include="Assets\HoverDisplayText.cs" />
     <Compile Include="Assets\LoadClipsInOverrideController.cs" />
+    <Compile Include="Assets\MapListManager.cs" />
     <Compile Include="Assets\ProCore\ProGrids\Classes\pg_Constant.cs" />
     <Compile Include="Assets\ProCore\ProGrids\Classes\pg_Enum.cs" />
     <Compile Include="Assets\ProCore\ProGrids\Classes\pg_IconUtility.cs" />
@@ -121,6 +122,7 @@
     <Compile Include="Assets\Scripts\StopwatchManager.cs" />
     <Compile Include="Assets\Scripts\TemporaryDisclaimer.cs" />
     <Compile Include="Assets\Scripts\TrapBehaviour.cs" />
+    <Compile Include="Assets\ScrollBarReset.cs" />
     <Compile Include="Assets\TabNavigation.cs" />
     <Compile Include="Assets\unity-ui-extensions\Examples\ComboBox\ComboBoxChanged.cs" />
     <Compile Include="Assets\unity-ui-extensions\Examples\Cooldown\CooldownEffect_Image.cs" />
