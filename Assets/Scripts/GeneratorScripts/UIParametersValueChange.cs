@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using TMPro;
+using System.Globalization;
 
 public class UIParametersValueChange : MonoBehaviour
 {
@@ -42,7 +43,9 @@ public class UIParametersValueChange : MonoBehaviour
 
     public void generalUICallBackText(TMP_InputField UIIF)
     {
-        
+        CultureInfo ci = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+        ci.NumberFormat.CurrencyDecimalSeparator = ".";
+
         if (UIIF == UIWidth)
         {
             switch (genM.activeGenerator)
@@ -172,15 +175,15 @@ public class UIParametersValueChange : MonoBehaviour
         }
         else if (UIIF==UIObstacleCountC)
         {
-            genM.connectedGenerator.obstaclePercent = float.Parse(UIObstacleCountC.text);
+            genM.connectedGenerator.obstaclePercent = Convert.ToSingle(UIObstacleCountC.text, CultureInfo.InvariantCulture.NumberFormat);// float.Parse(UIObstacleCountC.text, ci);
         }
         else if (UIIF == UIObstacleToRemove)
         {
-            genM.primGenerator.obstacleToRemovePercent = float.Parse(UIObstacleToRemove.text);
+            genM.primGenerator.obstacleToRemovePercent = Convert.ToSingle(UIObstacleToRemove.text, CultureInfo.InvariantCulture.NumberFormat); //float.Parse(UIObstacleToRemove.text, ci);
         }
         else if (UIIF == UIObstacleCountCA)
         {
-            genM.cellularAutomataGenerator.obstaclePercent = float.Parse(UIObstacleCountCA.text);
+            genM.cellularAutomataGenerator.obstaclePercent = Convert.ToSingle(UIObstacleCountCA.text, CultureInfo.InvariantCulture.NumberFormat); //float.Parse(UIObstacleCountCA.text, ci);
         }
         else if (UIIF == UIObstacleThreshold)
         {
@@ -286,16 +289,16 @@ public class UIParametersValueChange : MonoBehaviour
         switch (genM.activeGenerator)
         {
             case GeneratorManager.GeneratorEnum.CONNECTED:
-                UIObstacleCountC.text = string.Format("{0:N2}", genM.connectedGenerator.obstaclePercent.ToString());
+                UIObstacleCountC.text = genM.connectedGenerator.obstaclePercent.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
                 break;
             case GeneratorManager.GeneratorEnum.CELLULAR_AUTOMATA:
-                UIObstacleCountCA.text = string.Format("{0:N2}", genM.cellularAutomataGenerator.obstaclePercent.ToString());
+                UIObstacleCountCA.text = genM.cellularAutomataGenerator.obstaclePercent.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
                 UIObstacleThreshold.text = genM.cellularAutomataGenerator.thresholdWall.ToString();
                 UIIterationsNumber.text = genM.cellularAutomataGenerator.iterationsNumber.ToString();
                 UIborderIsObstacle.isOn = genM.cellularAutomataGenerator.borderIsObstacle;
                 break;
             case GeneratorManager.GeneratorEnum.PRIM:
-                UIObstacleToRemove.text = string.Format("{0:N2}", genM.primGenerator.obstacleToRemovePercent.ToString());
+                UIObstacleToRemove.text =  genM.primGenerator.obstacleToRemovePercent.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
                 break;
             default:
                 ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "GeneratorEnum PARAMETER NOT FOUND!");

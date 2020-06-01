@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>
 /// ParameterManager allows to exchange information between different scenes.
@@ -13,6 +14,7 @@ public class ParameterManager : Singleton<ParameterManager> {
     [HideInInspector] public Vector2Int StartCell { get; set; }
     [HideInInspector] public Vector2Int EndCell { get; set; }
     [HideInInspector] public bool IsTrapsOnMapBorder { get; set; }
+    [HideInInspector] public Dictionary<int, TileObject[,]>.ValueCollection AliasMaps { get; set; }
 
     // Gameplay data.
     [HideInInspector] public int countdownSecondsParam { get; set; }

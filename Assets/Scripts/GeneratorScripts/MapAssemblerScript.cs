@@ -5,6 +5,8 @@ using UnityEngine;
 public class MapAssemblerScript : MonoBehaviour
 {
     ParameterManager pMan;
+    public GameObject AliasUIDisplay;
+    public GameObject AliasPrefab;
     // Start is called before the first frame update
     private void Awake()
     {
@@ -28,7 +30,7 @@ public class MapAssemblerScript : MonoBehaviour
                         break;
                     case IGenerator.startChar:
                         Instantiate(pMan.GridType.InGameTilePrefab, new Vector3(pMan.GridType.inGameOffsetX * i, 0, pMan.GridType.inGameOffsetY * j), Quaternion.identity);
-                        GameManager_Generator.instance.Player.transform.position = new Vector3(pMan.GridType.inGameOffsetX * i, 1, pMan.GridType.inGameOffsetY * j);
+                        GameManager_Generator.instance.Player.transform.position = new Vector3(pMan.GridType.inGameOffsetX * i, 1.5f, pMan.GridType.inGameOffsetY * j);
                         break;
                     case IGenerator.endChar:
                         Instantiate(pMan.GridType.InGameEndPrefab, new Vector3(pMan.GridType.inGameOffsetX * i, 0, pMan.GridType.inGameOffsetY * j), Quaternion.identity);
@@ -42,7 +44,7 @@ public class MapAssemblerScript : MonoBehaviour
         }
 
         AssembleMapBorder();
-
+        RenderAliasMapsOnUI();
     }
 
     private void AssembleMapBorder()
@@ -75,5 +77,10 @@ public class MapAssemblerScript : MonoBehaviour
         rightPlane.AddComponent<BoxCollider>();
     }
 
-    
+    private void RenderAliasMapsOnUI()
+    {
+        foreach (TileObject[,] v in ParameterManager.Instance.AliasMaps) { 
+            Utility.renderAliasOnUI(AliasUIDisplay.transform.GetChild(0).GetComponent<RectTransform>(), ParameterManager.Instance.GridType, new StructuredAlias(v, Vector2Int.zero, Vector2Int.zero, 0), AliasPrefab, false);
+        }
+    }
 }

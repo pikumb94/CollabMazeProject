@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Threading;
 using System;
 using UnityEngine.UI.Extensions;
+using UnityEngine.UI;
 using System.Linq;
 using UnityEngine.EventSystems;
 /// <summary>
@@ -527,6 +528,40 @@ public static class Utility
 
         
 
+    }
+
+    public static void renderAliasOnUI(RectTransform container, ITypeGrid typeGrid, StructuredAlias alias, GameObject AliasPrefab, bool attachMapMetrics)
+    {
+        GameObject AliasGO = GameObject.Instantiate(AliasPrefab, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+
+        container.parent.GetComponent<MapListManager>().addMapToDictionary(alias.AliasMap, AliasGO.GetInstanceID());
+
+        AliasGO.transform.SetParent(container, false);
+        Transform t = AliasGO.transform.Find("BorderMask/Content");
+        RectTransform contentRect = t.GetComponent<RectTransform>();
+        RectTransform prefabRect = typeGrid.TilePrefab.GetComponent<RectTransform>();
+        initAliasGameObject(AliasGO);
+        GeneratorUIManager.Instance.DisplayMap(alias.AliasMap, t, ParameterManager.Instance.GridType);
+
+        GeneratorUIManager.Instance.ScaleToFitContainer(contentRect, new Rect(Vector2.zero, container.GetComponent<GridLayoutGroup>().cellSize));
+
+        if (attachMapMetrics)
+            AliasGO.GetComponentInChildren<HoverDisplayText>().textToDisplay = MapEvaluator.aggregateAliasDataMap(MapEvaluator.computeMetrics(alias.AliasMap, typeGrid, alias.start, alias.end), alias.similarityDistance);
+        else
+            AliasGO.GetComponentInChildren<HoverDisplayText>().gameObject.SetActive(false);
+
+
+    }
+
+    private static void initAliasGameObject(GameObject AliasGO)
+    {
+        HoverDisplayText scriptHoverDisplay = AliasGO.GetComponentInChildren<HoverDisplayText>();
+        DragHandler dHand = AliasGO.GetComponentInChildren<DragHandler>();
+        scriptHoverDisplay.DialogBoxInfo = GameObject.FindGameObjectWithTag("DialogBox");
+
+        dHand.OriginalParent = dHand.ToMoveGameObj.transform.parent.parent.gameObject;
+        dHand.canvas = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Canvas>();
+        dHand.defaultColor = AliasGO.transform.parent.parent.GetComponent<Image>().color;
     }
 }
 

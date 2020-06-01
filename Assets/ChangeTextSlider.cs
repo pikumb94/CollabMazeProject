@@ -1,26 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using TMPro;
 public class ChangeTextSlider : MonoBehaviour
 {
-    RectTransform r;
-    // Start is called before the first frame update
-    void Start()
+    private TMP_InputField r;
+
+    private void Start()
     {
-        r = GetComponent<RectTransform>();
+        r = GetComponent<TMP_InputField>();
     }
 
-    // Update is called once per frame
-    /*void Update()
-    {
-        //r.position = Input.mousePosition;
-    }*/
-
-    public void enableCursor(bool isActive) {
-        if (isActive)
-            gameObject.SetActive(true);
-        else
-            gameObject.SetActive(false);
+    public void InputFieldUpdate(float value) {
+        r.text = value.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
     }
 }

@@ -41,15 +41,11 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
     
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
+        DontDestroyOnLoad(transform.gameObject);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 
     public void printMap(Transform t, ITypeGrid g, TileObject[,] map)
     {
@@ -451,6 +447,8 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
         p.minStepsSolution = Int32.Parse(InpFields[1].text);
         p.maxStepsSolution = Int32.Parse(InpFields[2].text);
         p.allowAutosolverForAlias = t.isOn;
+        genM.inAliasGenerator = true;
+
         if (DropD.value == 0)
         {
             p.considerSimilar = true;

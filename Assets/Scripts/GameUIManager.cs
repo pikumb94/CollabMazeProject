@@ -9,6 +9,7 @@ public class GameUIManager : MonoBehaviour
     public GameObject gameOverPanel;
     public GameObject youWinPanel;
     public GameObject descriptionPanel;
+    public GameObject AliasPanel;
     public static GameUIManager instance = null;
 
     public TextMeshProUGUI timerText;
@@ -116,6 +117,15 @@ public class GameUIManager : MonoBehaviour
     {
         HideDescriptionPanel();
         GameManager.instance.isPause = false;
+    }
+
+    public void ToggleAliasPanel()
+    {
+        Animator a = AliasPanel.GetComponent<Animator>();
+        bool isOn = a.GetBool("isShown");
+        isOn = !isOn;
+        a.SetBool("isShown", isOn);
+
     }
 
     private string printColored(string s)

@@ -46,13 +46,13 @@ public static class MapEvaluator
 
     public static string aggregateAliasDataMap(DataMap dM, float similarityMetric)
     {
-        string similarityMetricString = "SimilarityDistance: " + similarityMetric.ToString("0.###");
+        string similarityMetricString = "SimilarityDistance: " + similarityMetric.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture);
         string totalStepsString = "Steps: " + dM.totalSteps;
         string obstaclesCountString = "Walls: " + dM.obstaclesCount;
         string deadendCountString = "DeadEnds: " + dM.deadendCount;
         string chockeCountString = "Chokes: " + dM.chockeCount;
-        string obsToRoomIndexString = "Walls/Rooms: " + dM.obsToRoomIndex.ToString("0.###");
-        string obstacleClusteringString = "Room Cluster Index: " + dM.obstacleClusteringIndex.ToString("0.###");
+        string obsToRoomIndexString = "Walls/Rooms: " + dM.obsToRoomIndex.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture);
+        string obstacleClusteringString = "Room Cluster Index: " + dM.obstacleClusteringIndex.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture);
 
         string separator = "\n";
         string result = "\n"+similarityMetricString;
@@ -73,8 +73,8 @@ public static class MapEvaluator
         string obstaclesCountString= "Walls: " + dM.obstaclesCount;
         string deadendCountString = "DeadEnds: "+dM.deadendCount;
         string chockeCountString="Chokes: "+dM.chockeCount;
-        string obsToRoomIndexString="Walls/Rooms: "+ dM.obsToRoomIndex.ToString("0.###");
-        string obstacleClusteringString="Room Cluster Index: "+dM.obstacleClusteringIndex.ToString("0.###");
+        string obsToRoomIndexString="Walls/Rooms: "+ dM.obsToRoomIndex.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture);
+        string obstacleClusteringString="Room Cluster Index: "+dM.obstacleClusteringIndex.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture);
 
         string separator = "   ";
         string result = totalStepsString;

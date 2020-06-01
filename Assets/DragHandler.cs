@@ -14,7 +14,7 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
     [HideInInspector]
     public GameObject OriginalParent;
     private bool inDropArea=false;
-    private Color defaultColor;
+    public Color defaultColor;
 
     [HideInInspector]
     public KeyValuePair<int, TileObject[,]> MapOnDrag;
@@ -24,7 +24,7 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
         rectTransform = ToMoveGameObj.GetComponent<RectTransform>();
         canvasGroup = ToMoveGameObj.GetComponent<CanvasGroup>();
 
-        defaultColor = AliasGeneratorManager.Instance.AliasDragAreas[0].GetComponent<Image>().color;//default color of map content is the first of the list in alias manager
+        //defaultColor = AliasGeneratorManager.Instance.AliasDragAreas[0].GetComponent<Image>().color;//default color of map content is the first of the list in alias manager
     }
 
     public void OnBeginDrag(PointerEventData eventData)

@@ -7,7 +7,7 @@ using System;
 using System.Linq;
 using Priority_Queue;
 
-struct StructuredAlias
+public struct StructuredAlias
 {
     public TileObject[,] AliasMap;
     public Vector2Int start;
@@ -159,7 +159,7 @@ public class AliasGeneratorManager : Singleton<AliasGeneratorManager>
             float dst = SimilarMapsQueue.GetPriority(SimilarMapsQueue.First());
             tmpStrAlias = SimilarMapsQueue.Dequeue();
             
-            renderAliasOnUI(AliasDragAreas[0].GetChild(0).GetComponent<RectTransform>(), ParameterManager.Instance.GridType, new StructuredAlias(tmpStrAlias,startMainMap,ParameterManager.Instance.EndCell, dst));
+            Utility.renderAliasOnUI(AliasDragAreas[0].GetChild(0).GetComponent<RectTransform>(), ParameterManager.Instance.GridType, new StructuredAlias(tmpStrAlias,startMainMap,ParameterManager.Instance.EndCell, dst),AliasPrefab, true);
             i++;
         }
 
@@ -169,7 +169,7 @@ public class AliasGeneratorManager : Singleton<AliasGeneratorManager>
             float dst = SimilarMapsQueue.GetPriority(SimilarMapsQueue.First());
             tmpStrAlias = SimilarMapsQueue.Dequeue();
 
-            renderAliasOnUI(AliasDragAreas[1].GetChild(0).GetComponent<RectTransform>(), ParameterManager.Instance.GridType, new StructuredAlias(tmpStrAlias, startMainMap, ParameterManager.Instance.EndCell, dst));
+            Utility.renderAliasOnUI(AliasDragAreas[1].GetChild(0).GetComponent<RectTransform>(), ParameterManager.Instance.GridType, new StructuredAlias(tmpStrAlias, startMainMap, ParameterManager.Instance.EndCell, dst),AliasPrefab, true);
             i++;
         }
 
@@ -180,7 +180,7 @@ public class AliasGeneratorManager : Singleton<AliasGeneratorManager>
             float dst = SimilarMapsQueue.GetPriority(tmpStrAlias);
             SimilarMapsQueue.Remove(tmpStrAlias);
 
-            renderAliasOnUI(AliasDragAreas[2].GetChild(0).GetComponent<RectTransform>(), ParameterManager.Instance.GridType, new StructuredAlias(tmpStrAlias, startMainMap, ParameterManager.Instance.EndCell, dst));
+            Utility.renderAliasOnUI(AliasDragAreas[2].GetChild(0).GetComponent<RectTransform>(), ParameterManager.Instance.GridType, new StructuredAlias(tmpStrAlias, startMainMap, ParameterManager.Instance.EndCell, dst),AliasPrefab, true);
             
             i++;
         }
@@ -288,7 +288,8 @@ public class AliasGeneratorManager : Singleton<AliasGeneratorManager>
         return UnionCollisionSet;
     }
 
-    private void renderAliasOnUI(RectTransform container, ITypeGrid typeGrid, StructuredAlias alias)
+    /*
+    public void renderAliasOnUI(RectTransform container, ITypeGrid typeGrid, StructuredAlias alias, bool attachMapMetrics)
     {
         GameObject AliasGO = Instantiate(AliasPrefab, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
 
@@ -303,8 +304,10 @@ public class AliasGeneratorManager : Singleton<AliasGeneratorManager>
 
         GeneratorUIManager.Instance.ScaleToFitContainer(contentRect, new Rect(Vector2.zero, container.GetComponent<GridLayoutGroup>().cellSize));
 
-        AliasGO.GetComponentInChildren<HoverDisplayText>().textToDisplay = MapEvaluator.aggregateAliasDataMap(MapEvaluator.computeMetrics(alias.AliasMap, typeGrid, alias.start, alias.end), alias.similarityDistance);
-
+        if (attachMapMetrics)
+            AliasGO.GetComponentInChildren<HoverDisplayText>().textToDisplay = MapEvaluator.aggregateAliasDataMap(MapEvaluator.computeMetrics(alias.AliasMap, typeGrid, alias.start, alias.end), alias.similarityDistance);
+        else
+            AliasGO.GetComponentInChildren<HoverDisplayText>().gameObject.SetActive(false);
     }
 
     private void initAliasGameObject(GameObject AliasGO)
@@ -316,6 +319,7 @@ public class AliasGeneratorManager : Singleton<AliasGeneratorManager>
         dHand.OriginalParent = dHand.ToMoveGameObj.transform.parent.parent.gameObject; 
         dHand.canvas = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Canvas>();
     }
+    */
 
     public void backToMapGeneratorHandler()
     {
@@ -324,7 +328,14 @@ public class AliasGeneratorManager : Singleton<AliasGeneratorManager>
             rect.GetComponent<MapListManager>().dictionaryMap.Clear();
         }
 
+        genMan.inAliasGenerator = false;
         K_CollisionSet = null;
         SimilarMapsQueue = null;
+    }
+
+    public Dictionary<int, TileObject[,]>.ValueCollection generateAliasOnTheFly(){
+        CollabGameGeneration();
+        return AliasDragAreas[0].GetComponent<MapListManager>().getMapList();
+
     }
 }

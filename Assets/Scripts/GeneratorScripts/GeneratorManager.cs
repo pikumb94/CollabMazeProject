@@ -38,7 +38,8 @@ public class GeneratorManager : Singleton<GeneratorManager>
     public GameObject Content;
     [HideInInspector]
     public bool isAutosolverOn=false;
-
+    [HideInInspector]
+    public bool inAliasGenerator = false;
     private DataMap dataMap;
 
     protected GeneratorManager() {}
@@ -126,15 +127,17 @@ public class GeneratorManager : Singleton<GeneratorManager>
         GeneratorUIManager.Instance.savePlayParametersInManager();
         ParameterManager.Instance.MapToPlay = (GeneratorUIManager.Instance.isTrapsOnMapBorderToggleOn()? GeneratorsVect[(int)activeGenerator].getMapWTrapBorder():GeneratorsVect[(int)activeGenerator].getMap());
         ParameterManager.Instance.GridType = GeneratorsVect[(int)activeGenerator].TypeGrid;
+        ParameterManager.Instance.AliasMaps = (inAliasGenerator ? AliasGeneratorManager.Instance.AliasDragAreas[0].GetComponent<MapListManager>().getMapList() : AliasGeneratorManager.Instance.generateAliasOnTheFly());
         SceneManager.LoadScene(AssembledLevelSceneName);
     }
+    
+    
     public void BeforePlayButtonPressed(GameObject BeforePlayBox)
     {
         if (dataMap != null && Content.transform.childCount>0) { 
             if (dataMap.isTraversable)
             {
                 BeforePlayBox.SetActive(true);
-                //BeforePlayBox.SetActive();
             }
             else
             {
