@@ -333,7 +333,7 @@ public class AliasGeneratorManager : Singleton<AliasGeneratorManager>
         SimilarMapsQueue = null;
     }
 
-    public Dictionary<int, TileObject[,]>.ValueCollection generateAliasOnTheFly(){
+    public Dictionary<int, StructuredAlias>.ValueCollection generateAliasOnTheFly(){
         CollabGameGeneration();
         return AliasDragAreas[0].GetComponent<MapListManager>().getMapList();
 

@@ -79,8 +79,8 @@ public class MapAssemblerScript : MonoBehaviour
 
     private void RenderAliasMapsOnUI()
     {
-        foreach (TileObject[,] v in ParameterManager.Instance.AliasMaps) { 
-            Utility.renderAliasOnUI(AliasUIDisplay.transform.GetChild(0).GetComponent<RectTransform>(), ParameterManager.Instance.GridType, new StructuredAlias(v, Vector2Int.zero, Vector2Int.zero, 0), AliasPrefab, false);
+        foreach (StructuredAlias v in ParameterManager.Instance.AliasMaps) { 
+            Utility.renderAliasOnUI(AliasUIDisplay.transform.GetChild(0).GetComponent<RectTransform>(), ParameterManager.Instance.GridType, v, AliasPrefab, false);
         }
     }
 }

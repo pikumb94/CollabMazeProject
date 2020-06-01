@@ -418,5 +418,5 @@ public static class MapEvaluator
         return FloodedCells;
     }
 
-    
+
 }

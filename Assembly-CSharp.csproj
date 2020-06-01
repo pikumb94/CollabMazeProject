@@ -81,6 +81,7 @@
     <Compile Include="Assets\ResizeMainMap.cs" />
     <Compile Include="Assets\RoomTraversableScript.cs" />
     <Compile Include="Assets\Scripts\CameraMovement.cs" />
+    <Compile Include="Assets\Scripts\ExternalScripts\NTree.cs" />
     <Compile Include="Assets\Scripts\ExternalScripts\Priority Queue\FastPriorityQueue.cs" />
     <Compile Include="Assets\Scripts\ExternalScripts\Priority Queue\FastPriorityQueueNode.cs" />
     <Compile Include="Assets\Scripts\ExternalScripts\Priority Queue\GenericPriorityQueue.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\GameManager_Generator.cs" />
     <Compile Include="Assets\Scripts\GameUIManager.cs" />
+    <Compile Include="Assets\Scripts\GeneratorScripts\AliasGameEvaluator.cs" />
     <Compile Include="Assets\Scripts\GeneratorScripts\AliasGeneratorManager.cs" />
     <Compile Include="Assets\Scripts\GeneratorScripts\CellularAutomataGenerator.cs" />
     <Compile Include="Assets\Scripts\GeneratorScripts\ConnectedGenerator.cs" />

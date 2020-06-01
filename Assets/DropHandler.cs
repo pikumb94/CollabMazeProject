@@ -10,7 +10,7 @@ public class DropHandler : MonoBehaviour, IDropHandler
     private Rect rectCellContainer;
     private Color defaultColor;
 
-    private Dictionary<int, TileObject[,]> dicMaps;
+    private Dictionary<int, StructuredAlias> dicMaps;
     
     public void Start()
     {

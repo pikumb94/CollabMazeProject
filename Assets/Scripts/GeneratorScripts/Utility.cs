@@ -262,6 +262,28 @@ public static class Utility
         return results;
     }
 
+    //this version get all neighbours including walls and cells outside the grid: is a more general version
+    public static Vector2Int[] getAllNeighboursWOBoundCheck_General(Vector2Int id, ITypeGrid TypeGrid, int width, int height)
+    {
+        Vector2Int[] results = new Vector2Int[] { };
+
+        foreach (Vector2Int dir in TypeGrid.getDirs())
+        {
+            Vector2Int next = new Vector2Int(id.x + dir.x, id.y + dir.y);
+
+            Array.Resize(ref results, results.Length + 1);
+            results[results.GetUpperBound(0)] = next;
+
+        }
+
+        if ((id.x + id.y) % 2 == 0)
+        {
+            Array.Reverse(results);
+        }
+
+        return results;
+    }
+
     //this version get all moore neighbours including walls: is a more general version
     public static Vector2Int[] getAllMooreNeighbours_General(Vector2Int id, ITypeGrid TypeGrid, int width, int height)
     {
@@ -534,7 +556,7 @@ public static class Utility
     {
         GameObject AliasGO = GameObject.Instantiate(AliasPrefab, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
 
-        container.parent.GetComponent<MapListManager>().addMapToDictionary(alias.AliasMap, AliasGO.GetInstanceID());
+        container.parent.GetComponent<MapListManager>().addMapToDictionary(alias.AliasMap, alias.start, alias.end, alias.similarityDistance, AliasGO.GetInstanceID());
 
         AliasGO.transform.SetParent(container, false);
         Transform t = AliasGO.transform.Find("BorderMask/Content");

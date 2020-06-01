@@ -17,7 +17,7 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
     public Color defaultColor;
 
     [HideInInspector]
-    public KeyValuePair<int, TileObject[,]> MapOnDrag;
+    public KeyValuePair<int, StructuredAlias> MapOnDrag;
 
     private void Awake()
     {
