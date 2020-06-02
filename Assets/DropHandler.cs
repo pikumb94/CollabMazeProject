@@ -38,6 +38,9 @@ public class DropHandler : MonoBehaviour, IDropHandler
             {
                 dicMaps.Add(AliasElement.GetInstanceID(), eventData.pointerDrag.GetComponent<DragHandler>().MapOnDrag.Value);
                 eventData.pointerDrag.GetComponent<DragHandler>().OriginalParent = gameObject;
+                //update statistics
+                AliasGeneratorManager.Instance.deleteBestWorstUILines();
+                AliasGeneratorManager.Instance.gameObject.GetComponent<AliasGameEvaluator>().AliasGameEvaluatorHandler();
             }
                 
             Image i = GetComponent<Image>();

@@ -83,7 +83,7 @@ public static class Utility
     }
 
     //Display a lines on the UI given a collection of points. Requires a game object LineGameObj with a UILineRenderer component
-    public static void displaySegmentedLineUI(GameObject LineGameObj, RectTransform destination, Vector2Int[] Points, Vector2 originPos, float offset)
+    public static void displaySegmentedLineUI(GameObject LineGameObj, RectTransform destination, Vector2Int[] Points, Vector2 originPos, float offsetX, float offsetY)
     {
         LineGameObj.transform.SetParent(destination.transform);
         LineGameObj.transform.position = destination.transform.position;
@@ -96,7 +96,7 @@ public static class Utility
             float dx = Points[i].x - Points[Points.Length - 1].x;
             float dy = Points[i].y - Points[Points.Length - 1].y;
 
-            Vector2 pUI = new Vector2(originPos.x + offset * dx, originPos.y + offset * dy);
+            Vector2 pUI = new Vector2(originPos.x + offsetX * dx, originPos.y + offsetY * dy);
             PointsF[i] = pUI;
         }
         LineRenderer.Points = PointsF;
@@ -552,7 +552,7 @@ public static class Utility
 
     }
 
-    public static void renderAliasOnUI(RectTransform container, ITypeGrid typeGrid, StructuredAlias alias, GameObject AliasPrefab, bool attachMapMetrics)
+    public static GameObject renderAliasOnUI(RectTransform container, ITypeGrid typeGrid, StructuredAlias alias, GameObject AliasPrefab, bool attachMapMetrics)
     {
         GameObject AliasGO = GameObject.Instantiate(AliasPrefab, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
 
@@ -572,7 +572,7 @@ public static class Utility
         else
             AliasGO.GetComponentInChildren<HoverDisplayText>().gameObject.SetActive(false);
 
-
+        return AliasGO;
     }
 
     private static void initAliasGameObject(GameObject AliasGO)

@@ -35,7 +35,7 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
     public Toggle TrapsOnMapBorderToggle;
     public GameObject LineUIPrefab;
 
-    private Vector2 originUIMap;
+    public Vector2 originUIMap;
 
     protected GeneratorUIManager() { }
     
@@ -258,7 +258,7 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
     public void showUIMapInfo(Transform mapHolderTransform, DataMap DataM, ITypeGrid t)
     {
         GameObject LineGO = Instantiate(LineUIPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-        Utility.displaySegmentedLineUI(LineGO, mapHolderTransform.Find("BorderMask/Content").GetComponent<RectTransform>(), DataM.solutionSteps, originUIMap, t.TilePrefab.GetComponent<RectTransform>().sizeDelta.x);
+        Utility.displaySegmentedLineUI(LineGO, mapHolderTransform.Find("BorderMask/Content").GetComponent<RectTransform>(), DataM.solutionSteps, originUIMap, t.TilePrefab.GetComponent<RectTransform>().sizeDelta.x, t.TilePrefab.GetComponent<RectTransform>().sizeDelta.y);
 
         mapHolderTransform.Find("SaveButton").gameObject.SetActive(true);
         mapHolderTransform.Find("PlusButton").gameObject.SetActive(true);
@@ -447,7 +447,7 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
         p.minStepsSolution = Int32.Parse(InpFields[1].text);
         p.maxStepsSolution = Int32.Parse(InpFields[2].text);
         p.allowAutosolverForAlias = t.isOn;
-        genM.inAliasGenerator = true;
+        
 
         if (DropD.value == 0)
         {

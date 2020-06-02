@@ -14,6 +14,7 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
     [HideInInspector]
     public GameObject OriginalParent;
     private bool inDropArea=false;
+    [HideInInspector]
     public Color defaultColor;
 
     [HideInInspector]
@@ -70,8 +71,10 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
         canvasGroup.blocksRaycasts = true;
 
         if (!inDropArea) {
-            //OriginalParent.GetComponent<MapListManager>().removeMapFromDictionary(ToMoveGameObj.GetInstanceID());
             Destroy(ToMoveGameObj);
+            //update statistics
+            AliasGeneratorManager.Instance.deleteBestWorstUILines();
+            AliasGeneratorManager.Instance.gameObject.GetComponent<AliasGameEvaluator>().AliasGameEvaluatorHandler();
         }
     }
     

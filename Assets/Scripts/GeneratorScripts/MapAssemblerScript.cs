@@ -7,6 +7,7 @@ public class MapAssemblerScript : MonoBehaviour
     ParameterManager pMan;
     public GameObject AliasUIDisplay;
     public GameObject AliasPrefab;
+
     // Start is called before the first frame update
     private void Awake()
     {
@@ -80,7 +81,8 @@ public class MapAssemblerScript : MonoBehaviour
     private void RenderAliasMapsOnUI()
     {
         foreach (StructuredAlias v in ParameterManager.Instance.AliasMaps) { 
-            Utility.renderAliasOnUI(AliasUIDisplay.transform.GetChild(0).GetComponent<RectTransform>(), ParameterManager.Instance.GridType, v, AliasPrefab, false);
+            GameObject g = Utility.renderAliasOnUI(AliasUIDisplay.transform.GetChild(0).GetComponent<RectTransform>(), ParameterManager.Instance.GridType, v, AliasPrefab, false);
+            g.transform.GetComponentInChildren<DragHandler>().canvas = GameUIManager.instance.GetComponent<Canvas>();
         }
     }
 }
