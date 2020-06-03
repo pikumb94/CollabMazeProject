@@ -445,7 +445,7 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
         //Save alias generation params
         p.aliasNum = Int32.Parse(InpFields[0].text);
         p.minStepsSolution = Int32.Parse(InpFields[1].text);
-        p.maxStepsSolution = Int32.Parse(InpFields[2].text);
+        p.maxStepsSolution = p.minStepsSolution;// Int32.Parse(InpFields[2].text); metto max uguale a min perchè attualmente l'impatto è poco influente data la natura generativa della creazione delle mappe
         p.allowAutosolverForAlias = t.isOn;
         
 

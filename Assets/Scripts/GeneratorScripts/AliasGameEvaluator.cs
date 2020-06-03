@@ -2,12 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI.Extensions;
+using System;
 
 public class AliasGameEvaluator : MonoBehaviour
 {
     public GameObject MainMapGO;
+    public GameObject CartesianGraphGO;
     public Color lineColorBest;
     public Color lineColorBestWorst;
+    public Color lineColoraverage;
+    
+
     private GameObject AliasContainerGO;
     private GameObject LineUIPrefab;
 
@@ -15,23 +20,37 @@ public class AliasGameEvaluator : MonoBehaviour
 
     private int nodesCount;
     private TreeNode<Vector2Int, Dictionary<int, bool>> root;
-    private List<TreeNode<Vector2Int, Dictionary<int, bool>>> LeavesSet;
-    private int maxDepth;
-
+    private List<TreeNode<Vector2Int, Dictionary<int, bool>>> ZeroLeavesSet;
+    private Dictionary<Vector2Int, TreeNode<Vector2Int, Dictionary<int, bool>>> LeavesSet;
+    private List<Tuple<List<float>, Color>> ChartLines;
     private ParameterManager pMan;
+
 
     private void Start()
     {
+        
         AliasContainerGO = AliasGeneratorManager.Instance.AliasDragAreas[0].gameObject;
         LineUIPrefab = GeneratorUIManager.Instance.LineUIPrefab;
         aliasList = AliasContainerGO.GetComponent<MapListManager>();
         pMan = ParameterManager.Instance;
+        ChartLines = new List<Tuple<List<float>, Color>>();
     }
 
     public void AliasGameEvaluatorHandler()
     {
-        LeavesSet=ConstructAliasTree();
-        printBestWorstPaths();
+        if (aliasList.dictionaryMap.Count != 0)
+        {
+            ZeroLeavesSet = ConstructAliasTree();
+            CartesianGraphGO.GetComponent<Window_Graph>().RemoveAllGraphs();
+            printBestWorstPaths();
+            buildAverageChartLine();
+            CartesianGraphGO.GetComponent<Window_Graph>().ShowGraphInBatch(ChartLines,-1,null,null);
+        }
+        else
+        {
+            CartesianGraphGO.GetComponent<Window_Graph>().RemoveAllGraphs();
+            //CartesianGraphGO.GetComponent<Window_Graph>().ShowGraph(new List<float>(){ 0}, lineColoraverage, -1, null, null);
+        }
     }
 
     private List<TreeNode<Vector2Int, Dictionary<int, bool>>> ConstructAliasTree()
@@ -50,6 +69,9 @@ public class AliasGameEvaluator : MonoBehaviour
         visitedNodes.Add(Vector2Int.zero);
         //leafNodes.Add(root);
         TreeNode<Vector2Int, Dictionary<int, bool>> minLeafNode = root;
+
+        LeavesSet = new Dictionary<Vector2Int, TreeNode<Vector2Int, Dictionary<int, bool>>>();
+        LeavesSet.Add(root.NodeKeyValue.Key, root);
 
         while (frontier.Count > 0)
         {
@@ -79,6 +101,12 @@ public class AliasGameEvaluator : MonoBehaviour
                         Node = new TreeNode<Vector2Int, Dictionary<int, bool>>(new KeyValuePair<Vector2Int, Dictionary<int, bool>>(c, CurrentNode.NodeKeyValue.Value), CurrentNode.nodeDepth + 1, CurrentNode);
                     else
                         Node = new TreeNode<Vector2Int, Dictionary<int, bool>>(new KeyValuePair<Vector2Int, Dictionary<int, bool>>(c, newDictionary), CurrentNode.nodeDepth+1, CurrentNode);
+
+                    //
+                    if(LeavesSet.ContainsKey(CurrentNode.NodeKeyValue.Key))
+                        LeavesSet.Remove(CurrentNode.NodeKeyValue.Key);
+                    LeavesSet.Add(Node.NodeKeyValue.Key, Node);
+                    //
 
                     if (newDictionary.Count != 0)
                     {
@@ -139,11 +167,11 @@ public class AliasGameEvaluator : MonoBehaviour
 
     public void printBestWorstPaths()
     {
-        int minDepth=LeavesSet[0].nodeDepth, maxDepth=0;
+        int minDepth= ZeroLeavesSet[0].nodeDepth, maxDepth=0;
         List<TreeNode<Vector2Int, Dictionary<int, bool>>> minNodes = new List<TreeNode<Vector2Int, Dictionary<int, bool>>>();
         List<TreeNode<Vector2Int, Dictionary<int, bool>>> maxNodes = new List<TreeNode<Vector2Int, Dictionary<int, bool>>>();
 
-        foreach (var l in LeavesSet)
+        foreach (var l in ZeroLeavesSet)
         {
             if (l.nodeDepth > maxDepth)
             {
@@ -189,7 +217,13 @@ public class AliasGameEvaluator : MonoBehaviour
                 backtrackSolution.ToArray(), GeneratorUIManager.Instance.originUIMap,
                 ParameterManager.Instance.GridType.TilePrefab.GetComponent<RectTransform>().sizeDelta.x, ParameterManager.Instance.GridType.TilePrefab.GetComponent<RectTransform>().sizeDelta.y);
             LineGO.GetComponent<UILineRenderer>().color = lineColorBestWorst;
+
             //LineGO.GetComponent<RectTransform>().position += new Vector3(GeneratorUIManager.Instance.originUIMap.x, GeneratorUIManager.Instance.originUIMap.y,0);
+            
+            List<float> toChart = buildPathChartLine(backtrackSolution);
+            toChart.Reverse();
+            ChartLines.Add(new Tuple<List<float>, Color>(toChart, lineColorBestWorst));
+            //CartesianGraphGO.GetComponent<Window_Graph>().ShowGraph(toChart, lineColorBestWorst, -1, null, null);
         }
 
         foreach (var l in minNodes)
@@ -208,8 +242,91 @@ public class AliasGameEvaluator : MonoBehaviour
                 backtrackSolution.ToArray(), GeneratorUIManager.Instance.originUIMap,
                 ParameterManager.Instance.GridType.TilePrefab.GetComponent<RectTransform>().sizeDelta.x, ParameterManager.Instance.GridType.TilePrefab.GetComponent<RectTransform>().sizeDelta.y);
             LineGO.GetComponent<UILineRenderer>().color = lineColorBest;
-            //LineGO.GetComponent<RectTransform>().position += new Vector3(GeneratorUIManager.Instance.originUIMap.x, GeneratorUIManager.Instance.originUIMap.y, 0);
 
+            //LineGO.GetComponent<RectTransform>().position += new Vector3(GeneratorUIManager.Instance.originUIMap.x, GeneratorUIManager.Instance.originUIMap.y, 0);
+            List<float> toChart = buildPathChartLine(backtrackSolution);
+            toChart.Reverse();
+            ChartLines.Add(new Tuple<List<float>, Color>(toChart, lineColorBest));
+            //CartesianGraphGO.GetComponent<Window_Graph>().ShowGraph(toChart, lineColorBest, -1, null, null);
         }
+    }
+
+    public List<float> buildPathChartLine(List<Vector2Int> pointList)
+    {
+        List<float> aliasPathCount = new List<float>();
+        TreeNode<Vector2Int, Dictionary<int, bool>> tmp = LeavesSet[pointList[0]];
+        while (tmp!=null)
+        {
+            aliasPathCount.Add(tmp.NodeKeyValue.Value.Count);
+            tmp = tmp.ParentNode;
+        }
+        return aliasPathCount;
+    }
+
+    public List<float> buildAverageChartLine()
+    {
+        Dictionary<int, List<TreeNode<Vector2Int, Dictionary<int, bool>>>> dicktionaryKeyStep = new Dictionary<int, List<TreeNode<Vector2Int, Dictionary<int, bool>>>>();
+        HashSet<Vector2Int> VisitedTreeNodes = new HashSet<Vector2Int>();
+
+        int maxDepth = 0;
+        foreach(var leaf in LeavesSet.Values)
+        {
+            if (!dicktionaryKeyStep.ContainsKey(leaf.nodeDepth))
+                dicktionaryKeyStep.Add(leaf.nodeDepth, new List<TreeNode<Vector2Int, Dictionary<int, bool>>>());
+
+            dicktionaryKeyStep[leaf.nodeDepth].Add(leaf);
+
+            if (leaf.nodeDepth > maxDepth)
+                maxDepth = leaf.nodeDepth;
+
+            VisitedTreeNodes.Add(leaf.NodeKeyValue.Key);
+        }
+        //dicktionaryKeyStep.Add(0, new List<TreeNode<Vector2Int, Dictionary<int, bool>>>() {root});
+        int i = maxDepth;
+
+        while (i > 0)
+        {
+            foreach (var node in dicktionaryKeyStep[i]) {
+                if (!VisitedTreeNodes.Contains(node.ParentNode.NodeKeyValue.Key))
+                {
+                    if (dicktionaryKeyStep.ContainsKey(i - 1))
+                    {
+                        dicktionaryKeyStep[i - 1].Add(node.ParentNode);
+                        VisitedTreeNodes.Add(node.ParentNode.NodeKeyValue.Key);
+                    }
+                    else
+                    {
+                        dicktionaryKeyStep.Add(i - 1, new List<TreeNode<Vector2Int, Dictionary<int, bool>>>());
+                        dicktionaryKeyStep[i - 1].Add(node.ParentNode);
+                        VisitedTreeNodes.Add(node.ParentNode.NodeKeyValue.Key);
+                    }
+                }
+
+            }
+            i--;
+        }
+
+        List<float> avgLine = new List<float>();
+
+
+        for (i = 0; i < dicktionaryKeyStep.Count; i++)
+        {
+            int avg=0;
+            foreach (var d in dicktionaryKeyStep[i])
+                avg += d.NodeKeyValue.Value.Count;
+
+            avgLine.Add((float)avg / (float)dicktionaryKeyStep[i].Count);
+        }
+
+        /*
+        GameObject LineGO = Instantiate(LineUIPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        avgLine.Reverse();
+        Utility.displaySegmentedLineUI_General(LineGO, StatisticsUIContainer.GetComponent<RectTransform>(),avgLine.ToArray(), Vector3.zero,10,10);
+        LineGO.GetComponent<UILineRenderer>().color = lineColoraverage;
+        LineGO.GetComponent<UILineRenderer>().LineThickness = 5;*/
+
+        ChartLines.Add(new Tuple<List<float>, Color>(avgLine, lineColoraverage));
+        //CartesianGraphGO.GetComponent<Window_Graph>().ShowGraph(avgLine, lineColoraverage, -1, null, null);
+        return avgLine;
     }
 }

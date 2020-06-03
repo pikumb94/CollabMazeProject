@@ -268,12 +268,25 @@ public class AliasGeneratorManager : Singleton<AliasGeneratorManager>
         TileObject[,] tmpStrAlias;
         while (i< ParameterManager.Instance.aliasNum)
         {
+            if (ParameterManager.Instance.considerSimilar)
+            {
+                float dst = SimilarMapsQueue.GetPriority(SimilarMapsQueue.First());
+                tmpStrAlias = SimilarMapsQueue.Dequeue();
+
+                Utility.renderAliasOnUI(AliasDragAreas[0].GetChild(0).GetComponent<RectTransform>(), ParameterManager.Instance.GridType, new StructuredAlias(tmpStrAlias, startMainMap, ParameterManager.Instance.EndCell, dst), AliasPrefab, true);
+                i++;
+            }
+
+            if (ParameterManager.Instance.considerNovelty)
+            {
+                tmpStrAlias = SimilarMapsQueue.Last();
+                float dst = SimilarMapsQueue.GetPriority(tmpStrAlias);
+                SimilarMapsQueue.Remove(tmpStrAlias);
+
+                Utility.renderAliasOnUI(AliasDragAreas[0].GetChild(0).GetComponent<RectTransform>(), ParameterManager.Instance.GridType, new StructuredAlias(tmpStrAlias, startMainMap, ParameterManager.Instance.EndCell, dst), AliasPrefab, true);
+                i++;
+            }
             
-            float dst = SimilarMapsQueue.GetPriority(SimilarMapsQueue.First());
-            tmpStrAlias = SimilarMapsQueue.Dequeue();
-            
-            Utility.renderAliasOnUI(AliasDragAreas[0].GetChild(0).GetComponent<RectTransform>(), ParameterManager.Instance.GridType, new StructuredAlias(tmpStrAlias,startMainMap,ParameterManager.Instance.EndCell, dst),AliasPrefab, true);
-            i++;
         }
 
         i = 0;
@@ -313,6 +326,46 @@ public class AliasGeneratorManager : Singleton<AliasGeneratorManager>
         }
 
         gameObject.GetComponent<AliasGameEvaluator>().AliasGameEvaluatorHandler();
+    }
+
+    public void refershSimilarMapsBatch()
+    {
+        int i = 0;
+        TileObject[,] tmpStrAlias;
+        Vector2Int startMainMap = ParameterManager.Instance.StartCell;
+
+        GeneratorUIManager.Instance.deleteMapOnUI(AliasDragAreas[1].GetChild(0));
+        AliasDragAreas[1].GetComponent<MapListManager>().dictionaryMap.Clear();
+
+        while (i < BatchAliasNumber)
+        {
+            float dst = SimilarMapsQueue.GetPriority(SimilarMapsQueue.First());
+            tmpStrAlias = SimilarMapsQueue.Dequeue();
+
+            Utility.renderAliasOnUI(AliasDragAreas[1].GetChild(0).GetComponent<RectTransform>(), ParameterManager.Instance.GridType, new StructuredAlias(tmpStrAlias, startMainMap, ParameterManager.Instance.EndCell, dst), AliasPrefab, true);
+            i++;
+        }
+    }
+
+    public void refershNoveltyMapsBatch()
+    {
+        int i = 0;
+        TileObject[,] tmpStrAlias;
+        Vector2Int startMainMap = ParameterManager.Instance.StartCell;
+
+        GeneratorUIManager.Instance.deleteMapOnUI(AliasDragAreas[2].GetChild(0));
+        AliasDragAreas[2].GetComponent<MapListManager>().dictionaryMap.Clear();
+
+        while (i < BatchAliasNumber)
+        {
+            tmpStrAlias = SimilarMapsQueue.Last();
+            float dst = SimilarMapsQueue.GetPriority(tmpStrAlias);
+            SimilarMapsQueue.Remove(tmpStrAlias);
+
+            Utility.renderAliasOnUI(AliasDragAreas[2].GetChild(0).GetComponent<RectTransform>(), ParameterManager.Instance.GridType, new StructuredAlias(tmpStrAlias, startMainMap, ParameterManager.Instance.EndCell, dst), AliasPrefab, true);
+
+            i++;
+        }
     }
 
     //Needs K_CollisionSet to be relative to the (0,0) cell!

@@ -91,6 +91,7 @@
     <Compile Include="Assets\Scripts\ExternalScripts\Priority Queue\SimplePriorityQueue.cs" />
     <Compile Include="Assets\Scripts\ExternalScripts\Priority Queue\StablePriorityQueue.cs" />
     <Compile Include="Assets\Scripts\ExternalScripts\Priority Queue\StablePriorityQueueNode.cs" />
+    <Compile Include="Assets\Scripts\ExternalScripts\Window_Graph.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\GameManager_Generator.cs" />
     <Compile Include="Assets\Scripts\GameUIManager.cs" />

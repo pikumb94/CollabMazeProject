@@ -69,15 +69,7 @@ MonoBehaviour:
   m_improveResolution: 0
   m_Resolution: 0
   m_useNativeSize: 0
-  m_points:
-  - {x: 0, y: 320}
-  - {x: 64, y: 320}
-  - {x: 64, y: 256}
-  - {x: 64, y: 192}
-  - {x: 64, y: 128}
-  - {x: 64, y: 64}
-  - {x: 0, y: 64}
-  - {x: 0, y: 0}
+  m_points: []
   lineThickness: 10
   relativeSize: 0
   lineList: 0

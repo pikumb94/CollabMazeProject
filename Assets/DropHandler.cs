@@ -10,18 +10,18 @@ public class DropHandler : MonoBehaviour, IDropHandler
     private Rect rectCellContainer;
     private Color defaultColor;
 
-    private Dictionary<int, StructuredAlias> dicMaps;
+    private MapListManager dicMaps;
     
     public void Start()
     {
         GridLayoutGroup GrLGr = GetComponentInChildren<GridLayoutGroup>();
         rectCellContainer = new Rect(Vector2.zero, GrLGr.cellSize);
         defaultColor = GetComponent<Image>().color;
-        dicMaps = GetComponent<MapListManager>().dictionaryMap;
+        dicMaps = GetComponent<MapListManager>();
     }
     public void OnDrop(PointerEventData eventData)
     {
-        Debug.Log("ONDROP");
+        
         if (droppable && eventData.pointerDrag.name.Contains("DragNDrop"))
         {
             
@@ -34,9 +34,10 @@ public class DropHandler : MonoBehaviour, IDropHandler
             AliasElement.transform.SetParent(transform.GetChild(0).transform);
 
             //}
-            if (!dicMaps.ContainsKey(AliasElement.GetInstanceID()))
+            if (!dicMaps.dictionaryMap.ContainsKey(AliasElement.GetInstanceID()))
             {
-                dicMaps.Add(AliasElement.GetInstanceID(), eventData.pointerDrag.GetComponent<DragHandler>().MapOnDrag.Value);
+                dicMaps.addMapToDictionary(eventData.pointerDrag.GetComponent<DragHandler>().MapOnDrag.Value, AliasElement.GetInstanceID());
+                
                 eventData.pointerDrag.GetComponent<DragHandler>().OriginalParent = gameObject;
                 //update statistics
                 AliasGeneratorManager.Instance.deleteBestWorstUILines();
@@ -51,6 +52,10 @@ public class DropHandler : MonoBehaviour, IDropHandler
 
             RectTransform contentRect = eventData.pointerDrag.transform.parent.Find("Content").GetComponent<RectTransform>();
             GeneratorUIManager.Instance.ScaleToFitContainer(contentRect, rectCellContainer);
+        }
+        else
+        {
+            //Debug.Log("ONDROP_Outsidearea");
         }
         
     }

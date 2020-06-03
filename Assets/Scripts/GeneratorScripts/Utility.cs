@@ -102,6 +102,44 @@ public static class Utility
         LineRenderer.Points = PointsF;
     }
 
+    public static void SetAndStretchToParentSize(RectTransform _mRect, RectTransform _parent)
+    {
+        _mRect.anchoredPosition = _parent.position;
+        _mRect.anchorMin = new Vector2(1, 0);
+        _mRect.anchorMax = new Vector2(0, 1);
+        _mRect.pivot = new Vector2(0.5f, 0.5f);
+        _mRect.sizeDelta = _parent.rect.size;
+        _mRect.transform.SetParent(_parent);
+    }
+
+    //Display a lines on the UI given a collection of points. Requires a game object LineGameObj with a UILineRenderer component
+    public static void displaySegmentedLineUI_General(GameObject LineGameObj, RectTransform destination, Vector2[] Points, Vector2 originPos, float offsetX, float offsetY)
+    {
+        LineGameObj.transform.SetParent(destination.transform);
+        LineGameObj.transform.localPosition = Vector3.zero;
+        LineGameObj.transform.localScale = Vector3.one;
+        UILineRenderer LineRenderer = LineGameObj.GetComponent<UILineRenderer>();
+        /*
+        Vector2[] PointsF = Array.ConvertAll(Points, item => (Vector2)item);
+
+        for (int i = Points.Length - 1; i >= 0; i--)
+        {
+            float dx = Points[i].x - Points[Points.Length - 1].x;
+            float dy = Points[i].y - Points[Points.Length - 1].y;
+
+            Vector2 pUI = new Vector2(originPos.x + offsetX * dx, originPos.y + offsetY * dy);
+            PointsF[i] = pUI;
+        }
+        LineRenderer.Points = PointsF;*/
+        for (int i = 0; i < Points.Length; i++)
+        {
+            Points[i].x *= offsetX;
+            Points[i].y *= offsetY;
+        }
+
+        LineRenderer.Points = Points;
+    }
+
     public static Vector3 GetGUIElementOffset(RectTransform rect)
     {
         Rect screenBounds = new Rect(0f, 0f, Screen.width, Screen.height);
