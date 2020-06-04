@@ -76,7 +76,7 @@ public class AliasGameEvaluator : MonoBehaviour
         while (frontier.Count > 0)
         {
             TreeNode<Vector2Int, Dictionary<int, bool>> CurrentNode = frontier.Dequeue();
-            Vector2Int[] Cells = Utility.getAllNeighboursWOBoundCheck_General(CurrentNode.NodeKeyValue.Key, pMan.GridType, pMan.MapToPlay.GetLength(0), pMan.MapToPlay.GetLength(1));
+            Vector2Int[] Cells = Utility.getAllNeighboursWOBoundCheck_General(CurrentNode.NodeKeyValue.Key, pMan.GridType);
             List<Vector2Int> cellList = new List<Vector2Int>(Cells);
             //You can never come from outside the map => except the coming cells, you should have 3 elements with getAllNeighbours and the difference indicates the OoB cells.
             if(CurrentNode.ParentNode != null)
@@ -328,5 +328,192 @@ public class AliasGameEvaluator : MonoBehaviour
         ChartLines.Add(new Tuple<List<float>, Color>(avgLine, lineColoraverage));
         //CartesianGraphGO.GetComponent<Window_Graph>().ShowGraph(avgLine, lineColoraverage, -1, null, null);
         return avgLine;
+    }
+
+    public Tuple<float[],List<int>> getStepStatistics(Vector2Int stepAttempt, Dictionary<int, bool> currDic)
+    {
+        Dictionary<int, bool> newDictionary = new Dictionary<int, bool>();
+        float[] stepStatistic = new float[] { 0, 0, 0 };//respectivly room, wall, out of border
+        List<int> alisIDList = new List<int>();
+
+        foreach (KeyValuePair<int, StructuredAlias> m in aliasList.dictionaryMap)
+        {
+            if (currDic.ContainsKey(m.Key))
+            {
+
+                if (!Utility.in_bounds_General(stepAttempt + m.Value.start, m.Value.AliasMap.GetLength(0), m.Value.AliasMap.GetLength(1)))
+                {
+                    stepStatistic[2]++;
+                    alisIDList[2] =m.Key;
+                }
+                else if (m.Value.AliasMap[stepAttempt.x + m.Value.start.x, stepAttempt.y + m.Value.start.y].type != IGenerator.wallChar)
+                {
+                    stepStatistic[0]++;
+                    alisIDList[0] = m.Key;
+                }
+                else if (m.Value.AliasMap[stepAttempt.x + m.Value.start.x, stepAttempt.y + m.Value.start.y].type == IGenerator.wallChar) {
+                    stepStatistic[1]++;
+                    alisIDList[1]=m.Key;
+                }
+
+            }
+
+        }
+
+        if (!Utility.in_bounds_General(stepAttempt + pMan.StartCell, pMan.MapToPlay.GetLength(0), pMan.MapToPlay.GetLength(1)))
+        {
+            stepStatistic[2]++;
+            alisIDList[2]=MainMapGO.GetInstanceID();
+        }
+        else if (pMan.MapToPlay[stepAttempt.x + pMan.StartCell.x, stepAttempt.y + pMan.StartCell.y].type != IGenerator.wallChar)
+        {
+            stepStatistic[0]++;
+            alisIDList[0] = MainMapGO.GetInstanceID();
+        }
+        else if (pMan.MapToPlay[stepAttempt.x + pMan.StartCell.x, stepAttempt.y + pMan.StartCell.y].type == IGenerator.wallChar)
+        {
+            stepStatistic[1]++;
+            alisIDList[1] = MainMapGO.GetInstanceID();
+        }
+
+        for (int i = 0; i < stepStatistic.Length; i++)
+        {
+            stepStatistic[i] /= currDic.Count;
+        }
+
+        return new Tuple<float[], List<int>>(stepStatistic, alisIDList);
+    }
+
+    public List<Tuple<Vector2Int, int>> PrudentAgentPath()
+    {
+        
+        
+        Dictionary<int, bool> playerDictionary = new Dictionary<int, bool>();
+        foreach (KeyValuePair<int, StructuredAlias> m in aliasList.dictionaryMap)
+            playerDictionary.Add(m.Key, true);
+        playerDictionary.Add(MainMapGO.GetInstanceID(), true);//?
+
+        
+        TreeNodeComplete<Vector2Int, Dictionary<int, bool>> root = new TreeNodeComplete<Vector2Int, Dictionary<int, bool>>(new KeyValuePair<Vector2Int, Dictionary<int, bool>>(Vector2Int.zero, playerDictionary), 0, null);
+        TreeNodeComplete<Vector2Int, Dictionary<int, bool>>  currCell = root;
+        HashSet<Vector2Int> visitedCells = new HashSet<Vector2Int>() { root.NodeKeyValue.Key};
+
+        List<Tuple<Vector2Int,int>> pathAgentWDicCount = new List<Tuple<Vector2Int, int>>();
+        pathAgentWDicCount.Add(new Tuple<Vector2Int, int>(root.NodeKeyValue.Key, playerDictionary.Count));
+
+        while (currCell.NodeKeyValue.Key + pMan.StartCell != pMan.EndCell)
+        {
+            //current treenode build so no init operations
+            Vector2Int nextMove = new Vector2Int();
+
+            //if out map or on Wall found...
+            if (!Utility.in_bounds_General(currCell.NodeKeyValue.Key + pMan.StartCell, pMan.MapToPlay.GetLength(0), pMan.MapToPlay.GetLength(1)) || 
+                pMan.MapToPlay[currCell.NodeKeyValue.Key.x + pMan.StartCell.x, currCell.NodeKeyValue.Key.y + pMan.StartCell.y].type == IGenerator.wallChar)
+            {
+                //pathDic already updated by the cycle before for currcell
+                //visit cell updated
+                //path updated: we trace the fact that we go back to the room from wall or out of map cells
+                visitedCells.Add(currCell.ParentNode.NodeKeyValue.Key);
+                pathAgentWDicCount.Add(new Tuple<Vector2Int, int>(root.NodeKeyValue.Key, playerDictionary.Count));
+
+            }
+            else//is a room cell current so seek for unvisited child using the smart policy
+            {
+                HashSet<Vector2Int> NeighCells = new HashSet<Vector2Int>(Utility.getAllNeighboursWOBoundCheck_General(currCell.NodeKeyValue.Key, pMan.GridType));
+                //List<Vector2Int> cellList = new List<Vector2Int>(Cells);
+                Dictionary<Vector2Int, Tuple<float[], List<int>>> StatisticsOnAttempts = new Dictionary<Vector2Int, Tuple<float[], List<int>>>();
+
+                if (currCell.ParentNode != null)
+                {
+                    NeighCells.IntersectWith(visitedCells);
+
+                }
+                if (NeighCells.Count != 0)
+                {
+                    //APPLY CUSTOM HEURISTIC----
+                    foreach (var moveAttempt in NeighCells)
+                    {
+                        StatisticsOnAttempts.Add(moveAttempt, getStepStatistics(moveAttempt, playerDictionary));
+                    }
+
+                    List<Vector2Int> maxList = new List<Vector2Int>();
+                    float max = 0;
+
+                    foreach (var attemptStatistic in StatisticsOnAttempts)
+                    {
+                        float newMax = Math.Max(attemptStatistic.Value.Item1[0], attemptStatistic.Value.Item1[2]);
+                        if (newMax > max)
+                        {
+                            max = newMax;
+                            maxList.Clear();
+                        }
+
+                        if (newMax == max)
+                            maxList.Add(attemptStatistic.Key);
+                    }
+
+
+                    if (maxList.Count == 1)
+                    {
+
+                        nextMove = maxList[0];
+                    }
+                    else
+                    {
+                        int minDstOfNxtMove = ParameterManager.Instance.GridType.heuristic(pMan.StartCell, pMan.EndCell);
+
+                        foreach (var nextMvs in maxList)
+                        {
+                            List<int> mapsID = new List<int>();
+                            /*foreach (var f in StatisticsOnAttempts[nextMvs].Item1) suppose to delete
+                                if (f == max)
+                                    mapsID.Add(StatisticsOnAttempts[nextMvs].Item2[i]);*/
+
+                            for (int i = 0; i < StatisticsOnAttempts[nextMvs].Item1.Length; i++)
+                            {
+                                if (StatisticsOnAttempts[nextMvs].Item1[i] == max)
+                                    mapsID.Add(StatisticsOnAttempts[nextMvs].Item2[i]);
+                            }
+
+                            int finalH = 0;
+
+                            foreach (var id in mapsID)
+                            {
+                                finalH += ParameterManager.Instance.GridType.heuristic(aliasList.dictionaryMap[id].start + (nextMvs - pMan.StartCell), aliasList.dictionaryMap[id].end);
+                            }
+                            finalH /= mapsID.Count;
+
+                            if (finalH < minDstOfNxtMove)
+                            {
+                                minDstOfNxtMove = finalH;
+                                nextMove = nextMvs;
+                            }
+
+                        }
+
+                    }
+                    //END CUSTOM HEURISTIC---
+
+                    playerDictionary = updateAliasDictionary(nextMove, playerDictionary);
+                    currCell = new TreeNodeComplete<Vector2Int, Dictionary<int, bool>>(nextMove, playerDictionary, currCell.nodeDepth + 1, null);
+                    visitedCells.Add(currCell.ParentNode.NodeKeyValue.Key);
+                    pathAgentWDicCount.Add(new Tuple<Vector2Int, int>(root.NodeKeyValue.Key, playerDictionary.Count));
+                }
+                else
+                {
+                    //DEADENDFOUND BACKTRACK: go back from room deadend to parent
+                    visitedCells.Add(currCell.ParentNode.NodeKeyValue.Key);
+                    pathAgentWDicCount.Add(new Tuple<Vector2Int, int>(root.NodeKeyValue.Key, playerDictionary.Count));
+                    currCell = currCell.ParentNode;
+
+                }
+                
+            }
+
+            //Update everything wrt new move found
+
+        }
+
+        return pathAgentWDicCount;
     }
 }

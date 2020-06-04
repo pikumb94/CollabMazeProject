@@ -301,7 +301,7 @@ public static class Utility
     }
 
     //this version get all neighbours including walls and cells outside the grid: is a more general version
-    public static Vector2Int[] getAllNeighboursWOBoundCheck_General(Vector2Int id, ITypeGrid TypeGrid, int width, int height)
+    public static Vector2Int[] getAllNeighboursWOBoundCheck_General(Vector2Int id, ITypeGrid TypeGrid)
     {
         Vector2Int[] results = new Vector2Int[] { };
 
