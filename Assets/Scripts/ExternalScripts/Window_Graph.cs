@@ -254,35 +254,37 @@ public class Window_Graph : MonoBehaviour {
         }
 
         //write the rest of the lines
-        for (int i = 0; i < LineBatch.Count && i != maxI; i++)
+        for (int i = 0; i < LineBatch.Count; i++)
         {
-            xIndex = 0;
+            if (i != maxI) {
+                xIndex = 0;
 
-            LineGO = Instantiate(LineUIPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-            gameObjectList.Add(LineGO);
-            LineGO.transform.SetParent(graphContainer, false);
-            lineRect = LineGO.GetComponent<RectTransform>();
-            lineRect.anchorMax = Vector2.zero;
-            lineRect.anchorMin = Vector2.zero;
-            lineRect.pivot = Vector2.zero;
-            LineRenderer = LineGO.GetComponent<UILineRenderer>();
-            LineRenderer.color = LineBatch[i].Item2;
+                LineGO = Instantiate(LineUIPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+                gameObjectList.Add(LineGO);
+                LineGO.transform.SetParent(graphContainer, false);
+                lineRect = LineGO.GetComponent<RectTransform>();
+                lineRect.anchorMax = Vector2.zero;
+                lineRect.anchorMin = Vector2.zero;
+                lineRect.pivot = Vector2.zero;
+                LineRenderer = LineGO.GetComponent<UILineRenderer>();
+                LineRenderer.color = LineBatch[i].Item2;
 
-            for (int j = 0; j < LineBatch[i].Item1.Count; j++)
-            {
-                float xPosition = xSize + xIndex * xSize;
-                float yPosition = ((LineBatch[i].Item1[j] - yMinimum) / (yMaximum - yMinimum)) * graphHeight;
-                GameObject circleGameObject = CreateCircle(new Vector2(xPosition, yPosition));
-                gameObjectList.Add(circleGameObject);
+                for (int j = 0; j < LineBatch[i].Item1.Count; j++)
+                {
+                    float xPosition = xSize + xIndex * xSize;
+                    float yPosition = ((LineBatch[i].Item1[j] - yMinimum) / (yMaximum - yMinimum)) * graphHeight;
+                    GameObject circleGameObject = CreateCircle(new Vector2(xPosition, yPosition));
+                    gameObjectList.Add(circleGameObject);
 
-                lastCircleGameObject = circleGameObject;
+                    lastCircleGameObject = circleGameObject;
 
-                xIndex++;
-                //
-                var pointlist = new List<Vector2>(LineRenderer.Points);
-                pointlist.Add(new Vector2(xPosition, yPosition));
-                LineRenderer.Points = pointlist.ToArray();
-                //
+                    xIndex++;
+                    //
+                    var pointlist = new List<Vector2>(LineRenderer.Points);
+                    pointlist.Add(new Vector2(xPosition, yPosition));
+                    LineRenderer.Points = pointlist.ToArray();
+                    //
+                }
             }
         }
 
