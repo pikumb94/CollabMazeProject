@@ -219,6 +219,9 @@ public class AliasGameEvaluator : MonoBehaviour
         List<float> BestChart = new List<float>();
         List<float> BestWorstChart = new List<float>();
 
+        BestPaths = new List<List<Vector2Int>>();
+        BestWorstPaths = new List<List<Vector2Int>>();
+
         foreach (var l in maxNodes)
         {
             TreeNode<Vector2Int, Dictionary<int, bool>> tmp = l.ParentNode;
@@ -230,6 +233,7 @@ public class AliasGameEvaluator : MonoBehaviour
                 backtrackSolution.Add(tmp.NodeKeyValue.Key);
                 tmp = tmp.ParentNode;
             }
+
             BestWorstPaths.Add(backtrackSolution);
                         
             List<float> toChart = buildPathChartLine(backtrackSolution);
@@ -239,7 +243,7 @@ public class AliasGameEvaluator : MonoBehaviour
                 for (int i = 0; i < toChart.Count; i++)
                 {
                     if (i < BestWorstChart.Count)
-                        BestWorstChart[i] = toChart[i];
+                        BestWorstChart[i] += toChart[i];
                     else
                         BestWorstChart.Add(toChart[i]);
                 }
@@ -249,16 +253,18 @@ public class AliasGameEvaluator : MonoBehaviour
             {
                 for (int i = 0; i < BestWorstChart.Count; i++)
                 {
-                   BestWorstChart[i] = toChart[i];
+                   BestWorstChart[i] += toChart[i];
                 }
             }
 
-            for (int i = 0; i < BestWorstChart.Count; i++)
-            {
-                BestWorstChart[i] /= BestWorstPaths.Count;
-            }
-            ChartLines.Add(new Tuple<List<float>, Color>(toChart, lineColorBestWorst));
+            
         }
+
+        for (int i = 0; i < BestWorstChart.Count; i++)
+        {
+            BestWorstChart[i] /= BestWorstPaths.Count;
+        }
+        ChartLines.Add(new Tuple<List<float>, Color>(BestWorstChart, lineColorBestWorst));
 
         foreach (var l in minNodes)
         {
@@ -275,8 +281,32 @@ public class AliasGameEvaluator : MonoBehaviour
 
             List<float> toChart = buildPathChartLine(backtrackSolution);
             toChart.Reverse();
-            ChartLines.Add(new Tuple<List<float>, Color>(toChart, lineColorBest));
+            if (toChart.Count > BestChart.Count)
+            {
+                for (int i = 0; i < toChart.Count; i++)
+                {
+                    if (i < BestChart.Count)
+                        BestChart[i] += toChart[i];
+                    else
+                        BestChart.Add(toChart[i]);
+                }
+
+            }
+            else
+            {
+                for (int i = 0; i < BestChart.Count; i++)
+                {
+                    BestChart[i] += toChart[i];
+                }
+            }
         }
+
+        for (int i = 0; i < BestChart.Count; i++)
+        {
+            BestChart[i] /= BestPaths.Count;
+        }
+        ChartLines.Add(new Tuple<List<float>, Color>(BestChart, lineColorBest));
+
 
         GameObject LineGO = Instantiate(LineUIPrefab, new Vector3(0, 0, 0), Quaternion.identity);
         Utility.displaySegmentedLineUI(LineGO, MainMapGO.transform.Find("BorderMask/Content").GetComponent<RectTransform>(),
