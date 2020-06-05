@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI.Extensions;
 using System;
+using System.Linq;
+using UnityEngine.UI;
 
 public class AliasGameEvaluator : MonoBehaviour
 {
@@ -10,9 +12,10 @@ public class AliasGameEvaluator : MonoBehaviour
     public GameObject CartesianGraphGO;
     public Color lineColorBest;
     public Color lineColorBestWorst;
-    public Color lineColoraverage;
+    public Color lineColorAggressiveAgent;
     public Color lineColorPrudentAgent;
-
+    public Color lineColorAverage;
+    public GameObject ToggleLineContainerGO;
 
     private GameObject AliasContainerGO;
     private GameObject LineUIPrefab;
@@ -31,6 +34,8 @@ public class AliasGameEvaluator : MonoBehaviour
     private List<List<Vector2Int>> BestPaths;
     private List<List<Vector2Int>> BestWorstPaths;
 
+    private List<GameObject> LinesGO;
+
     private void Start()
     {
         
@@ -39,25 +44,62 @@ public class AliasGameEvaluator : MonoBehaviour
         aliasList = AliasContainerGO.GetComponent<MapListManager>();
         pMan = ParameterManager.Instance;
         ChartLines = new List<Tuple<List<float>, Color>>();
+        LinesGO = new List<GameObject>();
     }
 
     public void AliasGameEvaluatorHandler()
     {
+        ChartLines.Clear();
+        DestroyMapLines();
+        CartesianGraphGO.GetComponent<Window_Graph>().RemoveAllGraphs();
+
         if (aliasList.dictionaryMap.Count != 0)
         {
-            ChartLines.Clear();
-            ZeroLeavesSet = ConstructAliasTreeWDuplicates();
+            
+            //ZeroLeavesSet = ConstructAliasTreeWDuplicates();
             //ZeroLeavesSet = ConstructAliasTree();
-            CartesianGraphGO.GetComponent<Window_Graph>().RemoveAllGraphs();
+
+            ZeroLeavesSet = ConstructAliasTreeWDuplicates();
             printBestWorstPaths();
             //buildAverageChartLine(); WORKS ONLY WITH ConstructAliasTree(); THAT BUILDS ALL THE LEAVES (but still not correctly)
             PrudentAgentPath();
+            AggressiveAgentPath();
             CartesianGraphGO.GetComponent<Window_Graph>().ShowGraphInBatch(ChartLines,-1,null,null);
         }
         else
         {
             CartesianGraphGO.GetComponent<Window_Graph>().RemoveAllGraphs();
             //CartesianGraphGO.GetComponent<Window_Graph>().ShowGraph(new List<float>(){ 0}, lineColoraverage, -1, null, null);
+        }
+        //refreshToggles();
+    }
+
+    public void DestroyMapLines()
+    {
+        foreach (GameObject gameObject in LinesGO)
+        {
+            Destroy(gameObject);
+        }
+        LinesGO.Clear();
+    }
+
+    public void refreshToggle()
+    {
+        Toggle[] toggles = ToggleLineContainerGO.GetComponentsInChildren<Toggle>();
+
+        foreach (var l in toggles)
+        {
+            l.gameObject.GetComponent<ToggleLineOnMap>().refreshLineReference();
+        }
+    }
+
+    public void refreshToggle(GameObject lineGO)
+    {
+        Toggle[] toggles = ToggleLineContainerGO.GetComponentsInChildren<Toggle>();
+
+        foreach (var l in toggles)
+        {
+            l.gameObject.GetComponent<ToggleLineOnMap>().refreshLineReference( lineGO);
         }
     }
 
@@ -251,7 +293,7 @@ public class AliasGameEvaluator : MonoBehaviour
             }
             else
             {
-                for (int i = 0; i < BestWorstChart.Count; i++)
+                for (int i = 0; i < toChart.Count; i++)
                 {
                    BestWorstChart[i] += toChart[i];
                 }
@@ -294,7 +336,7 @@ public class AliasGameEvaluator : MonoBehaviour
             }
             else
             {
-                for (int i = 0; i < BestChart.Count; i++)
+                for (int i = 0; i < toChart.Count; i++)
                 {
                     BestChart[i] += toChart[i];
                 }
@@ -307,18 +349,23 @@ public class AliasGameEvaluator : MonoBehaviour
         }
         ChartLines.Add(new Tuple<List<float>, Color>(BestChart, lineColorBest));
 
+        System.Random rand = new System.Random((int)DateTime.Now.Ticks);
 
         GameObject LineGO = Instantiate(LineUIPrefab, new Vector3(0, 0, 0), Quaternion.identity);
         Utility.displaySegmentedLineUI(LineGO, MainMapGO.transform.Find("BorderMask/Content").GetComponent<RectTransform>(),
-            BestWorstPaths[0].ToArray(), GeneratorUIManager.Instance.originUIMap,
+            BestWorstPaths[rand.Next(0, Int32.MaxValue)%BestWorstPaths.Count].ToArray(), GeneratorUIManager.Instance.originUIMap,
             ParameterManager.Instance.GridType.TilePrefab.GetComponent<RectTransform>().sizeDelta.x, ParameterManager.Instance.GridType.TilePrefab.GetComponent<RectTransform>().sizeDelta.y);
         LineGO.GetComponent<UILineRenderer>().color = lineColorBestWorst;
+        LinesGO.Add(LineGO);
+        refreshToggle(LineGO);
 
         LineGO = Instantiate(LineUIPrefab, new Vector3(0, 0, 0), Quaternion.identity);
         Utility.displaySegmentedLineUI(LineGO, MainMapGO.transform.Find("BorderMask/Content").GetComponent<RectTransform>(),
-            BestPaths[0].ToArray(), GeneratorUIManager.Instance.originUIMap,
+            BestPaths[rand.Next(0, Int32.MaxValue) % BestPaths.Count].ToArray(), GeneratorUIManager.Instance.originUIMap,
             ParameterManager.Instance.GridType.TilePrefab.GetComponent<RectTransform>().sizeDelta.x, ParameterManager.Instance.GridType.TilePrefab.GetComponent<RectTransform>().sizeDelta.y);
         LineGO.GetComponent<UILineRenderer>().color = lineColorBest;
+        LinesGO.Add(LineGO);
+        refreshToggle(LineGO);
     }
 
     public List<float> buildPathChartLine(List<Vector2Int> pointList)
@@ -395,7 +442,7 @@ public class AliasGameEvaluator : MonoBehaviour
         LineGO.GetComponent<UILineRenderer>().color = lineColoraverage;
         LineGO.GetComponent<UILineRenderer>().LineThickness = 5;*/
 
-        ChartLines.Add(new Tuple<List<float>, Color>(avgLine, lineColoraverage));
+        ChartLines.Add(new Tuple<List<float>, Color>(avgLine, lineColorAverage));
         //CartesianGraphGO.GetComponent<Window_Graph>().ShowGraph(avgLine, lineColoraverage, -1, null, null);
         return avgLine;
     }
@@ -471,6 +518,7 @@ public class AliasGameEvaluator : MonoBehaviour
         List<Tuple<Vector2Int,int>> pathAgentWDicCount = new List<Tuple<Vector2Int, int>>();
         pathAgentWDicCount.Add(new Tuple<Vector2Int, int>(root.NodeKeyValue.Key, playerDictionary.Count));
 
+        bool allVisitedAndOnlyWalls = false;
         while (currCell.NodeKeyValue.Key + pMan.StartCell != pMan.EndCell)
         {
             //current treenode build so no init operations
@@ -494,11 +542,9 @@ public class AliasGameEvaluator : MonoBehaviour
                 //List<Vector2Int> cellList = new List<Vector2Int>(Cells);
                 Dictionary<Vector2Int, Tuple<float[], List<int>[]>> StatisticsOnAttempts = new Dictionary<Vector2Int, Tuple<float[], List<int>[]>>();
 
-                if (currCell.ParentNode != null)
-                {
+                //if (currCell.ParentNode != null)
                     NeighCells.ExceptWith(visitedCells);
 
-                }
                 if (NeighCells.Count != 0)
                 {
                     //APPLY CUSTOM HEURISTIC----
@@ -557,7 +603,15 @@ public class AliasGameEvaluator : MonoBehaviour
                                 else
                                     ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "MapID not found during agent path building.");
                             }
-                            finalH /= mapsID.Count;
+                            if (mapsID.Count>0)
+                            {
+                                finalH /= mapsID.Count;
+                            }
+                            else
+                            {
+                                allVisitedAndOnlyWalls = true;
+                            }
+                            
 
                             if (finalH < minDstOfNxtMove)
                             {
@@ -569,11 +623,21 @@ public class AliasGameEvaluator : MonoBehaviour
 
                     }
                     //END CUSTOM HEURISTIC---
+                    if (allVisitedAndOnlyWalls)
+                    {
+                        currCell = currCell.ParentNode;
+                        visitedCells.Add(currCell.NodeKeyValue.Key);
+                        pathAgentWDicCount.Add(new Tuple<Vector2Int, int>(currCell.NodeKeyValue.Key, playerDictionary.Count));
+                    }
+                    else
+                    {
+                        playerDictionary = updateAliasDictionaryWReal(nextMove, playerDictionary);
+                        currCell = new TreeNodeComplete<Vector2Int, Dictionary<int, bool>>(nextMove, playerDictionary, currCell.nodeDepth + 1, currCell);
+                        visitedCells.Add(currCell.NodeKeyValue.Key);
+                        pathAgentWDicCount.Add(new Tuple<Vector2Int, int>(currCell.NodeKeyValue.Key, playerDictionary.Count));
+                    }
 
-                    playerDictionary = updateAliasDictionaryWReal(nextMove, playerDictionary);
-                    currCell = new TreeNodeComplete<Vector2Int, Dictionary<int, bool>>(nextMove, playerDictionary, currCell.nodeDepth + 1, currCell);
-                    visitedCells.Add(currCell.NodeKeyValue.Key);
-                    pathAgentWDicCount.Add(new Tuple<Vector2Int, int>(currCell.NodeKeyValue.Key, playerDictionary.Count));
+                    allVisitedAndOnlyWalls = false;
                 }
                 else
                 {
@@ -610,7 +674,8 @@ public class AliasGameEvaluator : MonoBehaviour
         LineGO.GetComponent<UILineRenderer>().color = lineColorPrudentAgent;
 
         ChartLines.Add(new Tuple<List<float>, Color>(chartAgentLine, lineColorPrudentAgent));
-
+        LinesGO.Add(LineGO);
+        refreshToggle(LineGO);
         return pathAgentWDicCount;
     }
 
@@ -730,5 +795,168 @@ public class AliasGameEvaluator : MonoBehaviour
         }
         //
         return leafNodes;
+    }
+
+    public List<Tuple<Vector2Int, int>> AggressiveAgentPath()
+    {
+
+
+        Dictionary<int, bool> playerDictionary = new Dictionary<int, bool>();
+        foreach (KeyValuePair<int, StructuredAlias> m in aliasList.dictionaryMap)
+            playerDictionary.Add(m.Key, true);
+        playerDictionary.Add(MainMapGO.GetInstanceID(), true);//?
+
+
+        TreeNodeComplete<Vector2Int, Dictionary<int, bool>> root = new TreeNodeComplete<Vector2Int, Dictionary<int, bool>>(new KeyValuePair<Vector2Int, Dictionary<int, bool>>(Vector2Int.zero, playerDictionary), 0, null);
+        TreeNodeComplete<Vector2Int, Dictionary<int, bool>> currCell = root;
+        HashSet<Vector2Int> visitedCells = new HashSet<Vector2Int>() { root.NodeKeyValue.Key };
+
+        List<Tuple<Vector2Int, int>> pathAgentWDicCount = new List<Tuple<Vector2Int, int>>();
+        pathAgentWDicCount.Add(new Tuple<Vector2Int, int>(root.NodeKeyValue.Key, playerDictionary.Count));
+
+        while (currCell.NodeKeyValue.Key + pMan.StartCell != pMan.EndCell)
+        {
+            //current treenode build so no init operations
+            Vector2Int nextMove = new Vector2Int();
+
+            //if out map or on Wall found...
+            if (!Utility.in_bounds_General(currCell.NodeKeyValue.Key + pMan.StartCell, pMan.MapToPlay.GetLength(0), pMan.MapToPlay.GetLength(1)) ||
+                pMan.MapToPlay[currCell.NodeKeyValue.Key.x + pMan.StartCell.x, currCell.NodeKeyValue.Key.y + pMan.StartCell.y].type == IGenerator.wallChar)
+            {
+                //pathDic already updated by the cycle before for currcell
+                //visit cell updated
+                //path updated: we trace the fact that we go back to the room from wall or out of map cells
+                currCell = currCell.ParentNode;
+                visitedCells.Add(currCell.NodeKeyValue.Key);
+                pathAgentWDicCount.Add(new Tuple<Vector2Int, int>(currCell.NodeKeyValue.Key, playerDictionary.Count));
+                //currCell = currCell.ParentNode;
+            }
+            else//is a room cell current so seek for unvisited child using the smart policy
+            {
+                HashSet<Vector2Int> NeighCells = new HashSet<Vector2Int>(Utility.getAllNeighboursWOBoundCheck_General(currCell.NodeKeyValue.Key, pMan.GridType));
+                //List<Vector2Int> cellList = new List<Vector2Int>(Cells);
+                Dictionary<Vector2Int, Tuple<float[], List<int>[]>> StatisticsOnAttempts = new Dictionary<Vector2Int, Tuple<float[], List<int>[]>>();
+
+                //if (currCell.ParentNode != null)
+                    NeighCells.ExceptWith(visitedCells);
+
+                if (NeighCells.Count != 0)
+                {
+                    //APPLY CUSTOM HEURISTIC----
+                    foreach (var moveAttempt in NeighCells)
+                    {
+                        StatisticsOnAttempts.Add(moveAttempt, getStepStatistics(moveAttempt, playerDictionary));
+                    }
+
+                    List<Vector2Int> minList = new List<Vector2Int>();
+                    float min = 1;
+
+                    foreach (var attemptStatistic in StatisticsOnAttempts)
+                    {
+                        //float newMax = Math.Min(attemptStatistic.Value.Item1[0], Math.Min(attemptStatistic.Value.Item1[1], attemptStatistic.Value.Item1[2]));
+                        float[] list = { attemptStatistic.Value.Item1[0], attemptStatistic.Value.Item1[1], attemptStatistic.Value.Item1[2] };
+                        list = list.Where(i => i != 0).ToArray();
+
+                        float newMin = list.Min();
+                        if (newMin < min)
+                        {
+                            min = newMin;
+                            minList.Clear();
+                        }
+
+                        if (newMin == min)
+                            minList.Add(attemptStatistic.Key);
+                    }
+
+
+                    if (minList.Count == 1)
+                    {
+
+                        nextMove = minList[0];
+                    }
+                    else
+                    {
+                        int minDstOfNxtMove = ParameterManager.Instance.GridType.heuristic(pMan.StartCell, pMan.EndCell);
+
+                        foreach (var nextMvs in minList)
+                        {
+                            List<int> mapsID = new List<int>();
+                            /*foreach (var f in StatisticsOnAttempts[nextMvs].Item1) suppose to delete
+                                if (f == max)
+                                    mapsID.Add(StatisticsOnAttempts[nextMvs].Item2[i]);*/
+
+                            for (int i = 0; i < StatisticsOnAttempts[nextMvs].Item1.Length; i++)
+                            {
+                                if (StatisticsOnAttempts[nextMvs].Item1[i] == min)
+                                    mapsID.AddRange(StatisticsOnAttempts[nextMvs].Item2[i]);
+                            }
+
+                            int finalH = 0;
+
+                            foreach (var id in mapsID)
+                            {
+                                if (aliasList.dictionaryMap.ContainsKey(id))
+                                    finalH += ParameterManager.Instance.GridType.heuristic(aliasList.dictionaryMap[id].start + (nextMvs), aliasList.dictionaryMap[id].end);
+                                else if (id == MainMapGO.GetInstanceID())
+                                    finalH += ParameterManager.Instance.GridType.heuristic(pMan.StartCell + (nextMvs), pMan.EndCell);
+                                else
+                                    ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "MapID not found during agent path building.");
+                            }
+                            finalH /= mapsID.Count;
+
+                            if (finalH < minDstOfNxtMove)
+                            {
+                                minDstOfNxtMove = finalH;
+                                nextMove = nextMvs;
+                            }
+
+                        }
+
+                    }
+                    //END CUSTOM HEURISTIC---
+
+                    playerDictionary = updateAliasDictionaryWReal(nextMove, playerDictionary);
+                    currCell = new TreeNodeComplete<Vector2Int, Dictionary<int, bool>>(nextMove, playerDictionary, currCell.nodeDepth + 1, currCell);
+                    visitedCells.Add(currCell.NodeKeyValue.Key);
+                    pathAgentWDicCount.Add(new Tuple<Vector2Int, int>(currCell.NodeKeyValue.Key, playerDictionary.Count));
+                }
+                else
+                {
+                    //DEADENDFOUND BACKTRACK: go back from room deadend to parent
+                    /*visitedCells.Add(currCell.ParentNode.NodeKeyValue.Key);
+                    pathAgentWDicCount.Add(new Tuple<Vector2Int, int>(currCell.NodeKeyValue.Key, playerDictionary.Count));
+                    currCell = currCell.ParentNode;*/
+
+                    currCell = currCell.ParentNode;
+                    visitedCells.Add(currCell.NodeKeyValue.Key);
+                    pathAgentWDicCount.Add(new Tuple<Vector2Int, int>(currCell.NodeKeyValue.Key, playerDictionary.Count));
+
+                }
+
+            }
+
+            //Update everything wrt new move found
+
+        }
+
+
+        List<float> chartAgentLine = new List<float>();
+        List<Vector2Int> agentPath = new List<Vector2Int>();
+        foreach (var t in pathAgentWDicCount)
+        {
+            agentPath.Add(t.Item1);
+            chartAgentLine.Add(t.Item2 - 1);
+        }
+        agentPath.Reverse();
+        GameObject LineGO = Instantiate(LineUIPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        Utility.displaySegmentedLineUI(LineGO, MainMapGO.transform.Find("BorderMask/Content").GetComponent<RectTransform>(),
+                agentPath.ToArray(), GeneratorUIManager.Instance.originUIMap,
+                ParameterManager.Instance.GridType.TilePrefab.GetComponent<RectTransform>().sizeDelta.x, ParameterManager.Instance.GridType.TilePrefab.GetComponent<RectTransform>().sizeDelta.y);
+        LineGO.GetComponent<UILineRenderer>().color = lineColorAggressiveAgent;
+
+        ChartLines.Add(new Tuple<List<float>, Color>(chartAgentLine, lineColorAggressiveAgent));
+        LinesGO.Add(LineGO);
+        refreshToggle(LineGO);
+        return pathAgentWDicCount;
     }
 }

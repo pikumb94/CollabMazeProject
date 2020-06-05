@@ -127,6 +127,7 @@
     <Compile Include="Assets\Scripts\TrapBehaviour.cs" />
     <Compile Include="Assets\ScrollBarReset.cs" />
     <Compile Include="Assets\TabNavigation.cs" />
+    <Compile Include="Assets\ToggleLineOnMap.cs" />
     <Compile Include="Assets\unity-ui-extensions\Examples\ComboBox\ComboBoxChanged.cs" />
     <Compile Include="Assets\unity-ui-extensions\Examples\Cooldown\CooldownEffect_Image.cs" />
     <Compile Include="Assets\unity-ui-extensions\Examples\Cooldown\CooldownEffect_SAUIM.cs" />

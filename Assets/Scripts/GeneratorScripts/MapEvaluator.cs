@@ -293,7 +293,7 @@ public static class MapEvaluator
             
             foreach(Vector2Int curr in KCollisionCells[i-1])
             {
-                if(map[curr.x, curr.y].type != IGenerator.wallChar)
+                if(Utility.in_bounds_General(curr, map.GetLength(0), map.GetLength(1)) && map[curr.x, curr.y].type != IGenerator.wallChar)
                 {
                     foreach (Vector2Int next in Utility.getAllNeighbours_General(curr, TypeGrid, map.GetLength(0), map.GetLength(1)))
                     {
