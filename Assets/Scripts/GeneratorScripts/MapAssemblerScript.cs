@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class MapAssemblerScript : MonoBehaviour
 {
@@ -78,9 +79,27 @@ public class MapAssemblerScript : MonoBehaviour
         rightPlane.AddComponent<BoxCollider>();
     }
 
+
+
     private void RenderAliasMapsOnUI()
     {
+        /*
         foreach (StructuredAlias v in ParameterManager.Instance.AliasMaps) { 
+            GameObject g = Utility.renderAliasOnUI(AliasUIDisplay.transform.GetChild(0).GetComponent<RectTransform>(), ParameterManager.Instance.GridType, v, AliasPrefab, false);
+            g.transform.GetComponentInChildren<DragHandler>().canvas = GameUIManager.instance.GetComponent<Canvas>();
+        }*/
+
+        List<StructuredAlias> maps = new List<StructuredAlias>();
+        foreach (StructuredAlias v in ParameterManager.Instance.AliasMaps)
+        {
+            maps.Add(v);
+        }
+        maps.Add(new StructuredAlias(ParameterManager.Instance.MapToPlay));
+
+        Utility.shuffleMapList(maps);
+
+        foreach (var v in maps)
+        {
             GameObject g = Utility.renderAliasOnUI(AliasUIDisplay.transform.GetChild(0).GetComponent<RectTransform>(), ParameterManager.Instance.GridType, v, AliasPrefab, false);
             g.transform.GetComponentInChildren<DragHandler>().canvas = GameUIManager.instance.GetComponent<Canvas>();
         }

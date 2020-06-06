@@ -125,7 +125,12 @@ public class GeneratorManager : Singleton<GeneratorManager>
     public void PlayButtonPressed()
     {
         GeneratorUIManager.Instance.savePlayParametersInManager();
-        ParameterManager.Instance.MapToPlay = (GeneratorUIManager.Instance.isTrapsOnMapBorderToggleOn()? GeneratorsVect[(int)activeGenerator].getMapWTrapBorder():GeneratorsVect[(int)activeGenerator].getMap());
+
+        if(!GeneratorManager.Instance.inAliasGenerator)
+            ParameterManager.Instance.MapToPlay = (GeneratorUIManager.Instance.isTrapsOnMapBorderToggleOn()? GeneratorsVect[(int)activeGenerator].getMapWTrapBorder():GeneratorsVect[(int)activeGenerator].getMap());
+        else
+            ParameterManager.Instance.MapToPlay = (ParameterManager.Instance.IsTrapsOnMapBorder ? ParameterManager.Instance.MapToPlayWTrapBorder : ParameterManager.Instance.MapToPlay);
+
         ParameterManager.Instance.GridType = GeneratorsVect[(int)activeGenerator].TypeGrid;
         ParameterManager.Instance.AliasMaps = (inAliasGenerator ? AliasGeneratorManager.Instance.AliasDragAreas[0].GetComponent<MapListManager>().getMapList() : AliasGeneratorManager.Instance.generateAliasOnTheFly());
         SceneManager.LoadScene(AssembledLevelSceneName);
@@ -154,6 +159,7 @@ public class GeneratorManager : Singleton<GeneratorManager>
     {
         string textFilePath = Application.persistentDataPath;
         TileObject[,] map = GeneratorsVect[(int)activeGenerator].getMap();
+
         if (textFilePath == null && !Directory.Exists(textFilePath))
         {
             ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, "Error while retrieving the folder, please insert a " + "valid path.");
@@ -163,19 +169,59 @@ public class GeneratorManager : Singleton<GeneratorManager>
             try
             {
                 string textMap = "";
-
-                for (int x = 0; x < map.GetLength(0); x++)
+                if (inAliasGenerator)
                 {
-                    for (int y = 0; y < map.GetLength(1); y++)
+                    for (int x = 0; x < map.GetLength(0); x++)
                     {
-                        textMap = textMap + map[y, map.GetLength(0)-1-x].type;
+                        for (int y = 0; y < map.GetLength(1); y++)
+                        {
+                            textMap = textMap + map[y, map.GetLength(0) - 1 - x].type;
+                        }
+                        if (x < map.GetLength(1) - 1)
+                        {
+                            textMap = textMap + "\n";
+                        }
                     }
-                    if (x < map.GetLength(1) - 1)
+
+                    Dictionary<int, StructuredAlias>.ValueCollection mapList = AliasGeneratorManager.Instance.AliasDragAreas[0].GetComponent<MapListManager>().getMapList();
+                    textMap = textMap + "\n\n\n\n";
+
+                    foreach (var m in mapList)
                     {
-                        textMap = textMap + "\n";
+                        map = m.AliasMap;
+
+                        for (int x = 0; x < map.GetLength(0); x++)
+                        {
+                            for (int y = 0; y < map.GetLength(1); y++)
+                            {
+                                textMap = textMap + map[y, map.GetLength(0) - 1 - x].type;
+                            }
+                            if (x < map.GetLength(1) - 1)
+                            {
+                                textMap = textMap + "\n";
+                            }
+                        }
+
+                        textMap = textMap + "\n\n";
                     }
                 }
-                string fileName = GeneratorsVect[(int)activeGenerator].seed.ToString() + "map.txt";
+                else
+                {
+                    for (int x = 0; x < map.GetLength(0); x++)
+                    {
+                        for (int y = 0; y < map.GetLength(1); y++)
+                        {
+                            textMap = textMap + map[y, map.GetLength(0) - 1 - x].type;
+                        }
+                        if (x < map.GetLength(1) - 1)
+                        {
+                            textMap = textMap + "\n";
+                        }
+                    }
+                }
+                
+
+                string fileName = (inAliasGenerator?"Alias"+ParameterManager.Instance.rndSeed.ToString():GeneratorsVect[(int)activeGenerator].seed.ToString()) + "map.txt";
                 File.WriteAllText(@textFilePath + "/" + fileName, textMap);
 
                 GeneratorUIManager.Instance.showMessageDialogBox("Map \"" + fileName + "\" successfully saved at:\n" + textFilePath);
@@ -185,6 +231,8 @@ public class GeneratorManager : Singleton<GeneratorManager>
                 ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, "Error while saving the map at " + @textFilePath + ", please insert a valid path and check its permissions. ");
             }
         }
+
+
     }
 
     

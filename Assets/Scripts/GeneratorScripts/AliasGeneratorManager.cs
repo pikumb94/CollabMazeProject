@@ -101,7 +101,7 @@ public class AliasGeneratorManager : Singleton<AliasGeneratorManager>
         Vector2Int startAlias = ParameterManager.Instance.StartCell;
         Vector2Int endAlias = ParameterManager.Instance.EndCell;
 
-
+        
         while (i < MAX_ALIAS)
         {
             //define here the width, height, start and end  of the chosen map
@@ -157,7 +157,22 @@ public class AliasGeneratorManager : Singleton<AliasGeneratorManager>
             if (MapEvaluator.isEndReachable(aliasMap, gridType, startAlias, endAlias, ParameterManager.Instance.allowAutosolverForAlias).First() == endAlias)
             {//if the map has a path from start to end, add it
                 float dst = MapEvaluator.BinaryMapSimilarity(mainMap, aliasMap, startMainMap, startAlias);
+                //
+                int mapWCount = 0;
+                int aliasWCount = 0;
+                for (int h = 0; h < mainMap.GetLength(0); h++)
+                {
+                    for (int k = 0; k < mainMap.GetLength(1); k++)
+                    {
+                        if (mainMap[h, k].type == IGenerator.wallChar)
+                            mapWCount++;
+                        if (aliasMap[h, k].type == IGenerator.wallChar)
+                            aliasWCount++;
+                    }
+                }
 
+                dst = dst + Math.Abs(mapWCount - aliasWCount);
+                //
                 SimilarMapsQueue.Enqueue(aliasMap, dst);
             }
             i++;
@@ -515,7 +530,7 @@ public class AliasGeneratorManager : Singleton<AliasGeneratorManager>
         GenerateAndTestAliasMaps();
         Dictionary<int, StructuredAlias> dic = new Dictionary<int, StructuredAlias>();
 
-        int i = ParameterManager.Instance.aliasNum;
+        int i = UnityEngine.Random.Range(3, 7); //try to change
 
         while (i > 0)
         {

@@ -71,7 +71,7 @@ public class AliasGameEvaluator : MonoBehaviour
             CartesianGraphGO.GetComponent<Window_Graph>().RemoveAllGraphs();
             //CartesianGraphGO.GetComponent<Window_Graph>().ShowGraph(new List<float>(){ 0}, lineColoraverage, -1, null, null);
         }
-        //refreshToggles();
+        refreshBlueToggle();
     }
 
     public void DestroyMapLines()
@@ -83,13 +83,14 @@ public class AliasGameEvaluator : MonoBehaviour
         LinesGO.Clear();
     }
 
-    public void refreshToggle()
+    public void refreshBlueToggle()
     {
         Toggle[] toggles = ToggleLineContainerGO.GetComponentsInChildren<Toggle>();
 
         foreach (var l in toggles)
         {
-            l.gameObject.GetComponent<ToggleLineOnMap>().refreshLineReference();
+            if(l.transform.Find("Background/Checkmark").GetComponent<Image>().color == Color.blue)
+                l.gameObject.GetComponent<ToggleLineOnMap>().refreshLineReference();
         }
     }
 
@@ -519,7 +520,7 @@ public class AliasGameEvaluator : MonoBehaviour
         pathAgentWDicCount.Add(new Tuple<Vector2Int, int>(root.NodeKeyValue.Key, playerDictionary.Count));
 
         bool allVisitedAndOnlyWalls = false;
-        while (currCell.NodeKeyValue.Key + pMan.StartCell != pMan.EndCell)
+        while (currCell.NodeKeyValue.Key + pMan.StartCell != pMan.EndCell && pathAgentWDicCount.Last().Item2 > 1)
         {
             //current treenode build so no init operations
             Vector2Int nextMove = new Vector2Int();
@@ -659,12 +660,22 @@ public class AliasGameEvaluator : MonoBehaviour
         }
 
 
+        Vector2Int[] stepsFromPlayerToExit = MapEvaluator.Search_AStar(pMan.MapToPlay, pMan.GridType, pathAgentWDicCount.Last().Item1 + pMan.StartCell, pMan.EndCell);
+        List<Vector2Int> tmpArr = new List<Vector2Int>(stepsFromPlayerToExit);
+        tmpArr.Reverse();
+        stepsFromPlayerToExit = tmpArr.ToArray().Skip(1).ToArray();
+
         List<float> chartAgentLine = new List<float>();
         List<Vector2Int> agentPath = new List<Vector2Int>();
-        foreach(var t in pathAgentWDicCount)
+        foreach (var t in pathAgentWDicCount)
         {
             agentPath.Add(t.Item1);
-            chartAgentLine.Add(t.Item2-1);
+            chartAgentLine.Add(t.Item2 - 1);
+        }
+        foreach (var t in stepsFromPlayerToExit)
+        {
+            agentPath.Add(t - pMan.StartCell);
+            chartAgentLine.Add(0);
         }
         agentPath.Reverse();
         GameObject LineGO = Instantiate(LineUIPrefab, new Vector3(0, 0, 0), Quaternion.identity);
@@ -814,7 +825,7 @@ public class AliasGameEvaluator : MonoBehaviour
         List<Tuple<Vector2Int, int>> pathAgentWDicCount = new List<Tuple<Vector2Int, int>>();
         pathAgentWDicCount.Add(new Tuple<Vector2Int, int>(root.NodeKeyValue.Key, playerDictionary.Count));
 
-        while (currCell.NodeKeyValue.Key + pMan.StartCell != pMan.EndCell)
+        while (currCell.NodeKeyValue.Key + pMan.StartCell != pMan.EndCell && pathAgentWDicCount.Last().Item2 >1)
         {
             //current treenode build so no init operations
             Vector2Int nextMove = new Vector2Int();
@@ -939,6 +950,10 @@ public class AliasGameEvaluator : MonoBehaviour
 
         }
 
+        Vector2Int[] stepsFromPlayerToExit = MapEvaluator.Search_AStar(pMan.MapToPlay, pMan.GridType, pathAgentWDicCount.Last().Item1+ pMan.StartCell, pMan.EndCell);
+        List<Vector2Int> tmpArr = new List<Vector2Int>(stepsFromPlayerToExit);
+        tmpArr.Reverse();
+        stepsFromPlayerToExit = tmpArr.ToArray().Skip(1).ToArray();
 
         List<float> chartAgentLine = new List<float>();
         List<Vector2Int> agentPath = new List<Vector2Int>();
@@ -946,6 +961,11 @@ public class AliasGameEvaluator : MonoBehaviour
         {
             agentPath.Add(t.Item1);
             chartAgentLine.Add(t.Item2 - 1);
+        }
+        foreach (var t in stepsFromPlayerToExit)
+        {
+            agentPath.Add(t-pMan.StartCell);
+            chartAgentLine.Add(0);
         }
         agentPath.Reverse();
         GameObject LineGO = Instantiate(LineUIPrefab, new Vector3(0, 0, 0), Quaternion.identity);

@@ -52,7 +52,7 @@ public static class MapEvaluator
         string deadendCountString = "DeadEnds: " + dM.deadendCount;
         string chockeCountString = "Chokes: " + dM.chockeCount;
         string obsToRoomIndexString = "Walls/Rooms: " + dM.obsToRoomIndex.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture);
-        string obstacleClusteringString = "Room Cluster Index: " + dM.obstacleClusteringIndex.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture);
+        string obstacleClusteringString = "Wall Cluster Index: " + dM.obstacleClusteringIndex.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture);
 
         string separator = "\n";
         string result = "\n"+similarityMetricString;
@@ -74,7 +74,7 @@ public static class MapEvaluator
         string deadendCountString = "DeadEnds: "+dM.deadendCount;
         string chockeCountString="Chokes: "+dM.chockeCount;
         string obsToRoomIndexString="Walls/Rooms: "+ dM.obsToRoomIndex.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture);
-        string obstacleClusteringString="Room Cluster Index: "+dM.obstacleClusteringIndex.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture);
+        string obstacleClusteringString="Wall Cluster Index: "+dM.obstacleClusteringIndex.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture);
 
         string separator = "   ";
         string result = totalStepsString;
@@ -229,7 +229,17 @@ public static class MapEvaluator
 
     private static float functionPointsDifference(Vector2 pI, Vector2 pJ)
     {
-        return Mathf.Pow(2.0f, (-3.0f * (pI - pJ).magnitude));//NOW IS -3!
+        float magn = (pI - pJ).magnitude;
+
+        if (magn <= 0)
+            return 1;
+        if (magn <= 1)
+            return .25f;
+        if(magn<= 1.5)
+           return .1f;
+
+        return 0f;
+        //return Mathf.Pow(2.0f, (-3.0f * (pI - pJ).magnitude));//NOW IS -3!
         //return (1 / Mathf.Sqrt(2 * Mathf.PI)) * Mathf.Exp(-.5f * (pI - pJ).sqrMagnitude);
     }
 

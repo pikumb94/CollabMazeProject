@@ -391,11 +391,11 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
     }
 
     public void DisplayMap(TileObject[,] map,Transform container, ITypeGrid gridType)
-    {
+    {/*                                                                     DA FIXARE!
         if (map.GetLength(0) * map.GetLength(1) > thresholdToCompositeImage)
             printCompositeMap(container, gridType, map, 0);
-        else
-            printMap(container, gridType, map);
+        else*/
+        printMap(container, gridType, map);
     }
 
     public void trapsOnMapBorderHandler(Toggle t)
@@ -435,9 +435,10 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
         TMP_InputField[] InpFields = ParamsContainer.GetComponentsInChildren<TMP_InputField>();
         Toggle t = ParamsContainer.GetComponentInChildren<Toggle>();
         TMP_Dropdown DropD = ParamsContainer.GetComponentInChildren<TMP_Dropdown>();
-
+        
         //Save map params
         p.MapToPlay = (GeneratorUIManager.Instance.isTrapsOnMapBorderToggleOn() ? genM.GeneratorsVect[(int)genM.activeGenerator].getMapWTrapBorder() : genM.GeneratorsVect[(int)genM.activeGenerator].getMap());
+        p.rndSeed = genM.GeneratorsVect[(int)genM.activeGenerator].seed;
         p.GridType = genM.GeneratorsVect[(int)genM.activeGenerator].TypeGrid;
         p.StartCell = genM.GeneratorsVect[(int)genM.activeGenerator].startPos;
         p.EndCell = genM.GeneratorsVect[(int)genM.activeGenerator].endPos;

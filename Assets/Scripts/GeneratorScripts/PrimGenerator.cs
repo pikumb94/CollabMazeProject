@@ -52,14 +52,22 @@ public class PrimGenerator : IGenerator
 
         map = new TileObject[width, height];
         //Map initialization: mark all walls as closed
+        /*
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
                 map[x, y].type = ColorLookupTable[x% ColorLookupTable.GetLength(0),y % ColorLookupTable.GetLength(1)];
             }
-        }
+        }*/
 
+        for (int x = -startPos.x; x < width- startPos.x; x++)
+        {
+            for (int y = -startPos.y; y < height- startPos.y; y++)
+            {
+                map[startPos.x+x, startPos.y+y].type = ColorLookupTable[Math.Abs(x % ColorLookupTable.GetLength(0)), Math.Abs(y % ColorLookupTable.GetLength(1))];
+            }
+        }
 
         return map;
 
@@ -113,9 +121,10 @@ public class PrimGenerator : IGenerator
                     //Add the walls adjacent to the unvisited room to the wall list
                     insertWallsInSet(wallSet, pathRoom);
                 }
-                //if count is equal to zero, probably we're on the boarder or the next room is already in the path
+                //if count is equal to zero, probably we're on the border or the next room is already in the path
             } else {
-                throw new Exception("One wall has more than one room as neighbour.");
+                //throw new Exception("One wall has more than one room as neighbour.");
+                Debug.Log("ERROR!");
             }
 
             //Remove the wall from the wall list

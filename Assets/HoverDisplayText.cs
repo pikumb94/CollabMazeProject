@@ -13,6 +13,7 @@ public class HoverDisplayText : MonoBehaviour
     bool isMouseHover = false;
     TextMeshProUGUI TextComp;
     RectTransform BoxRect;
+    private Transform originalParent;
     void Start()
     {
         if(DialogBoxInfo!= null)
@@ -20,7 +21,7 @@ public class HoverDisplayText : MonoBehaviour
             TextComp = DialogBoxInfo.GetComponentInChildren<TextMeshProUGUI>();
             BoxRect = DialogBoxInfo.GetComponent<RectTransform>();
         }
-
+        originalParent = DialogBoxInfo.transform.parent.parent;
     }
 
     public void OnMouseEnterCallback()
@@ -70,6 +71,7 @@ public class HoverDisplayText : MonoBehaviour
 
         else
         {
+            DialogBoxInfo.transform.parent.SetParent(originalParent);
             DialogBoxInfo.transform.parent.GetComponent<Canvas>().sortingOrder = -1;
         }
             

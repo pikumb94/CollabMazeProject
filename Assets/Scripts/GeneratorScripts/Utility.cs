@@ -37,6 +37,17 @@ public static class Utility
         return GetWorldSapceRect(rectTrans1).Overlaps(GetWorldSapceRect(rectTrans2));
     }
 
+    public static void shuffleMapList<T>(List<T> maps)
+    {
+        for (int i = 0; i < maps.Count; i++)
+        {
+            T temp = maps[i];
+            int randomIndex = UnityEngine.Random.Range(i, maps.Count);
+            maps[i] = maps[randomIndex];
+            maps[randomIndex] = temp;
+        }
+    }
+
     public static Rect GetWorldSapceRect(RectTransform rt)
     {
         var r = rt.rect;
