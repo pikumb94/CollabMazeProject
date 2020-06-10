@@ -9,13 +9,15 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance = null;
     [HideInInspector] public int remainingSeconds;
-    public int countdownSeconds = 300;
+    public int countdownSeconds;
 
     [HideInInspector] public bool isGameOver = false;
     [HideInInspector] public bool isWin = false;
     [HideInInspector] public bool isPause = false;
     public int penaltySeconds = 10;
+    public GameObject Player;
 
+    protected GameManager() { }
     private void Awake()
     {
         if (instance == null)
@@ -28,6 +30,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         Init();
+        GameUIManager.instance.DisplayTimeFormatted();
         InvokeRepeating("DecreaseCounter", 1f, 1f);
     }
 
@@ -43,39 +46,13 @@ public class GameManager : MonoBehaviour
         SceneManager.sceneLoaded -= OnLevelFinishedLoading;
     }
 
-    void Update()
+    protected virtual void  Update()
     {
         if (Input.GetKeyDown("0"))
         {
-            SceneManager.LoadScene(0);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
-        if (Input.GetKeyDown("1")) {
-           SceneManager.LoadScene(1);
-        }
-        if (Input.GetKeyDown("2"))
-        {
-            SceneManager.LoadScene(2);
-        }
-        if (Input.GetKeyDown("3"))
-        {
-            SceneManager.LoadScene(3);
-        }
-        if (Input.GetKeyDown("4"))
-        {
-            SceneManager.LoadScene(4);
-        }
-        if (Input.GetKeyDown("5"))
-        {
-            SceneManager.LoadScene(5);
-        }
-        if (Input.GetKeyDown("6"))
-        {
-            SceneManager.LoadScene(6);
-        }
-        if (Input.GetKeyDown("7"))
-        {
-            SceneManager.LoadScene(7);
-        }
+
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -99,9 +76,11 @@ public class GameManager : MonoBehaviour
     private void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
     {
         Init();
+        GameUIManager.instance.DisplayTimeFormatted();
+
     }
 
-    void Init()
+    protected virtual void Init()
     {
         isGameOver = false;
         isWin = false;
@@ -111,7 +90,6 @@ public class GameManager : MonoBehaviour
         GameUIManager.instance.HideYouWinPanel();
         GameUIManager.instance.HideDescriptionPanel();
         remainingSeconds = countdownSeconds;
-        GameUIManager.instance.DisplayTimeFormatted();
  
     }
 
@@ -128,7 +106,6 @@ public class GameManager : MonoBehaviour
         }
         
     }
-
 
 
     public void ApplyPenalty()

@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using TMPro;
-
+using UnityEngine.SceneManagement;
 public class GameUIManager : MonoBehaviour
 {
     public GameObject gameOverPanel;
     public GameObject youWinPanel;
     public GameObject descriptionPanel;
+    public GameObject AliasPanel;
     public static GameUIManager instance = null;
 
     public TextMeshProUGUI timerText;
@@ -22,7 +23,7 @@ public class GameUIManager : MonoBehaviour
             instance = this;
         else if (instance != this)
             Destroy(gameObject);
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
     }
 
     public void Start()
@@ -116,6 +117,20 @@ public class GameUIManager : MonoBehaviour
     {
         HideDescriptionPanel();
         GameManager.instance.isPause = false;
+    }
+
+    public void BackToGeneratorButtonPressed()
+    {
+        SceneManager.LoadScene("MazeGeneratorScene");
+    }
+
+    public void ToggleAliasPanel()
+    {
+        Animator a = AliasPanel.GetComponent<Animator>();
+        bool isOn = a.GetBool("isShown");
+        isOn = !isOn;
+        a.SetBool("isShown", isOn);
+
     }
 
     private string printColored(string s)

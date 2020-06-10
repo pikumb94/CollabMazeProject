@@ -21,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     protected void Update()
     {
-        if (!GameManager.instance.isGameOver && !GameManager.instance.isPause) {
+        if (!GameManager.instance.isGameOver && !GameManager.instance.isPause && !((GameManager_Generator)GameManager.instance).isAliasDisplayOn) {
             float horizInput = Input.GetAxis(horizontalInputName) * speed;
             float vertInput = Input.GetAxis(verticalInputName) * speed;
 
