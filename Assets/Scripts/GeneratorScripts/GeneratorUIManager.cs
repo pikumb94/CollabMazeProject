@@ -9,7 +9,7 @@ using System;
 /// GeneratorUIManager allows to print the outcome of the generator on the UI
 /// </summary>
 
-public class GeneratorUIManager : Singleton<GeneratorUIManager>
+public class GeneratorUIManager : MonoBehaviour/*Singleton<GeneratorUIManager>*/
 {
 
     public Color roomColor;
@@ -37,15 +37,17 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
 
     public Vector2 originUIMap;
 
+    public static GeneratorUIManager Instance = null;
     protected GeneratorUIManager() { }
-    
 
-    // Start is called before the first frame update
-    void Awake()
+    private void Awake()
     {
-        DontDestroyOnLoad(transform.gameObject);
+        if (Instance == null)
+            Instance = this;
+        else if (Instance != this)
+            Destroy(gameObject);
+        //DontDestroyOnLoad(gameObject);
     }
-
 
     public void printMap(Transform t, ITypeGrid g, TileObject[,] map)
     {
@@ -435,9 +437,11 @@ public class GeneratorUIManager : Singleton<GeneratorUIManager>
         TMP_InputField[] InpFields = ParamsContainer.GetComponentsInChildren<TMP_InputField>();
         Toggle t = ParamsContainer.GetComponentInChildren<Toggle>();
         TMP_Dropdown DropD = ParamsContainer.GetComponentInChildren<TMP_Dropdown>();
-        
+
         //Save map params
         p.MapToPlay = (GeneratorUIManager.Instance.isTrapsOnMapBorderToggleOn() ? genM.GeneratorsVect[(int)genM.activeGenerator].getMapWTrapBorder() : genM.GeneratorsVect[(int)genM.activeGenerator].getMap());
+
+
         p.rndSeed = genM.GeneratorsVect[(int)genM.activeGenerator].seed;
         p.GridType = genM.GeneratorsVect[(int)genM.activeGenerator].TypeGrid;
         p.StartCell = genM.GeneratorsVect[(int)genM.activeGenerator].startPos;

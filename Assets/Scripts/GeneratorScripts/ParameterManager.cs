@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// ParameterManager allows to exchange information between different scenes.
 /// </summary>
-public class ParameterManager : Singleton<ParameterManager> {
+public class ParameterManager:MonoBehaviour /*: Singleton<ParameterManager> */{
 
     public enum BuildVersion { COMPLETE, GAME_ONLY, EXPERIMENT_CONTROL, EXPERIMENT_ONLY };
 
@@ -56,6 +56,11 @@ public class ParameterManager : Singleton<ParameterManager> {
     [HideInInspector] public BuildVersion Version { get; set; }
     [HideInInspector] public string InitialScene { get; set; }
 
+    public static ParameterManager Instance = null;
+
+    protected ParameterManager() { }
+
+
     void Awake() {
         ErrorCode = 0;
 
@@ -68,7 +73,13 @@ public class ParameterManager : Singleton<ParameterManager> {
         DefaultSensibility = 1.75f;
         WebSensibilityDownscale = 3f;*/
 
-        DontDestroyOnLoad(transform.gameObject);
+
+        if (Instance == null)
+            Instance = this;
+        else if (Instance != this)
+            Destroy(gameObject);
+        DontDestroyOnLoad(gameObject);
+
     }
 
 }

@@ -295,20 +295,21 @@ public static class MapEvaluator
             KCollisionCells[i] = new HashSet<Vector2Int>();
         }
 
-        KCollisionCells[0].Add(start);
-
+        //KCollisionCells[0].Add(start);
+        KCollisionCells[0].Add(Vector2Int.zero);
         i = 1;
         while (i<=lookahead)
         {
             
             foreach(Vector2Int curr in KCollisionCells[i-1])
             {
-                if(Utility.in_bounds_General(curr, map.GetLength(0), map.GetLength(1)) && map[curr.x, curr.y].type != IGenerator.wallChar)
+                Vector2Int mainMapPos = new Vector2Int(start.x + curr.x, start.y + curr.y);
+                if (/*Utility.in_bounds_General(curr, map.GetLength(0), map.GetLength(1)) &&*/ map[mainMapPos.x, mainMapPos.y].type != IGenerator.wallChar)
                 {
-                    foreach (Vector2Int next in Utility.getAllNeighbours_General(curr, TypeGrid, map.GetLength(0), map.GetLength(1)))
+                    foreach (Vector2Int next in Utility.getAllNeighbours_General(mainMapPos, TypeGrid, map.GetLength(0), map.GetLength(1)))
                     {
 
-                        if (!visited.Contains(next))
+                        if (!visited.Contains(next) && Utility.in_bounds_General(next, map.GetLength(0), map.GetLength(1)))
                         {
                             KCollisionCells[i].Add(next-start);//start is subtracted since the collision list must be absolute and not relative wrt startcell of mainmap
                             visited.Add(next);
@@ -324,7 +325,7 @@ public static class MapEvaluator
             i++;
         }
 
-
+        
 
         return KCollisionCells;
     }

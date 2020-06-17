@@ -31,7 +31,7 @@ public struct StructuredAlias
     }
 }
 
-public class AliasGeneratorManager : Singleton<AliasGeneratorManager>
+public class AliasGeneratorManager : MonoBehaviour/*Singleton<AliasGeneratorManager>*/
 {
     static readonly int MAX_ALIAS = 1000;
     static readonly int MAX_ALIASMASKS = 5;
@@ -43,16 +43,21 @@ public class AliasGeneratorManager : Singleton<AliasGeneratorManager>
     public RectTransform[] AliasDragAreas;
     private HashSet<Vector2Int>[] K_CollisionSet;
     public GameObject AliasPrefab;
-
+    public GameObject ToggleLinesContainer;
     private TileObject[,] mainMap;
     private ITypeGrid gridType;
     private GeneratorManager genMan;
     private SimplePriorityQueue<TileObject[,]> SimilarMapsQueue;
 
+    public static AliasGeneratorManager Instance = null;
     protected AliasGeneratorManager() { }
 
     private void Awake()
     {
+        if (Instance == null)
+            Instance = this;
+        else if (Instance != this)
+            Destroy(gameObject);
         genMan = GeneratorManager.Instance;
     }
 
@@ -144,6 +149,7 @@ public class AliasGeneratorManager : Singleton<AliasGeneratorManager>
             else
             {
                 //only from zero to kMinStep
+                /*
                 for (int x = 0; x < aliasMap.GetLength(0); x++)
                 {
                     for (int y = 0; y < aliasMap.GetLength(1); y++)
@@ -151,6 +157,12 @@ public class AliasGeneratorManager : Singleton<AliasGeneratorManager>
                         if (Utility.in_bounds_General(new Vector2Int(startMainMap.x + x, startMainMap.y + y), width, height) && BaseAliasCollisionMask.Contains(new Vector2Int(x - startAlias.x, y - startAlias.y)))
                             aliasMap[x, y].type = ParameterManager.Instance.MapToPlay[startMainMap.x + x, startMainMap.y + y].type;
                     }
+                }*/
+                foreach(var m in BaseAliasCollisionMask)
+                {
+                    if(Utility.in_bounds_General(new Vector2Int(startMainMap.x + m.x, startMainMap.y + m.y), mainMap.GetLength(0), mainMap.GetLength(1)) &&
+                        Utility.in_bounds_General(new Vector2Int(startAlias.x + m.x, startAlias.y + m.y), aliasMap.GetLength(0), aliasMap.GetLength(1)))
+                        aliasMap[startAlias.x + m.x, startAlias.y + m.y].type = ParameterManager.Instance.MapToPlay[startMainMap.x + m.x, startMainMap.y + m.y].type;
                 }
             }
 
@@ -394,20 +406,20 @@ public class AliasGeneratorManager : Singleton<AliasGeneratorManager>
         int width = mainMap.GetLength(0);
         int height = mainMap.GetLength(1);
 
-        //Ensure same cells in minimum kMinStep steps
+        //Ensure same cells in minimum kMinStep steps: EVERYTHING IS WRT ORIGIN CELL
         while (i <= kMinStep)
         {
             foreach(Vector2Int p in K_CollisionSet[i])
             {
-                Vector2Int x = p + startCell;
-                if (Utility.in_bounds_General(x, width, height))
-                    UnionCollisionSet.Add(x);
+                //Vector2Int x = p + startCell; 
+                //if (Utility.in_bounds_General(p, width, height))
+                    UnionCollisionSet.Add(p);
             }
             
             i++;
         }
 
-        //Ensure one or more paths from kMinStep up to kMaxStep
+        //Ensure one or more paths from kMinStep up to kMaxStep: WE DON'T USE IT. IF USE IT CONSIDER WRT TO ORIGIN
         if (kMaxStep > kMinStep)
         {
             HashSet<Vector2Int> toBacktrack= new HashSet<Vector2Int>();
@@ -515,7 +527,17 @@ public class AliasGeneratorManager : Singleton<AliasGeneratorManager>
         K_CollisionSet = null;
         SimilarMapsQueue = null;
 
+        foreach (var t in ToggleLinesContainer.GetComponentsInChildren<Toggle>())
+            t.isOn = true;
+
         deleteBestWorstUILines();
+
+        foreach (Transform child in GeneratorManager.Instance.Content.transform)
+        {
+            GameObject.Destroy(child.gameObject);
+        }
+        
+        GeneratorUIManager.Instance.gameObject.GetComponent<UIParametersValueChange>().refreshUIParams();
     }
 
     public void deleteBestWorstUILines()

@@ -5,6 +5,7 @@ using UnityEngine.UI.Extensions;
 using System;
 using System.Linq;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class AliasGameEvaluator : MonoBehaviour
 {
@@ -36,15 +37,28 @@ public class AliasGameEvaluator : MonoBehaviour
 
     private List<GameObject> LinesGO;
 
-    private void Start()
+    private void InitAliasGameEvaluator()
     {
-        
-        AliasContainerGO = AliasGeneratorManager.Instance.AliasDragAreas[0].gameObject;
+        AliasContainerGO = AliasGeneratorManager.Instance.AliasDragAreas[0].gameObject;//IN SCENE LOADED!!
         LineUIPrefab = GeneratorUIManager.Instance.LineUIPrefab;
         aliasList = AliasContainerGO.GetComponent<MapListManager>();
         pMan = ParameterManager.Instance;
         ChartLines = new List<Tuple<List<float>, Color>>();
         LinesGO = new List<GameObject>();
+    }
+    
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+
+        InitAliasGameEvaluator();
     }
 
     public void AliasGameEvaluatorHandler()
@@ -659,6 +673,10 @@ public class AliasGameEvaluator : MonoBehaviour
 
         }
 
+        if(pMan.MapToPlay[(pathAgentWDicCount.Last().Item1 + pMan.StartCell).x, (pathAgentWDicCount.Last().Item1 + pMan.StartCell).y].type == IGenerator.wallChar)
+        {
+            pathAgentWDicCount.Add(new Tuple<Vector2Int, int>(pathAgentWDicCount[pathAgentWDicCount.Count-2].Item1, 1));
+        }
 
         Vector2Int[] stepsFromPlayerToExit = MapEvaluator.Search_AStar(pMan.MapToPlay, pMan.GridType, pathAgentWDicCount.Last().Item1 + pMan.StartCell, pMan.EndCell);
         List<Vector2Int> tmpArr = new List<Vector2Int>(stepsFromPlayerToExit);
@@ -887,7 +905,8 @@ public class AliasGameEvaluator : MonoBehaviour
                     }
                     else
                     {
-                        int minDstOfNxtMove = ParameterManager.Instance.GridType.heuristic(pMan.StartCell, pMan.EndCell);
+                        //int minDstOfNxtMove = ParameterManager.Instance.GridType.heuristic(pMan.StartCell, pMan.EndCell);//for all the cases where the heuristic, have brought the agent far, this initialization will be always less than a move attempt
+                        int minDstOfNxtMove = pMan.MapToPlay.GetLength(0) * pMan.MapToPlay.GetLength(1);
 
                         foreach (var nextMvs in minList)
                         {
@@ -948,6 +967,11 @@ public class AliasGameEvaluator : MonoBehaviour
 
             //Update everything wrt new move found
 
+        }
+
+        if (pMan.MapToPlay[(pathAgentWDicCount.Last().Item1 + pMan.StartCell).x, (pathAgentWDicCount.Last().Item1 + pMan.StartCell).y].type == IGenerator.wallChar)
+        {
+            pathAgentWDicCount.Add(new Tuple<Vector2Int, int>(pathAgentWDicCount[pathAgentWDicCount.Count - 2].Item1, 1));
         }
 
         Vector2Int[] stepsFromPlayerToExit = MapEvaluator.Search_AStar(pMan.MapToPlay, pMan.GridType, pathAgentWDicCount.Last().Item1+ pMan.StartCell, pMan.EndCell);
