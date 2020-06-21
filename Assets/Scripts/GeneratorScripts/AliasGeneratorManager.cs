@@ -34,6 +34,7 @@ public struct StructuredAlias
 public class AliasGeneratorManager : MonoBehaviour/*Singleton<AliasGeneratorManager>*/
 {
     static readonly int MAX_ALIAS = 1000;
+    static readonly int MAX_OPT_ALIAS = 10;//should not be less than BATCH_ALIASES
     static readonly int MAX_ALIASMASKS = 5;
 
     public int BatchAliasNumber = 5;
@@ -42,6 +43,7 @@ public class AliasGeneratorManager : MonoBehaviour/*Singleton<AliasGeneratorMana
     public GameObject[] AliasToggleAnimations;
     public RectTransform[] AliasDragAreas;
     private HashSet<Vector2Int>[] K_CollisionSet;
+    private HashSet<Vector2Int> BaseAliasCollisionMask;
     public GameObject AliasPrefab;
     public GameObject ToggleLinesContainer;
     private TileObject[,] mainMap;
@@ -72,15 +74,14 @@ public class AliasGeneratorManager : MonoBehaviour/*Singleton<AliasGeneratorMana
 
     public void GenerateAndTestAliasMaps()
     {
-        mainMap = ParameterManager.Instance.MapToPlay;
-        gridType = ParameterManager.Instance.GridType;
-        K_CollisionSet = MapEvaluator.BuildKCollisionVec(mainMap, gridType, ParameterManager.Instance.StartCell, Mathf.Max(ParameterManager.Instance.minStepsSolution, ParameterManager.Instance.maxStepsSolution));
+        
+        
         Vector2Int startMainMap = ParameterManager.Instance.StartCell;
         int width = ParameterManager.Instance.MapToPlay.GetLength(0);
         int height = ParameterManager.Instance.MapToPlay.GetLength(1);
 
 
-        HashSet<Vector2Int> BaseAliasCollisionMask = getMainMapKMaxMinCells(mainMap, gridType, ParameterManager.Instance.minStepsSolution, ParameterManager.Instance.minStepsSolution, startMainMap, 0f);
+        BaseAliasCollisionMask = getMainMapKMaxMinCells(mainMap, gridType, ParameterManager.Instance.minStepsSolution, ParameterManager.Instance.minStepsSolution, startMainMap, 0f);
         HashSet<Vector2Int>[,] AliasCollisionMaskMatrix = new HashSet<Vector2Int>[ParameterManager.Instance.maxStepsSolution - ParameterManager.Instance.minStepsSolution, MAX_ALIASMASKS];
 
         if (ParameterManager.Instance.maxStepsSolution > ParameterManager.Instance.minStepsSolution)
@@ -101,7 +102,7 @@ public class AliasGeneratorManager : MonoBehaviour/*Singleton<AliasGeneratorMana
         //Map initialization.
         int i = 0;
 
-        SimilarMapsQueue = new SimplePriorityQueue<TileObject[,]>();
+        
 
         Vector2Int startAlias = ParameterManager.Instance.StartCell;
         Vector2Int endAlias = ParameterManager.Instance.EndCell;
@@ -193,102 +194,23 @@ public class AliasGeneratorManager : MonoBehaviour/*Singleton<AliasGeneratorMana
 
     public void CollabGameGeneration()
     {
-        GenerateAndTestAliasMaps();
-        /*
+
         mainMap = ParameterManager.Instance.MapToPlay;
         gridType = ParameterManager.Instance.GridType;
-        K_CollisionSet = MapEvaluator.BuildKCollisionVec(mainMap, gridType, ParameterManager.Instance.StartCell, Mathf.Max(ParameterManager.Instance.minStepsSolution, ParameterManager.Instance.maxStepsSolution));
-        Vector2Int startMainMap = ParameterManager.Instance.StartCell;
-        int width = ParameterManager.Instance.MapToPlay.GetLength(0);
-        int height = ParameterManager.Instance.MapToPlay.GetLength(1);
-
-        
-        HashSet<Vector2Int> BaseAliasCollisionMask = getMainMapKMaxMinCells(mainMap, gridType, ParameterManager.Instance.minStepsSolution, ParameterManager.Instance.minStepsSolution, startMainMap, 0f);
-        HashSet<Vector2Int>[,] AliasCollisionMaskMatrix = new HashSet<Vector2Int>[ParameterManager.Instance.maxStepsSolution - ParameterManager.Instance.minStepsSolution, MAX_ALIASMASKS];
-
-        if (ParameterManager.Instance.maxStepsSolution > ParameterManager.Instance.minStepsSolution) {
-            for (int h =0 ; h < ParameterManager.Instance.maxStepsSolution - ParameterManager.Instance.minStepsSolution ; h++)
-            {
-                for (int k = 0; k < MAX_ALIASMASKS; k++)
-                {
-                    AliasCollisionMaskMatrix[h,k] = getMainMapKMaxMinCells(mainMap, gridType, ParameterManager.Instance.minStepsSolution, ParameterManager.Instance.minStepsSolution+h+1, startMainMap, ((k+1)*1.0f)/(MAX_ALIASMASKS)); ;
-                }
-            }
-        }
-        else
-        {
-            AliasCollisionMaskMatrix = null;
-        }
-            
-        //Map initialization.
-        int i = 0;
-
         SimilarMapsQueue = new SimplePriorityQueue<TileObject[,]>();
 
-        Vector2Int startAlias = ParameterManager.Instance.StartCell;
-        Vector2Int endAlias = ParameterManager.Instance.EndCell;
+        K_CollisionSet = MapEvaluator.BuildKCollisionVec(mainMap, gridType, ParameterManager.Instance.StartCell, Mathf.Max(ParameterManager.Instance.minStepsSolution, ParameterManager.Instance.maxStepsSolution));
+        
+        if (ParameterManager.Instance.isOptimizerOn) {
+            List<TileObject[,]> alises = new List<TileObject[,]>();
+            BaseAliasCollisionMask = getMainMapKMaxMinCells(mainMap, gridType, ParameterManager.Instance.minStepsSolution, ParameterManager.Instance.minStepsSolution, ParameterManager.Instance.StartCell, 0f);
 
-
-        while (i < MAX_ALIAS)
-        {
-            //define here the width, height, start and end  of the chosen map
-            TileObject[,] aliasMap = new TileObject[width, height];
-
-            genMan.connectedGenerator.setBaseGeneratorParameters(gridType, width, height, startAlias, endAlias, i, false);
-            genMan.cellularAutomataGenerator.setBaseGeneratorParameters(gridType, width, height, startAlias, endAlias, i, false);
-            genMan.primGenerator.setBaseGeneratorParameters(gridType, width, height, startAlias, endAlias, i, false);
-
-            switch (i%3)
-            {
-                case 0:
-                    aliasMap = genMan.connectedGenerator.generateMapGeneral(ParameterManager.Instance.IsTrapsOnMapBorder,(float) pRNG_Alias.NextDouble());
-                    break;
-                case 1:
-                    aliasMap = genMan.cellularAutomataGenerator.generateMapGeneral(ParameterManager.Instance.IsTrapsOnMapBorder, (float)pRNG_Alias.NextDouble(), 1+i%5, 5, i%2==1, 0, 0);
-                    break;
-                case 2:
-                    aliasMap = genMan.primGenerator.generateMapGeneral(ParameterManager.Instance.IsTrapsOnMapBorder, (float)pRNG_Alias.NextDouble());
-                    break;
-                default:
-                    ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "AliasManager: no map generator found.");
-                    break;
-            }
-
-            //Apply mask...
-            //from zero to kMinStep and up to some cells at kMaxStep 
-            if (ParameterManager.Instance.maxStepsSolution > ParameterManager.Instance.minStepsSolution)
-            {
-                for (int x = 0; x < aliasMap.GetLength(0); x++)
-                {
-                    for (int y = 0; y < aliasMap.GetLength(1); y++)
-                    {
-                        if (Utility.in_bounds_General(new Vector2Int(startMainMap.x + x, startMainMap.y + y), width, height))
-                            if(AliasCollisionMaskMatrix[i % AliasCollisionMaskMatrix.GetLength(0), i % AliasCollisionMaskMatrix.GetLength(1)].Contains(new Vector2Int(x - startAlias.x, y - startAlias.y)))
-                                aliasMap[x, y].type = ParameterManager.Instance.MapToPlay[startMainMap.x + x, startMainMap.y + y].type;
-                    }
-                }
-            }
+            foreach (var a in AliasGeneratorManager.Instance.GetComponent<AliasGameEvaluator>().AliasGameOptimizerHandler())
+                SimilarMapsQueue.Enqueue(a.Value.AliasMap, a.Value.similarityDistance);
+        }
             else
-            {
-                //only from zero to kMinStep
-                for (int x = 0; x < aliasMap.GetLength(0); x++)
-                {
-                    for (int y = 0; y < aliasMap.GetLength(1); y++)
-                    {
-                        if (Utility.in_bounds_General(new Vector2Int(startMainMap.x + x, startMainMap.y + y), width, height) && BaseAliasCollisionMask.Contains(new Vector2Int(x - startAlias.x, y - startAlias.y)))
-                            aliasMap[x, y].type = ParameterManager.Instance.MapToPlay[startMainMap.x + x, startMainMap.y + y].type;
-                    }
-                }
-            }
+            GenerateAndTestAliasMaps();
 
-            if (MapEvaluator.isEndReachable(aliasMap, gridType, startAlias, endAlias, ParameterManager.Instance.allowAutosolverForAlias).First() == endAlias)
-            {//if the map has a path from start to end, add it
-                float dst = MapEvaluator.BinaryMapSimilarity(mainMap, aliasMap, startMainMap, startAlias);
-                
-                SimilarMapsQueue.Enqueue(aliasMap, dst);
-            }
-            i++;
-        }*/
 
         int i = 0;
         Vector2Int startMainMap = ParameterManager.Instance.StartCell;
@@ -317,7 +239,7 @@ public class AliasGeneratorManager : MonoBehaviour/*Singleton<AliasGeneratorMana
         }
 
         i = 0;
-        while (i < BatchAliasNumber)
+        while (SimilarMapsQueue.Count > 0 && i < BatchAliasNumber )
         {
             float dst = SimilarMapsQueue.GetPriority(SimilarMapsQueue.First());
             tmpStrAlias = SimilarMapsQueue.Dequeue();
@@ -327,7 +249,7 @@ public class AliasGeneratorManager : MonoBehaviour/*Singleton<AliasGeneratorMana
         }
 
         i = 0;
-        while (i < BatchAliasNumber)
+        while (SimilarMapsQueue.Count > 0 && i < BatchAliasNumber)
         {
             tmpStrAlias = SimilarMapsQueue.Last();
             float dst = SimilarMapsQueue.GetPriority(tmpStrAlias);
@@ -364,6 +286,9 @@ public class AliasGeneratorManager : MonoBehaviour/*Singleton<AliasGeneratorMana
         GeneratorUIManager.Instance.deleteMapOnUI(AliasDragAreas[1].GetChild(0));
         AliasDragAreas[1].GetComponent<MapListManager>().dictionaryMap.Clear();
 
+        if(SimilarMapsQueue.Count<=0)
+            GenerateAndTestAliasMaps();
+
         while (i < BatchAliasNumber)
         {
             float dst = SimilarMapsQueue.GetPriority(SimilarMapsQueue.First());
@@ -382,6 +307,9 @@ public class AliasGeneratorManager : MonoBehaviour/*Singleton<AliasGeneratorMana
 
         GeneratorUIManager.Instance.deleteMapOnUI(AliasDragAreas[2].GetChild(0));
         AliasDragAreas[2].GetComponent<MapListManager>().dictionaryMap.Clear();
+
+        if (SimilarMapsQueue.Count <= 0)
+            GenerateAndTestAliasMaps();
 
         while (i < BatchAliasNumber)
         {
@@ -562,5 +490,112 @@ public class AliasGeneratorManager : MonoBehaviour/*Singleton<AliasGeneratorMana
 
         return dic.Values;
 
+    }
+
+    public Dictionary<int, StructuredAlias> GenerateNRandomAliasFromRealMap(StructuredAlias realMap, int N)
+    {
+        mainMap = realMap.AliasMap;
+        gridType = ParameterManager.Instance.GridType;
+        Vector2Int startMainMap = realMap.start;
+        int width = realMap.AliasMap.GetLength(0);
+        int height = realMap.AliasMap.GetLength(1);
+
+        //Map initialization.
+        int i = 0;
+
+        Dictionary<int, StructuredAlias> AliasBatch = new Dictionary<int, StructuredAlias>();
+
+        Vector2Int startAlias = realMap.start;
+        Vector2Int endAlias = realMap.end;
+        SimplePriorityQueue<TileObject[,]> tmpPQ = new SimplePriorityQueue<TileObject[,]>();
+
+        while (i < MAX_OPT_ALIAS)
+        {
+            //define here the width, height, start and end  of the chosen map
+            TileObject[,] aliasMap = new TileObject[width, height];
+
+            genMan.connectedGenerator.setBaseGeneratorParameters(gridType, width, height, startAlias, endAlias, i, false);
+            genMan.cellularAutomataGenerator.setBaseGeneratorParameters(gridType, width, height, startAlias, endAlias, i, false);
+            genMan.primGenerator.setBaseGeneratorParameters(gridType, width, height, startAlias, endAlias, i, false);
+
+            switch (i % 3)
+            {
+                case 0:
+                    aliasMap = genMan.connectedGenerator.generateMapGeneral(ParameterManager.Instance.IsTrapsOnMapBorder, (float)pRNG_Alias.NextDouble());
+                    break;
+                case 1:
+                    aliasMap = genMan.cellularAutomataGenerator.generateMapGeneral(ParameterManager.Instance.IsTrapsOnMapBorder, (float)pRNG_Alias.NextDouble(), 1 + pRNG_Alias.Next(0,6), 5, i % 2 == 1, 0, 0);
+                    break;
+                case 2:
+                    aliasMap = genMan.primGenerator.generateMapGeneral(ParameterManager.Instance.IsTrapsOnMapBorder, (float)pRNG_Alias.NextDouble());
+                    break;
+                default:
+                    ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "AliasManager: no map generator found.");
+                    break;
+            }
+
+            foreach (var m in BaseAliasCollisionMask)
+            {
+                if (Utility.in_bounds_General(new Vector2Int(startMainMap.x + m.x, startMainMap.y + m.y), mainMap.GetLength(0), mainMap.GetLength(1)) &&
+                    Utility.in_bounds_General(new Vector2Int(startAlias.x + m.x, startAlias.y + m.y), aliasMap.GetLength(0), aliasMap.GetLength(1)))
+                    aliasMap[startAlias.x + m.x, startAlias.y + m.y].type = ParameterManager.Instance.MapToPlay[startMainMap.x + m.x, startMainMap.y + m.y].type;
+            }
+
+            if (MapEvaluator.isEndReachable(aliasMap, gridType, startAlias, endAlias, ParameterManager.Instance.allowAutosolverForAlias).First() == endAlias)
+            {
+                //if the map has a path from start to end, add it
+                float dst = MapEvaluator.BinaryMapSimilarity(mainMap, aliasMap, startMainMap, startAlias);
+                //
+                int mapWCount = 0;
+                int aliasWCount = 0;
+                for (int h = 0; h < mainMap.GetLength(0); h++)
+                {
+                    for (int k = 0; k < mainMap.GetLength(1); k++)
+                    {
+                        if (mainMap[h, k].type == IGenerator.wallChar)
+                            mapWCount++;
+                        if (aliasMap[h, k].type == IGenerator.wallChar)
+                            aliasWCount++;
+                    }
+                }
+
+                dst = dst + Math.Abs(mapWCount - aliasWCount);
+                //
+                tmpPQ.Enqueue(aliasMap, dst);
+                
+                
+                i++;
+            }
+            
+        }
+
+        i = 0;
+        TileObject[,] tmpStrAlias;
+        while (i < N)
+        {
+            if (ParameterManager.Instance.considerSimilar)
+            {
+                float dst = tmpPQ.GetPriority(tmpPQ.First());
+                tmpStrAlias = tmpPQ.Dequeue();
+
+                AliasBatch.Add(Guid.NewGuid().GetHashCode(), new StructuredAlias(tmpStrAlias, startAlias, endAlias, dst));
+
+                i++;
+            }
+
+            if (ParameterManager.Instance.considerNovelty)
+            {
+                tmpStrAlias = tmpPQ.Last();
+                float dst = tmpPQ.GetPriority(tmpStrAlias);
+                tmpPQ.Remove(tmpStrAlias);
+
+                AliasBatch.Add(Guid.NewGuid().GetHashCode(), new StructuredAlias(tmpStrAlias, startAlias, endAlias, dst));
+
+                i++;
+            }
+            
+        }
+
+        return AliasBatch;
     }
 }

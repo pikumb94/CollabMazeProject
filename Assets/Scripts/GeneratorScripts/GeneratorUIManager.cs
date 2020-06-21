@@ -435,8 +435,8 @@ public class GeneratorUIManager : MonoBehaviour/*Singleton<GeneratorUIManager>*/
         GeneratorManager genM = GeneratorManager.Instance;
         ParameterManager p = ParameterManager.Instance;
         TMP_InputField[] InpFields = ParamsContainer.GetComponentsInChildren<TMP_InputField>();
-        Toggle t = ParamsContainer.GetComponentInChildren<Toggle>();
-        TMP_Dropdown DropD = ParamsContainer.GetComponentInChildren<TMP_Dropdown>();
+        Toggle[] tS = ParamsContainer.GetComponentsInChildren<Toggle>();
+        TMP_Dropdown[] DropsD = ParamsContainer.GetComponentsInChildren<TMP_Dropdown>();
 
         //Save map params
         p.MapToPlay = (GeneratorUIManager.Instance.isTrapsOnMapBorderToggleOn() ? genM.GeneratorsVect[(int)genM.activeGenerator].getMapWTrapBorder() : genM.GeneratorsVect[(int)genM.activeGenerator].getMap());
@@ -451,24 +451,32 @@ public class GeneratorUIManager : MonoBehaviour/*Singleton<GeneratorUIManager>*/
         p.aliasNum = Int32.Parse(InpFields[0].text);
         p.minStepsSolution = Int32.Parse(InpFields[1].text);
         p.maxStepsSolution = p.minStepsSolution;// Int32.Parse(InpFields[2].text); metto max uguale a min perchè attualmente l'impatto è poco influente data la natura generativa della creazione delle mappe
-        p.allowAutosolverForAlias = t.isOn;
-        
+        p.allowAutosolverForAlias = tS[0].isOn;
 
-        if (DropD.value == 0)
+        p.isOptimizerOn = tS[1].isOn;
+
+        if (DropsD[0].value == 0)
         {
             p.considerSimilar = true;
             p.considerNovelty = false;
         }
-        else if (DropD.value == 1)
+        else if (DropsD[0].value == 1)
         {
             p.considerSimilar = false;
             p.considerNovelty = true;
         }
-        else if (DropD.value >= 2)
+        else if (DropsD[0].value >= 2)
         {
             p.considerSimilar = true;
             p.considerNovelty = true;
         }
 
+        if (DropsD[1].value == 0)
+            p.isBestPathOnlyExplorative=true;
+        else if (DropsD[1].value == 1)
+            p.isBestPathOnlyExplorative = false;
+
+        if(p.isOptimizerOn)
+            p.optimizerType = DropsD[2].value;
     }
 }

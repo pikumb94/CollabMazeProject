@@ -311,6 +311,24 @@ public static class Utility
         return results;
     }
 
+    public static bool checkListCoordIsPalindrome(List<Vector2Int> v)
+    {
+        bool res = false;
+
+        if (v.Count % 2 == 0)
+            return false;
+        else
+        {
+            res = true;
+            for (int i = 0; i < v.Count/2; i++)
+            {
+                res &= v[i] == v[v.Count - 1 - i];
+            }
+        }
+
+        return res;
+    }
+
     //this version get all neighbours including walls and cells outside the grid: is a more general version
     public static Vector2Int[] getAllNeighboursWOBoundCheck_General(Vector2Int id, ITypeGrid TypeGrid)
     {

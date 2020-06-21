@@ -21,7 +21,7 @@ public class DropHandler : MonoBehaviour, IDropHandler
     }
     public void OnDrop(PointerEventData eventData)
     {
-        Debug.Log("OnDrop");
+        //Debug.Log("OnDrop");
         if (droppable && eventData.pointerDrag.name.Contains("DragNDrop"))
         {
             

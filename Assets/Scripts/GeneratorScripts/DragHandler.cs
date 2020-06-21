@@ -32,7 +32,7 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        Debug.Log("OnBeginDrag");
+        //Debug.Log("OnBeginDrag");
         hasBeenDragged = true;
         MapOnDrag = OriginalParent.GetComponent<MapListManager>().removeMapFromDictionary(ToMoveGameObj.GetInstanceID());
         canvasGroup.alpha = .6f;
@@ -41,7 +41,7 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
 
     public void OnDrag(PointerEventData eventData)
     {
-        Debug.Log("OnDrag");
+        //Debug.Log("OnDrag");
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
         inDropArea = false;
 
@@ -69,7 +69,7 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
 
     public void OnEndDrag(PointerEventData eventData)
     {
-       Debug.Log("OnEndDrag");
+       //Debug.Log("OnEndDrag");
         canvasGroup.alpha = 1f;
         canvasGroup.blocksRaycasts = true;
 
@@ -83,7 +83,7 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
     
     public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log("OnPointerDown");
+        //Debug.Log("OnPointerDown");
         hasBeenDragged = false;
         rectTransform.GetComponentInChildren<ScrollRect>().enabled = false;
         ToMoveGameObj.transform.SetParent(canvas.transform);
@@ -98,7 +98,7 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        Debug.Log("OnPointerUP");
+        //Debug.Log("OnPointerUP");
         if (!hasBeenDragged)
         {
             ToMoveGameObj.transform.SetParent(OriginalParent.transform.Find("AliasContent"));

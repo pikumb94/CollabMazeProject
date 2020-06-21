@@ -107,6 +107,7 @@
     <Compile Include="Assets\Scripts\GeneratorScripts\ITypeGrid.cs" />
     <Compile Include="Assets\Scripts\GeneratorScripts\MapAssemblerScript.cs" />
     <Compile Include="Assets\Scripts\GeneratorScripts\MapEvaluator.cs" />
+    <Compile Include="Assets\Scripts\GeneratorScripts\OptimizationManager.cs" />
     <Compile Include="Assets\Scripts\GeneratorScripts\ParameterManager.cs" />
     <Compile Include="Assets\Scripts\GeneratorScripts\PrimGenerator.cs" />
     <Compile Include="Assets\Scripts\GeneratorScripts\Singleton.cs" />
