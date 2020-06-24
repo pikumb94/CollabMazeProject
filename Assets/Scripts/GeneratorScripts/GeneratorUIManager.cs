@@ -476,7 +476,12 @@ public class GeneratorUIManager : MonoBehaviour/*Singleton<GeneratorUIManager>*/
         else if (DropsD[1].value == 1)
             p.isBestPathOnlyExplorative = false;
 
-        if(p.isOptimizerOn)
+        if (p.isOptimizerOn)
+        {
             p.optimizerType = DropsD[2].value;
+            p.hillClimberNumBatch = Int32.Parse(InpFields[2].text);
+            p.timeCap = Int32.Parse(InpFields[3].text);
+        }
+            
     }
 }

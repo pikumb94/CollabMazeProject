@@ -34,8 +34,9 @@ public struct StructuredAlias
 public class AliasGeneratorManager : MonoBehaviour/*Singleton<AliasGeneratorManager>*/
 {
     static readonly int MAX_ALIAS = 1000;
-    static readonly int MAX_OPT_ALIAS = 10;//should not be less than BATCH_ALIASES
     static readonly int MAX_ALIASMASKS = 5;
+
+    static readonly int MAX_OPT_ALIAS;//should not be less than BATCH_ALIASES: ACTUALLY NOT USED!
 
     public int BatchAliasNumber = 5;
     static System.Random pRNG_Alias = new System.Random(0);
@@ -170,7 +171,7 @@ public class AliasGeneratorManager : MonoBehaviour/*Singleton<AliasGeneratorMana
             if (MapEvaluator.isEndReachable(aliasMap, gridType, startAlias, endAlias, ParameterManager.Instance.allowAutosolverForAlias).First() == endAlias)
             {//if the map has a path from start to end, add it
                 float dst = MapEvaluator.BinaryMapSimilarity(mainMap, aliasMap, startMainMap, startAlias);
-                //
+                /*
                 int mapWCount = 0;
                 int aliasWCount = 0;
                 for (int h = 0; h < mainMap.GetLength(0); h++)
@@ -185,7 +186,7 @@ public class AliasGeneratorManager : MonoBehaviour/*Singleton<AliasGeneratorMana
                 }
 
                 dst = dst + Math.Abs(mapWCount - aliasWCount);
-                //
+                */
                 SimilarMapsQueue.Enqueue(aliasMap, dst);
             }
             i++;
@@ -509,7 +510,7 @@ public class AliasGeneratorManager : MonoBehaviour/*Singleton<AliasGeneratorMana
         Vector2Int endAlias = realMap.end;
         SimplePriorityQueue<TileObject[,]> tmpPQ = new SimplePriorityQueue<TileObject[,]>();
 
-        while (i < MAX_OPT_ALIAS)
+        while (i < N/*MAX_OPT_ALIAS*/)
         {
             //define here the width, height, start and end  of the chosen map
             TileObject[,] aliasMap = new TileObject[width, height];
@@ -545,7 +546,7 @@ public class AliasGeneratorManager : MonoBehaviour/*Singleton<AliasGeneratorMana
             {
                 //if the map has a path from start to end, add it
                 float dst = MapEvaluator.BinaryMapSimilarity(mainMap, aliasMap, startMainMap, startAlias);
-                //
+                /*
                 int mapWCount = 0;
                 int aliasWCount = 0;
                 for (int h = 0; h < mainMap.GetLength(0); h++)
@@ -560,7 +561,7 @@ public class AliasGeneratorManager : MonoBehaviour/*Singleton<AliasGeneratorMana
                 }
 
                 dst = dst + Math.Abs(mapWCount - aliasWCount);
-                //
+                */
                 tmpPQ.Enqueue(aliasMap, dst);
                 
                 

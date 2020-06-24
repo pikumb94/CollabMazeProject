@@ -29,6 +29,7 @@ public class AliasGameEvaluator : MonoBehaviour
     private Dictionary<Vector2Int, TreeNode<Vector2Int, Dictionary<int, bool>>> LeavesSet;
     private List<Tuple<List<float>, Color>> ChartLines;
     private ParameterManager pMan;
+    private System.Diagnostics.Stopwatch sWatch;
 
     private List<TreeNode<Vector2Int, Dictionary<int, bool>>> DupLeavesList;
 
@@ -45,6 +46,7 @@ public class AliasGameEvaluator : MonoBehaviour
         pMan = ParameterManager.Instance;
         ChartLines = new List<Tuple<List<float>, Color>>();
         LinesGO = new List<GameObject>();
+        sWatch = StopwatchProxy.Instance.Stopwatch;
     }
     
     void OnEnable()
@@ -72,7 +74,14 @@ public class AliasGameEvaluator : MonoBehaviour
 
             //ZeroLeavesSet = ConstructAliasTree();
             StructuredAlias RealMap = new StructuredAlias(pMan.MapToPlay, pMan.StartCell, pMan.EndCell, -1);
+
+            var watch = new System.Diagnostics.Stopwatch();
+            watch.Start();
+
             ZeroLeavesSet = (pMan.isBestPathOnlyExplorative? ConstructAliasTreeWDuplicates(RealMap, aliasList.dictionaryMap): ConstructSmartAgentAliasTree(RealMap, aliasList.dictionaryMap));
+            watch.Stop();
+            Debug.Log("BestPath exeTime: "+watch.ElapsedMilliseconds / 1000f);
+
             printBestWorstPaths(ZeroLeavesSet);
             //buildAverageChartLine(); WORKS ONLY WITH ConstructAliasTree(); THAT BUILDS ALL THE LEAVES (but still not correctly)
 
@@ -667,6 +676,7 @@ public class AliasGameEvaluator : MonoBehaviour
         bool allVisitedAndOnlyWalls = false;
         while (currCell.NodeKeyValue.Key + realMap.start != realMap.end && pathAgentWDicCount.Last().Item2 > 1)
         {
+            checkTime();
             //current treenode build so no init operations
             Vector2Int nextMove = new Vector2Int();
 
@@ -859,6 +869,7 @@ public class AliasGameEvaluator : MonoBehaviour
 
         while (currCell.NodeKeyValue.Key + realMap.start != realMap.end && pathAgentWDicCount.Last().Item2 >1)
         {
+            checkTime();
             //current treenode build so no init operations
             Vector2Int nextMove = new Vector2Int();
 
@@ -1042,6 +1053,7 @@ public class AliasGameEvaluator : MonoBehaviour
 
         while (frontier.Count > 0)
         {
+            checkTime();
             TreeNode<Vector2Int, Dictionary<int, bool>> CurrentNode = frontier.Dequeue();
             Vector2Int[] Cells = Utility.getAllNeighboursWOBoundCheck_General(CurrentNode.NodeKeyValue.Key, pMan.GridType);
             List<Vector2Int> cellList = new List<Vector2Int>(Cells);
@@ -1156,150 +1168,154 @@ public class AliasGameEvaluator : MonoBehaviour
 
         while (frontier.Count > 0)
         {
+            checkTime();
             TreeNode<Vector2Int, Dictionary<int, bool>> CurrentNode = frontier.Dequeue();
-            Vector2Int[] Cells = Utility.getAllNeighboursWOBoundCheck_General(CurrentNode.NodeKeyValue.Key, pMan.GridType);
-            List<Vector2Int> cellList = new List<Vector2Int>(Cells);
-            //You can never come from outside the map => except the coming cells, you should have 3 elements with getAllNeighbours and the difference indicates the OoB cells.
-            
-            if (CurrentNode.ParentNode != null)
-            {
-                Vector2Int toRemove = Vector2Int.zero;
-                foreach (var c in cellList)
-                    if (CurrentNode.ParentNode.NodeKeyValue.Key == c)
-                        toRemove = c;
+            if (CurrentNode.NodeKeyValue.Key + realMap.start != realMap.end) { 
 
-                cellList.Remove(toRemove);
-            }
+                Vector2Int[] Cells = Utility.getAllNeighboursWOBoundCheck_General(CurrentNode.NodeKeyValue.Key, pMan.GridType);
+                List<Vector2Int> cellList = new List<Vector2Int>(Cells);
+                //You can never come from outside the map => except the coming cells, you should have 3 elements with getAllNeighbours and the difference indicates the OoB cells.
 
-            //int countFailedSteps = 0;
-
-            foreach (var c in cellList)
-            {
-                //Avoid self loops
-                HashSet<Vector2Int> checkLoopSet = new HashSet<Vector2Int>();
-                TreeNode<Vector2Int, Dictionary<int, bool>> tmp = CurrentNode;
-
-                //
-                bool isBacktracking = false;
-                List<Vector2Int> checkList = new List<Vector2Int>() {};
-                int cnt = 0;
-                while (tmp != null)
+                if (CurrentNode.ParentNode != null)
                 {
+                    Vector2Int toRemove = Vector2Int.zero;
+                    foreach (var c in cellList)
+                        if (CurrentNode.ParentNode.NodeKeyValue.Key == c)
+                            toRemove = c;
+
+                    cellList.Remove(toRemove);
+                }
+
+                //int countFailedSteps = 0;
+
+                foreach (var c in cellList)
+                {
+                    //Avoid self loops
+                    HashSet<Vector2Int> checkLoopSet = new HashSet<Vector2Int>();
+                    TreeNode<Vector2Int, Dictionary<int, bool>> tmp = CurrentNode;
+
                     //
-                    /*
-                    if(tmp.ParentNode!= null && tmp.ParentNode.ParentNode!= null && tmp.NodeKeyValue.Key == tmp.ParentNode.ParentNode.NodeKeyValue.Key)
+                    bool isBacktracking = false;
+                    List<Vector2Int> checkList = new List<Vector2Int>() { };
+                    int cnt = 0;
+                    while (tmp != null)
                     {
-                        isBacktracking = true;
-                        break;
-                    }*/
-                    if (tmp.NodeKeyValue.Key == CurrentNode.NodeKeyValue.Key)
-                        cnt++;
-
-                    if (cnt < 2)
-                        checkList.Add(tmp.NodeKeyValue.Key);
-                    else
-                    {
-                        if (cnt == 2)
+                        //
+                        /*
+                        if(tmp.ParentNode!= null && tmp.ParentNode.ParentNode!= null && tmp.NodeKeyValue.Key == tmp.ParentNode.ParentNode.NodeKeyValue.Key)
                         {
-                            checkList.Add(tmp.NodeKeyValue.Key);
+                            isBacktracking = true;
+                            break;
+                        }*/
+                        if (tmp.NodeKeyValue.Key == CurrentNode.NodeKeyValue.Key)
                             cnt++;
-                        }
 
+                        if (cnt < 2)
+                            checkList.Add(tmp.NodeKeyValue.Key);
+                        else
+                        {
+                            if (cnt == 2)
+                            {
+                                checkList.Add(tmp.NodeKeyValue.Key);
+                                cnt++;
+                            }
+
+                        }
+                        //
+
+                        checkLoopSet.Add(tmp.NodeKeyValue.Key);
+                        tmp = tmp.ParentNode;
                     }
                     //
 
-                    checkLoopSet.Add(tmp.NodeKeyValue.Key);
-                    tmp = tmp.ParentNode;
+                    if (/*isBacktracking*/ Utility.checkListCoordIsPalindrome(checkList) || !checkLoopSet.Contains(c))//added backstrack check
+                    {
+                        Dictionary<int, bool> newDictionary = updateAliasDictionary(c, CurrentNode.NodeKeyValue.Value, realMap, Aliases);
+                        TreeNode<Vector2Int, Dictionary<int, bool>> Node;
+
+                        if (newDictionary.Count - CurrentNode.NodeKeyValue.Value.Count == 0)
+                            Node = new TreeNode<Vector2Int, Dictionary<int, bool>>(new KeyValuePair<Vector2Int, Dictionary<int, bool>>(c, CurrentNode.NodeKeyValue.Value), CurrentNode.nodeDepth + 1, CurrentNode);
+                        else
+                            Node = new TreeNode<Vector2Int, Dictionary<int, bool>>(new KeyValuePair<Vector2Int, Dictionary<int, bool>>(c, newDictionary), CurrentNode.nodeDepth + 1, CurrentNode);
+
+                        if (newDictionary.Count != 0)
+                        {
+                            //The tree search continues if the new node is a room
+                            if (Utility.in_bounds_General(c + realMap.start, realMap.AliasMap.GetLength(0), realMap.AliasMap.GetLength(1)) &&
+                                realMap.AliasMap[c.x + realMap.start.x, c.y + realMap.start.y].type != IGenerator.wallChar)
+                                frontier.Enqueue(Node);
+
+                            //The tree search continues if is a wall or border that produces an alias reduction: already do the first backtrack
+                            if ((!Utility.in_bounds_General(c + realMap.start, realMap.AliasMap.GetLength(0), realMap.AliasMap.GetLength(1)) &&
+                                newDictionary.Count - CurrentNode.NodeKeyValue.Value.Count != 0)
+                                ||
+                                (Utility.in_bounds_General(c + realMap.start, realMap.AliasMap.GetLength(0), realMap.AliasMap.GetLength(1)) &&
+                                newDictionary.Count - CurrentNode.NodeKeyValue.Value.Count != 0 &&
+                                realMap.AliasMap[c.x + realMap.start.x, c.y + realMap.start.y].type == IGenerator.wallChar))
+                            {
+                                TreeNode<Vector2Int, Dictionary<int, bool>> backNode =
+                                    new TreeNode<Vector2Int, Dictionary<int, bool>>(new KeyValuePair<Vector2Int, Dictionary<int, bool>>(CurrentNode.NodeKeyValue.Key, newDictionary), Node.nodeDepth + 1, Node);
+                                frontier.Enqueue(backNode);
+                            }
+
+                            /*
+                            //if is a wall or border that DOES NOT produces an alias reduction: count as a failure
+                            if ((!Utility.in_bounds_General(c + realMap.start, realMap.AliasMap.GetLength(0), realMap.AliasMap.GetLength(1)) &&
+                                newDictionary.Count - CurrentNode.NodeKeyValue.Value.Count == 0)
+                                ||
+                                (Utility.in_bounds_General(c + realMap.start, realMap.AliasMap.GetLength(0), realMap.AliasMap.GetLength(1)) &&
+                                newDictionary.Count - CurrentNode.NodeKeyValue.Value.Count == 0 &&
+                                realMap.AliasMap[c.x + realMap.start.x, c.y + realMap.start.y].type == IGenerator.wallChar))
+                            {
+                                countFailedSteps++;
+                            }*/
+
+                        }
+                        else
+                        {
+                            leafNodes.Add(Node);
+                        }
+
+                        //
+                        if (newDictionary.Count < minLeafNodes.First().NodeKeyValue.Value.Count)
+                        {
+                            minLeafNodes.Clear();
+                            minLeafNodes.Add(Node);
+                        }
+                        else if (newDictionary.Count == minLeafNodes.First().NodeKeyValue.Value.Count)
+                            minLeafNodes.Add(Node);
+                        //
+
+                    }
+                    /*else
+                    {
+                        countFailedSteps++;
+                    }*/
+
                 }
-                //
-                
-                if (/*isBacktracking*/ Utility.checkListCoordIsPalindrome(checkList) || !checkLoopSet.Contains(c))//added backstrack check
+
+                /*
+                if(CurrentNode.ParentNode != null && countFailedSteps >= 3)
                 {
-                    Dictionary<int, bool> newDictionary = updateAliasDictionary(c, CurrentNode.NodeKeyValue.Value, realMap, Aliases);
+                    //WE ARE FORCED TO BACKTRACK
+                
                     TreeNode<Vector2Int, Dictionary<int, bool>> Node;
 
-                    if (newDictionary.Count - CurrentNode.NodeKeyValue.Value.Count == 0)
-                        Node = new TreeNode<Vector2Int, Dictionary<int, bool>>(new KeyValuePair<Vector2Int, Dictionary<int, bool>>(c, CurrentNode.NodeKeyValue.Value), CurrentNode.nodeDepth + 1, CurrentNode);
-                    else
-                        Node = new TreeNode<Vector2Int, Dictionary<int, bool>>(new KeyValuePair<Vector2Int, Dictionary<int, bool>>(c, newDictionary), CurrentNode.nodeDepth + 1, CurrentNode);
-
-                    if (newDictionary.Count != 0)
+                    foreach (var c in Cells)
                     {
-                        //The tree search continues if the new node is a room
+                        Node = new TreeNode<Vector2Int, Dictionary<int, bool>>(new KeyValuePair<Vector2Int, Dictionary<int, bool>>(c, CurrentNode.NodeKeyValue.Value), CurrentNode.nodeDepth + 1, CurrentNode);
                         if (Utility.in_bounds_General(c + realMap.start, realMap.AliasMap.GetLength(0), realMap.AliasMap.GetLength(1)) &&
-                            realMap.AliasMap[c.x + realMap.start.x, c.y + realMap.start.y].type != IGenerator.wallChar)
+                                 realMap.AliasMap[c.x + realMap.start.x, c.y + realMap.start.y].type != IGenerator.wallChar)
                             frontier.Enqueue(Node);
 
-                        //The tree search continues if is a wall or border that produces an alias reduction: already do the first backtrack
-                        if ((!Utility.in_bounds_General(c + realMap.start, realMap.AliasMap.GetLength(0), realMap.AliasMap.GetLength(1)) &&
-                            newDictionary.Count - CurrentNode.NodeKeyValue.Value.Count != 0) 
-                            ||
-                            (Utility.in_bounds_General(c + realMap.start, realMap.AliasMap.GetLength(0), realMap.AliasMap.GetLength(1)) &&
-                            newDictionary.Count - CurrentNode.NodeKeyValue.Value.Count != 0 &&
-                            realMap.AliasMap[c.x + realMap.start.x, c.y + realMap.start.y].type == IGenerator.wallChar))
-                        {
-                            TreeNode<Vector2Int, Dictionary<int, bool>> backNode = 
-                                new TreeNode<Vector2Int, Dictionary<int, bool>>(new KeyValuePair<Vector2Int, Dictionary<int, bool>>(CurrentNode.NodeKeyValue.Key, newDictionary), Node.nodeDepth + 1, Node);
-                            frontier.Enqueue(backNode);
-                        }
-
-                        /*
-                        //if is a wall or border that DOES NOT produces an alias reduction: count as a failure
-                        if ((!Utility.in_bounds_General(c + realMap.start, realMap.AliasMap.GetLength(0), realMap.AliasMap.GetLength(1)) &&
-                            newDictionary.Count - CurrentNode.NodeKeyValue.Value.Count == 0)
-                            ||
-                            (Utility.in_bounds_General(c + realMap.start, realMap.AliasMap.GetLength(0), realMap.AliasMap.GetLength(1)) &&
-                            newDictionary.Count - CurrentNode.NodeKeyValue.Value.Count == 0 &&
-                            realMap.AliasMap[c.x + realMap.start.x, c.y + realMap.start.y].type == IGenerator.wallChar))
-                        {
-                            countFailedSteps++;
-                        }*/
-
                     }
-                    else
-                    {
-                        leafNodes.Add(Node);
-                    }
-
                     //
-                    if (newDictionary.Count < minLeafNodes.First().NodeKeyValue.Value.Count)
-                    {
-                        minLeafNodes.Clear();
-                        minLeafNodes.Add(Node);
-                    }
-                    else if (newDictionary.Count == minLeafNodes.First().NodeKeyValue.Value.Count)
-                        minLeafNodes.Add(Node);
+                    TreeNode<Vector2Int, Dictionary<int, bool>> backtrackNode =
+                                    new TreeNode<Vector2Int, Dictionary<int, bool>>(new KeyValuePair<Vector2Int, Dictionary<int, bool>>(CurrentNode.ParentNode.NodeKeyValue.Key, CurrentNode.NodeKeyValue.Value), CurrentNode.nodeDepth + 1, CurrentNode);
+                    frontier.Enqueue(backtrackNode);
                     //
-
-                }
-                /*else
-                {
-                    countFailedSteps++;
                 }*/
-
             }
-
-            /*
-            if(CurrentNode.ParentNode != null && countFailedSteps >= 3)
-            {
-                //WE ARE FORCED TO BACKTRACK
-                
-                TreeNode<Vector2Int, Dictionary<int, bool>> Node;
-
-                foreach (var c in Cells)
-                {
-                    Node = new TreeNode<Vector2Int, Dictionary<int, bool>>(new KeyValuePair<Vector2Int, Dictionary<int, bool>>(c, CurrentNode.NodeKeyValue.Value), CurrentNode.nodeDepth + 1, CurrentNode);
-                    if (Utility.in_bounds_General(c + realMap.start, realMap.AliasMap.GetLength(0), realMap.AliasMap.GetLength(1)) &&
-                             realMap.AliasMap[c.x + realMap.start.x, c.y + realMap.start.y].type != IGenerator.wallChar)
-                        frontier.Enqueue(Node);
-
-                }
-                //
-                TreeNode<Vector2Int, Dictionary<int, bool>> backtrackNode =
-                                new TreeNode<Vector2Int, Dictionary<int, bool>>(new KeyValuePair<Vector2Int, Dictionary<int, bool>>(CurrentNode.ParentNode.NodeKeyValue.Key, CurrentNode.NodeKeyValue.Value), CurrentNode.nodeDepth + 1, CurrentNode);
-                frontier.Enqueue(backtrackNode);
-                //
-            }*/
 
         }
 
@@ -1308,5 +1324,13 @@ public class AliasGameEvaluator : MonoBehaviour
             leafNodes.AddRange(minLeafNodes);
         }
         return leafNodes;
+    }
+
+    private void checkTime()
+    {
+        if (sWatch.ElapsedMilliseconds > pMan.timeCap * 1000f)
+        {
+            throw new Exception ("Time cap elapsed.\n");
+        }
     }
 }

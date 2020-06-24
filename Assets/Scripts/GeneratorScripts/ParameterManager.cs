@@ -35,6 +35,8 @@ public class ParameterManager:MonoBehaviour /*: Singleton<ParameterManager> */{
     // Optimization data.
     [HideInInspector] public bool isOptimizerOn { get; set; }
     [HideInInspector] public int optimizerType { get; set; }
+    [HideInInspector] public int hillClimberNumBatch { get; set; }
+    [HideInInspector] public int timeCap { get; set; }
 
     // Export data.
     [HideInInspector] public bool Export { get; set; }

@@ -230,7 +230,7 @@ public static class MapEvaluator
     private static float functionPointsDifference(Vector2 pI, Vector2 pJ)
     {
         float magn = (pI - pJ).magnitude;
-
+        
         if (magn <= 0)
             return 1;
         if (magn <= 1)
@@ -271,8 +271,11 @@ public static class MapEvaluator
                 {
                     for (int k = -lY; k <= hY; k++)
                     {
-                        if ((mainMap[startMainMap.x + i, startMainMap.y + j].type == IGenerator.wallChar ? 1 : 0) - (Alias[startAlias.x + h, startAlias.y + k].type == IGenerator.wallChar ? 1 : 0) != 0)
-                            similarity += functionPointsDifference(new Vector2(startMainMap.x + i, startMainMap.y + j), new Vector2(startAlias.x + h, startAlias.y + k));
+                        int sign = (mainMap[startMainMap.x + i, startMainMap.y + j].type == IGenerator.wallChar ? 1 : 0) - (Alias[startAlias.x + i, startAlias.y + j].type == IGenerator.wallChar ? 1 : 0);
+                        sign *= (mainMap[startMainMap.x + h, startMainMap.y + k].type == IGenerator.wallChar ? 1 : 0) - (Alias[startAlias.x + h, startAlias.y + k].type == IGenerator.wallChar ? 1 : 0);
+
+                        if ( sign != 0)
+                            similarity += sign * functionPointsDifference(new Vector2(startMainMap.x + i, startMainMap.y + j), new Vector2(startAlias.x + h, startAlias.y + k));
                     }
                 }
             }
