@@ -31,6 +31,7 @@ public class ParameterManager:MonoBehaviour /*: Singleton<ParameterManager> */{
     [HideInInspector] public bool considerSimilar { get; set; }
     [HideInInspector] public bool considerNovelty { get; set; }
     [HideInInspector] public bool isBestPathOnlyExplorative { get; set; }
+    [HideInInspector] public bool onlyBestPath { get; set; }
 
     // Optimization data.
     [HideInInspector] public bool isOptimizerOn { get; set; }

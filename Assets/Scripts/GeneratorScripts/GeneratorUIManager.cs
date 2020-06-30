@@ -381,6 +381,12 @@ public class GeneratorUIManager : MonoBehaviour/*Singleton<GeneratorUIManager>*/
         MessageDialogBox.transform.Find("MessageDialog").GetComponent<TMPro.TextMeshProUGUI>().text = s;
     }
 
+    public void appendMessageDialogBox(string s)
+    {
+        MessageDialogBox.SetActive(true);
+        MessageDialogBox.transform.Find("MessageDialog").GetComponent<TMPro.TextMeshProUGUI>().text += s;
+    }
+
     public void savePlayParametersInManager()
     {
         TMP_InputField[] ParamsIF = BeforePlayDialogBox.GetComponentsInChildren<TMP_InputField>();
@@ -474,9 +480,18 @@ public class GeneratorUIManager : MonoBehaviour/*Singleton<GeneratorUIManager>*/
         if (DropsD[1].value == 0)
             p.isBestPathOnlyExplorative=true;
         else if (DropsD[1].value == 1)
+        {
             p.isBestPathOnlyExplorative = false;
+            p.onlyBestPath = true;
+        }
+        else if (DropsD[1].value == 2)
+        {
+            p.isBestPathOnlyExplorative = false;
+            p.onlyBestPath = false;
+        }
 
-        if (p.isOptimizerOn)
+
+            if (p.isOptimizerOn)
         {
             p.optimizerType = DropsD[2].value;
             p.hillClimberNumBatch = Int32.Parse(InpFields[2].text);

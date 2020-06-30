@@ -37,7 +37,11 @@ public class AliasGameEvaluator : MonoBehaviour
     private List<List<Vector2Int>> BestWorstPaths;
 
     private List<GameObject> LinesGO;
-
+    //
+    Dictionary<int, int> nodesAtKDepth = new Dictionary<int, int>();
+    Tuple<int, int> NumDepthPairBestPath;
+    Tuple<int, int> NumDepthPairBestWorstPath;
+    //
     private void InitAliasGameEvaluator()
     {
         AliasContainerGO = AliasGeneratorManager.Instance.AliasDragAreas[0].gameObject;//IN SCENE LOADED!!
@@ -59,7 +63,6 @@ public class AliasGameEvaluator : MonoBehaviour
     }
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-
         InitAliasGameEvaluator();
     }
 
@@ -103,6 +106,7 @@ public class AliasGameEvaluator : MonoBehaviour
 
         switch (pMan.optimizerType)
         {
+            /*
             case 0:
                 return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().HillClimber(RealMap, EvalFirstZero);
             case 1:
@@ -111,11 +115,50 @@ public class AliasGameEvaluator : MonoBehaviour
                 return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().HillClimber(RealMap, EvalForkAgents);
             case 3:
                 return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().HillClimber(RealMap,  EvalForkOverall);
+            case 4:
+                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().HillClimber(RealMap,  EvalMinReliabilityBestPath);
+            case 5:
+                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().HillClimber(RealMap,  EvalMaxReliabilityBestPath);
             default:
                 ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, "Optimization type not found.");
                 break;
-        }
+                */
+                
+            case 0:
+                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().RandomRestartHillClimber(RealMap, EvalFirstZero);
+            case 1:
+                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().RandomRestartHillClimber(RealMap, EvalForkBestPath);
+            case 2:
+                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().RandomRestartHillClimber(RealMap, EvalForkAgents);
+            case 3:
+                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().RandomRestartHillClimber(RealMap,  EvalForkOverall);
+            case 4:
+                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().RandomRestartHillClimber(RealMap, EvalMinReliabilityBestPath);
+            case 5:
+                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().RandomRestartHillClimber(RealMap, EvalMaxReliabilityBestPath);
+            default:
+                ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, "Optimization type not found.");
+                break;
+                
+                /*
+                case 0:
+                    return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().StochasticFirstChoiceHillClimber(RealMap, EvalFirstZero);
+                case 1:
+                    return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().StochasticFirstChoiceHillClimber(RealMap, EvalForkBestPath);
+                case 2:
+                    return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().StochasticFirstChoiceHillClimber(RealMap, EvalForkAgents);
+                case 3:
+                    return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().StochasticFirstChoiceHillClimber(RealMap, EvalForkOverall);
+                case 4:
+                    return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().StochasticFirstChoiceHillClimber(RealMap, EvalMinReliabilityBestPath);
+                case 5:
+                    return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().StochasticFirstChoiceHillClimber(RealMap, EvalMaxReliabilityBestPath);
 
+                default:
+                    ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, "Optimization type not found.");
+                    break;
+                    */
+        }
         return null;
 
     }
@@ -172,7 +215,7 @@ public class AliasGameEvaluator : MonoBehaviour
 
         //Fitness computation
         XFirstZero.OrderBy(o => o).ToList();
-        fit = XFirstZero[XFirstZero.Count-1] - XFirstZero[0];
+        fit = XFirstZero[0] - XFirstZero[XFirstZero.Count-1];
         return fit;
     }
 
@@ -196,7 +239,7 @@ public class AliasGameEvaluator : MonoBehaviour
 
         //Fitness computation
         XFirstZero.OrderBy(o => o).ToList();
-        fit = XFirstZero[XFirstZero.Count - 1] - XFirstZero[0];
+        fit = XFirstZero[0] - XFirstZero[XFirstZero.Count - 1];
         return fit;
     }
 
@@ -222,8 +265,32 @@ public class AliasGameEvaluator : MonoBehaviour
 
         //Fitness computation
         XFirstZero.OrderBy(o => o).ToList();
-        fit = XFirstZero[XFirstZero.Count - 1] - XFirstZero[0];
+        fit = XFirstZero[0] - XFirstZero[XFirstZero.Count - 1];
         return fit;
+    }
+
+    public double EvalMaxReliabilityBestPath(StructuredAlias realMap, Dictionary<int, StructuredAlias> alias)
+    {
+        double fit = 0;
+        List<List<float>> EvalChartLines = printBestWorstPaths((pMan.isBestPathOnlyExplorative ? ConstructAliasTreeWDuplicates(realMap, alias) : ConstructSmartAgentAliasTree(realMap, alias)));
+        List<int> XFirstZero = new List<int>(new int[EvalChartLines.Count]);
+
+        int totalNumBestDepth = nodesAtKDepth[NumDepthPairBestPath.Item2];
+        float totalBestWorst = (pMan.onlyBestPath?0:(NumDepthPairBestWorstPath.Item1 / (float)nodesAtKDepth[NumDepthPairBestWorstPath.Item2]));
+        fit = (NumDepthPairBestPath.Item1/(float)totalNumBestDepth)+ totalBestWorst;
+        return fit;
+    }
+
+    public double EvalMinReliabilityBestPath(StructuredAlias realMap, Dictionary<int, StructuredAlias> alias)
+    {
+        double fit = 0;
+        List<List<float>> EvalChartLines = printBestWorstPaths((pMan.isBestPathOnlyExplorative ? ConstructAliasTreeWDuplicates(realMap, alias) : ConstructSmartAgentAliasTree(realMap, alias)));
+        List<int> XFirstZero = new List<int>(new int[EvalChartLines.Count]);
+
+        int totalNumBestDepth = nodesAtKDepth[NumDepthPairBestPath.Item2];
+        float totalBestWorst = (pMan.onlyBestPath ? 0 : (NumDepthPairBestWorstPath.Item1 / (float)nodesAtKDepth[NumDepthPairBestWorstPath.Item2]));
+        fit = (NumDepthPairBestPath.Item1 / (float)totalNumBestDepth) + totalBestWorst;
+        return -fit;
     }
 
     public void DestroyMapLines()
@@ -379,9 +446,11 @@ public class AliasGameEvaluator : MonoBehaviour
 
     public List<List<float>> printBestWorstPaths(List<TreeNode<Vector2Int, Dictionary<int, bool>>> Z_LeavesSet)
     {
-        int minDepth= Z_LeavesSet[0].nodeDepth, maxDepth=0;
+        int minDepth = Z_LeavesSet[0].nodeDepth, maxDepth = 0;
         List<TreeNode<Vector2Int, Dictionary<int, bool>>> minNodes = new List<TreeNode<Vector2Int, Dictionary<int, bool>>>();
         List<TreeNode<Vector2Int, Dictionary<int, bool>>> maxNodes = new List<TreeNode<Vector2Int, Dictionary<int, bool>>>();
+        System.Random rand = new System.Random((int)DateTime.Now.Ticks);
+        GameObject LineGO;
 
         foreach (var l in Z_LeavesSet)
         {
@@ -394,7 +463,7 @@ public class AliasGameEvaluator : MonoBehaviour
             }
             else
             {
-                if(l.nodeDepth == maxDepth)
+                if (l.nodeDepth == maxDepth)
                     maxNodes.Add(l);
             }
 
@@ -410,56 +479,70 @@ public class AliasGameEvaluator : MonoBehaviour
                     minNodes.Add(l);
             }
         }
+        //
+        NumDepthPairBestPath = new Tuple<int, int>(minNodes.Count, minDepth);
+        NumDepthPairBestWorstPath = new Tuple<int, int>(maxNodes.Count, maxDepth);
+        //
+        List<float> BestWorstChart = new List<float>();
+        if (!pMan.onlyBestPath) { 
+            BestWorstPaths = new List<List<Vector2Int>>();
+
+            foreach (var l in maxNodes)
+            {
+                TreeNode<Vector2Int, Dictionary<int, bool>> tmp = l.ParentNode;
+                List<Vector2Int> backtrackSolution = new List<Vector2Int>();
+                backtrackSolution.Add(l.NodeKeyValue.Key);
+
+                while (tmp != null)
+                {
+                    backtrackSolution.Add(tmp.NodeKeyValue.Key);
+                    tmp = tmp.ParentNode;
+                }
+
+                BestWorstPaths.Add(backtrackSolution);
+
+                List<float> toChart = buildPathChartLine(backtrackSolution, Z_LeavesSet);
+                toChart.Reverse();
+                if (toChart.Count > BestWorstChart.Count)
+                {
+                    for (int i = 0; i < toChart.Count; i++)
+                    {
+                        if (i < BestWorstChart.Count)
+                            BestWorstChart[i] += toChart[i];
+                        else
+                            BestWorstChart.Add(toChart[i]);
+                    }
+
+                }
+                else
+                {
+                    for (int i = 0; i < toChart.Count; i++)
+                    {
+                        BestWorstChart[i] += toChart[i];
+                    }
+                }
+
+
+            }
+
+            for (int i = 0; i < BestWorstChart.Count; i++)
+            {
+                BestWorstChart[i] /= BestWorstPaths.Count;
+            }
+
+            ChartLines.Add(new Tuple<List<float>, Color>(BestWorstChart, lineColorBestWorst));
+
+            LineGO = Instantiate(LineUIPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+            Utility.displaySegmentedLineUI(LineGO, MainMapGO.transform.Find("BorderMask/Content").GetComponent<RectTransform>(),
+                BestWorstPaths[rand.Next(0, Int32.MaxValue) % BestWorstPaths.Count].ToArray(), GeneratorUIManager.Instance.originUIMap,
+                ParameterManager.Instance.GridType.TilePrefab.GetComponent<RectTransform>().sizeDelta.x, ParameterManager.Instance.GridType.TilePrefab.GetComponent<RectTransform>().sizeDelta.y);
+            LineGO.GetComponent<UILineRenderer>().color = lineColorBestWorst;
+            LinesGO.Add(LineGO);
+            refreshToggle(LineGO);
+        }
 
         List<float> BestChart = new List<float>();
-        List<float> BestWorstChart = new List<float>();
-
         BestPaths = new List<List<Vector2Int>>();
-        BestWorstPaths = new List<List<Vector2Int>>();
-
-        foreach (var l in maxNodes)
-        {
-            TreeNode<Vector2Int, Dictionary<int, bool>> tmp = l.ParentNode;
-            List<Vector2Int> backtrackSolution = new List<Vector2Int>();
-            backtrackSolution.Add(l.NodeKeyValue.Key);
-
-            while (tmp != null)
-            {
-                backtrackSolution.Add(tmp.NodeKeyValue.Key);
-                tmp = tmp.ParentNode;
-            }
-
-            BestWorstPaths.Add(backtrackSolution);
-                        
-            List<float> toChart = buildPathChartLine(backtrackSolution, Z_LeavesSet);
-            toChart.Reverse();
-            if (toChart.Count > BestWorstChart.Count)
-            {
-                for (int i = 0; i < toChart.Count; i++)
-                {
-                    if (i < BestWorstChart.Count)
-                        BestWorstChart[i] += toChart[i];
-                    else
-                        BestWorstChart.Add(toChart[i]);
-                }
-
-            }
-            else
-            {
-                for (int i = 0; i < toChart.Count; i++)
-                {
-                   BestWorstChart[i] += toChart[i];
-                }
-            }
-
-            
-        }
-
-        for (int i = 0; i < BestWorstChart.Count; i++)
-        {
-            BestWorstChart[i] /= BestWorstPaths.Count;
-        }
-        ChartLines.Add(new Tuple<List<float>, Color>(BestWorstChart, lineColorBestWorst));
 
         foreach (var l in minNodes)
         {
@@ -502,15 +585,9 @@ public class AliasGameEvaluator : MonoBehaviour
         }
         ChartLines.Add(new Tuple<List<float>, Color>(BestChart, lineColorBest));
 
-        System.Random rand = new System.Random((int)DateTime.Now.Ticks);
+        
 
-        GameObject LineGO = Instantiate(LineUIPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-        Utility.displaySegmentedLineUI(LineGO, MainMapGO.transform.Find("BorderMask/Content").GetComponent<RectTransform>(),
-            BestWorstPaths[rand.Next(0, Int32.MaxValue)%BestWorstPaths.Count].ToArray(), GeneratorUIManager.Instance.originUIMap,
-            ParameterManager.Instance.GridType.TilePrefab.GetComponent<RectTransform>().sizeDelta.x, ParameterManager.Instance.GridType.TilePrefab.GetComponent<RectTransform>().sizeDelta.y);
-        LineGO.GetComponent<UILineRenderer>().color = lineColorBestWorst;
-        LinesGO.Add(LineGO);
-        refreshToggle(LineGO);
+
 
         LineGO = Instantiate(LineUIPrefab, new Vector3(0, 0, 0), Quaternion.identity);
         Utility.displaySegmentedLineUI(LineGO, MainMapGO.transform.Find("BorderMask/Content").GetComponent<RectTransform>(),
@@ -1050,11 +1127,19 @@ public class AliasGameEvaluator : MonoBehaviour
         LeavesSet = new Dictionary<Vector2Int, TreeNode<Vector2Int, Dictionary<int, bool>>>();
         DupLeavesList = new List<TreeNode<Vector2Int, Dictionary<int, bool>>>();
         LeavesSet.Add(root.NodeKeyValue.Key, root);
-
+        //
+        nodesAtKDepth.Clear();
+        //
         while (frontier.Count > 0)
         {
             checkTime();
             TreeNode<Vector2Int, Dictionary<int, bool>> CurrentNode = frontier.Dequeue();
+            //
+            if (nodesAtKDepth.ContainsKey(CurrentNode.nodeDepth))
+                nodesAtKDepth[CurrentNode.nodeDepth]++;
+            else
+                nodesAtKDepth.Add(CurrentNode.nodeDepth, 1);
+            //
             Vector2Int[] Cells = Utility.getAllNeighboursWOBoundCheck_General(CurrentNode.NodeKeyValue.Key, pMan.GridType);
             List<Vector2Int> cellList = new List<Vector2Int>(Cells);
             //You can never come from outside the map => except the coming cells, you should have 3 elements with getAllNeighbours and the difference indicates the OoB cells.
@@ -1165,11 +1250,22 @@ public class AliasGameEvaluator : MonoBehaviour
 
         LeavesSet = new Dictionary<Vector2Int, TreeNode<Vector2Int, Dictionary<int, bool>>>();
         LeavesSet.Add(root.NodeKeyValue.Key, root);
-
+        //
+        
+        bool oneBestPathFound = false;
+        int stepBestPath = 0;
+        nodesAtKDepth.Clear();
+        //
         while (frontier.Count > 0)
         {
             checkTime();
             TreeNode<Vector2Int, Dictionary<int, bool>> CurrentNode = frontier.Dequeue();
+            //
+            if (nodesAtKDepth.ContainsKey(CurrentNode.nodeDepth))
+                nodesAtKDepth[CurrentNode.nodeDepth]++;
+            else
+                nodesAtKDepth.Add(CurrentNode.nodeDepth, 1);
+            //
             if (CurrentNode.NodeKeyValue.Key + realMap.start != realMap.end) { 
 
                 Vector2Int[] Cells = Utility.getAllNeighboursWOBoundCheck_General(CurrentNode.NodeKeyValue.Key, pMan.GridType);
@@ -1243,7 +1339,9 @@ public class AliasGameEvaluator : MonoBehaviour
                             //The tree search continues if the new node is a room
                             if (Utility.in_bounds_General(c + realMap.start, realMap.AliasMap.GetLength(0), realMap.AliasMap.GetLength(1)) &&
                                 realMap.AliasMap[c.x + realMap.start.x, c.y + realMap.start.y].type != IGenerator.wallChar)
-                                frontier.Enqueue(Node);
+
+                                if(!pMan.onlyBestPath || (pMan.onlyBestPath && !oneBestPathFound) ||(pMan.onlyBestPath && oneBestPathFound &&  Node.nodeDepth<=stepBestPath))
+                                    frontier.Enqueue(Node);
 
                             //The tree search continues if is a wall or border that produces an alias reduction: already do the first backtrack
                             if ((!Utility.in_bounds_General(c + realMap.start, realMap.AliasMap.GetLength(0), realMap.AliasMap.GetLength(1)) &&
@@ -1253,9 +1351,13 @@ public class AliasGameEvaluator : MonoBehaviour
                                 newDictionary.Count - CurrentNode.NodeKeyValue.Value.Count != 0 &&
                                 realMap.AliasMap[c.x + realMap.start.x, c.y + realMap.start.y].type == IGenerator.wallChar))
                             {
-                                TreeNode<Vector2Int, Dictionary<int, bool>> backNode =
+                                if (!pMan.onlyBestPath || (pMan.onlyBestPath && !oneBestPathFound) || (pMan.onlyBestPath && oneBestPathFound && Node.nodeDepth <= stepBestPath))
+                                {
+                                    TreeNode<Vector2Int, Dictionary<int, bool>> backNode =
                                     new TreeNode<Vector2Int, Dictionary<int, bool>>(new KeyValuePair<Vector2Int, Dictionary<int, bool>>(CurrentNode.NodeKeyValue.Key, newDictionary), Node.nodeDepth + 1, Node);
-                                frontier.Enqueue(backNode);
+                                    frontier.Enqueue(backNode);
+                                }
+                                
                             }
 
                             /*
@@ -1273,6 +1375,10 @@ public class AliasGameEvaluator : MonoBehaviour
                         }
                         else
                         {
+                            
+                            if(!oneBestPathFound)
+                                stepBestPath = Node.nodeDepth;
+                            oneBestPathFound = true;
                             leafNodes.Add(Node);
                         }
 
@@ -1328,7 +1434,7 @@ public class AliasGameEvaluator : MonoBehaviour
 
     private void checkTime()
     {
-        if (sWatch.ElapsedMilliseconds > pMan.timeCap * 1000f)
+        if (sWatch.ElapsedMilliseconds > pMan.timeCap * 1000f && pMan.timeCap >= 0)
         {
             throw new Exception ("Time cap elapsed.\n");
         }

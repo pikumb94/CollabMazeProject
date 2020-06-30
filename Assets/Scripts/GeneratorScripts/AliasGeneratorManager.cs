@@ -227,7 +227,7 @@ public class AliasGeneratorManager : MonoBehaviour/*Singleton<AliasGeneratorMana
                 i++;
             }
 
-            if (ParameterManager.Instance.considerNovelty)
+            if (ParameterManager.Instance.considerNovelty && i < ParameterManager.Instance.aliasNum)
             {
                 tmpStrAlias = SimilarMapsQueue.Last();
                 float dst = SimilarMapsQueue.GetPriority(tmpStrAlias);
@@ -493,6 +493,8 @@ public class AliasGeneratorManager : MonoBehaviour/*Singleton<AliasGeneratorMana
 
     }
 
+
+    private System.Random RNG_Alias = new System.Random((int)DateTime.Now.Ticks);
     public Dictionary<int, StructuredAlias> GenerateNRandomAliasFromRealMap(StructuredAlias realMap, int N)
     {
         mainMap = realMap.AliasMap;
@@ -509,40 +511,55 @@ public class AliasGeneratorManager : MonoBehaviour/*Singleton<AliasGeneratorMana
         Vector2Int startAlias = realMap.start;
         Vector2Int endAlias = realMap.end;
         SimplePriorityQueue<TileObject[,]> tmpPQ = new SimplePriorityQueue<TileObject[,]>();
+        bool isAliasSameAsReal = true;
 
         while (i < N/*MAX_OPT_ALIAS*/)
         {
             //define here the width, height, start and end  of the chosen map
             TileObject[,] aliasMap = new TileObject[width, height];
-
-            genMan.connectedGenerator.setBaseGeneratorParameters(gridType, width, height, startAlias, endAlias, i, false);
-            genMan.cellularAutomataGenerator.setBaseGeneratorParameters(gridType, width, height, startAlias, endAlias, i, false);
-            genMan.primGenerator.setBaseGeneratorParameters(gridType, width, height, startAlias, endAlias, i, false);
+            
+            genMan.connectedGenerator.setBaseGeneratorParameters(gridType, width, height, startAlias, endAlias, (i%2==0?1:-1)*RNG_Alias.Next(), false);
+            genMan.cellularAutomataGenerator.setBaseGeneratorParameters(gridType, width, height, startAlias, endAlias, (i % 2 == 0 ? 1 : -1) * RNG_Alias.Next(), false);
+            genMan.primGenerator.setBaseGeneratorParameters(gridType, width, height, startAlias, endAlias, (i % 2 == 0 ? 1 : -1) * RNG_Alias.Next(), false);
 
             switch (i % 3)
             {
                 case 0:
-                    aliasMap = genMan.connectedGenerator.generateMapGeneral(ParameterManager.Instance.IsTrapsOnMapBorder, (float)pRNG_Alias.NextDouble());
+                    aliasMap = genMan.connectedGenerator.generateMapGeneral(ParameterManager.Instance.IsTrapsOnMapBorder, (float)RNG_Alias.NextDouble());
                     break;
                 case 1:
-                    aliasMap = genMan.cellularAutomataGenerator.generateMapGeneral(ParameterManager.Instance.IsTrapsOnMapBorder, (float)pRNG_Alias.NextDouble(), 1 + pRNG_Alias.Next(0,6), 5, i % 2 == 1, 0, 0);
+                    float prcObsCA = (float)RNG_Alias.NextDouble();
+                    aliasMap = genMan.cellularAutomataGenerator.generateMapGeneral(ParameterManager.Instance.IsTrapsOnMapBorder, prcObsCA, 1 + (prcObsCA <= .5f && !(i % 2 == 1)?0:RNG_Alias.Next(0,6)), 5, i % 2 == 1, 0, 0);
                     break;
                 case 2:
-                    aliasMap = genMan.primGenerator.generateMapGeneral(ParameterManager.Instance.IsTrapsOnMapBorder, (float)pRNG_Alias.NextDouble());
+                    aliasMap = genMan.primGenerator.generateMapGeneral(ParameterManager.Instance.IsTrapsOnMapBorder, (float)RNG_Alias.NextDouble());
                     break;
                 default:
                     ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "AliasManager: no map generator found.");
                     break;
             }
-
+            
             foreach (var m in BaseAliasCollisionMask)
             {
                 if (Utility.in_bounds_General(new Vector2Int(startMainMap.x + m.x, startMainMap.y + m.y), mainMap.GetLength(0), mainMap.GetLength(1)) &&
                     Utility.in_bounds_General(new Vector2Int(startAlias.x + m.x, startAlias.y + m.y), aliasMap.GetLength(0), aliasMap.GetLength(1)))
-                    aliasMap[startAlias.x + m.x, startAlias.y + m.y].type = ParameterManager.Instance.MapToPlay[startMainMap.x + m.x, startMainMap.y + m.y].type;
+                    aliasMap[startAlias.x + m.x, startAlias.y + m.y].type = realMap.AliasMap[startMainMap.x + m.x, startMainMap.y + m.y].type;
             }
 
-            if (MapEvaluator.isEndReachable(aliasMap, gridType, startAlias, endAlias, ParameterManager.Instance.allowAutosolverForAlias).First() == endAlias)
+            for (int h = 0; h < width; h++)
+            {
+                for (int k = 0; k < height; k++)
+                {
+                    isAliasSameAsReal &= (aliasMap[h, k].type == realMap.AliasMap[h, k].type);
+
+                    if (!isAliasSameAsReal)
+                        break;
+                }
+                if (!isAliasSameAsReal)
+                    break;
+            }
+
+            if (MapEvaluator.isEndReachable(aliasMap, gridType, startAlias, endAlias, ParameterManager.Instance.allowAutosolverForAlias).First() == endAlias && !isAliasSameAsReal)
             {
                 //if the map has a path from start to end, add it
                 float dst = MapEvaluator.BinaryMapSimilarity(mainMap, aliasMap, startMainMap, startAlias);
@@ -584,7 +601,7 @@ public class AliasGeneratorManager : MonoBehaviour/*Singleton<AliasGeneratorMana
                 i++;
             }
 
-            if (ParameterManager.Instance.considerNovelty)
+            if (ParameterManager.Instance.considerNovelty && i < N)
             {
                 tmpStrAlias = tmpPQ.Last();
                 float dst = tmpPQ.GetPriority(tmpStrAlias);
@@ -598,5 +615,87 @@ public class AliasGeneratorManager : MonoBehaviour/*Singleton<AliasGeneratorMana
         }
 
         return AliasBatch;
+    }
+
+    public Tuple<int, StructuredAlias> Generate1RandomAliasFromRealMap(StructuredAlias realMap)
+    {
+        mainMap = realMap.AliasMap;
+        gridType = ParameterManager.Instance.GridType;
+        Vector2Int startMainMap = realMap.start;
+        int width = realMap.AliasMap.GetLength(0);
+        int height = realMap.AliasMap.GetLength(1);
+
+        //Map initialization.
+        int i = 0;
+
+        Tuple<int, StructuredAlias> AliasTuple;
+
+        Vector2Int startAlias = realMap.start;
+        Vector2Int endAlias = realMap.end;
+        float dst=0;
+        TileObject[,] aliasMap = new TileObject[width, height];
+
+        while (i < 1/*MAX_OPT_ALIAS*/)
+        {
+            //define here the width, height, start and end  of the chosen map
+            
+
+            genMan.connectedGenerator.setBaseGeneratorParameters(gridType, width, height, startAlias, endAlias, i, false);
+            genMan.cellularAutomataGenerator.setBaseGeneratorParameters(gridType, width, height, startAlias, endAlias, i, false);
+            genMan.primGenerator.setBaseGeneratorParameters(gridType, width, height, startAlias, endAlias, i, false);
+
+            switch (pRNG_Alias.Next() % 3)
+            {
+                case 0:
+                    aliasMap = genMan.connectedGenerator.generateMapGeneral(ParameterManager.Instance.IsTrapsOnMapBorder, (float)pRNG_Alias.NextDouble());
+                    break;
+                case 1:
+                    float prcObsCA = (float)pRNG_Alias.NextDouble();
+                    aliasMap = genMan.cellularAutomataGenerator.generateMapGeneral(ParameterManager.Instance.IsTrapsOnMapBorder, prcObsCA, 1 + (prcObsCA <= .5f && !(i % 2 == 1) ? 0 : pRNG_Alias.Next(0, 6)), 5, i % 2 == 1, 0, 0);
+                    break;
+                case 2:
+                    aliasMap = genMan.primGenerator.generateMapGeneral(ParameterManager.Instance.IsTrapsOnMapBorder, (float)pRNG_Alias.NextDouble());
+                    break;
+                default:
+                    ErrorManager.ManageError(ErrorManager.Error.HARD_ERROR, "AliasManager: no map generator found.");
+                    break;
+            }
+
+            foreach (var m in BaseAliasCollisionMask)
+            {
+                if (Utility.in_bounds_General(new Vector2Int(startMainMap.x + m.x, startMainMap.y + m.y), mainMap.GetLength(0), mainMap.GetLength(1)) &&
+                    Utility.in_bounds_General(new Vector2Int(startAlias.x + m.x, startAlias.y + m.y), aliasMap.GetLength(0), aliasMap.GetLength(1)))
+                    aliasMap[startAlias.x + m.x, startAlias.y + m.y].type = ParameterManager.Instance.MapToPlay[startMainMap.x + m.x, startMainMap.y + m.y].type;
+            }
+
+            if (MapEvaluator.isEndReachable(aliasMap, gridType, startAlias, endAlias, ParameterManager.Instance.allowAutosolverForAlias).First() == endAlias)
+            {
+                //if the map has a path from start to end, add it
+                dst = MapEvaluator.BinaryMapSimilarity(mainMap, aliasMap, startMainMap, startAlias);
+                /*
+                int mapWCount = 0;
+                int aliasWCount = 0;
+                for (int h = 0; h < mainMap.GetLength(0); h++)
+                {
+                    for (int k = 0; k < mainMap.GetLength(1); k++)
+                    {
+                        if (mainMap[h, k].type == IGenerator.wallChar)
+                            mapWCount++;
+                        if (aliasMap[h, k].type == IGenerator.wallChar)
+                            aliasWCount++;
+                    }
+                }
+
+                dst = dst + Math.Abs(mapWCount - aliasWCount);
+                */
+
+                i++;
+            }
+
+        }
+
+
+        AliasTuple = new Tuple<int, StructuredAlias>(Guid.NewGuid().GetHashCode(), new StructuredAlias(aliasMap, startAlias, endAlias, dst));
+        return AliasTuple;
     }
 }
