@@ -1251,7 +1251,6 @@ public class AliasGameEvaluator : MonoBehaviour
         LeavesSet = new Dictionary<Vector2Int, TreeNode<Vector2Int, Dictionary<int, bool>>>();
         LeavesSet.Add(root.NodeKeyValue.Key, root);
         //
-        
         bool oneBestPathFound = false;
         int stepBestPath = 0;
         nodesAtKDepth.Clear();
@@ -1260,12 +1259,7 @@ public class AliasGameEvaluator : MonoBehaviour
         {
             checkTime();
             TreeNode<Vector2Int, Dictionary<int, bool>> CurrentNode = frontier.Dequeue();
-            //
-            if (nodesAtKDepth.ContainsKey(CurrentNode.nodeDepth))
-                nodesAtKDepth[CurrentNode.nodeDepth]++;
-            else
-                nodesAtKDepth.Add(CurrentNode.nodeDepth, 1);
-            //
+
             if (CurrentNode.NodeKeyValue.Key + realMap.start != realMap.end) { 
 
                 Vector2Int[] Cells = Utility.getAllNeighboursWOBoundCheck_General(CurrentNode.NodeKeyValue.Key, pMan.GridType);
@@ -1289,11 +1283,11 @@ public class AliasGameEvaluator : MonoBehaviour
                     //Avoid self loops
                     HashSet<Vector2Int> checkLoopSet = new HashSet<Vector2Int>();
                     TreeNode<Vector2Int, Dictionary<int, bool>> tmp = CurrentNode;
-
                     //
                     bool isBacktracking = false;
                     List<Vector2Int> checkList = new List<Vector2Int>() { };
                     int cnt = 0;
+
                     while (tmp != null)
                     {
                         //
@@ -1390,6 +1384,13 @@ public class AliasGameEvaluator : MonoBehaviour
                         }
                         else if (newDictionary.Count == minLeafNodes.First().NodeKeyValue.Value.Count)
                             minLeafNodes.Add(Node);
+                        //
+
+                        //
+                        if (nodesAtKDepth.ContainsKey(Node.nodeDepth))
+                            nodesAtKDepth[Node.nodeDepth]++;
+                        else
+                            nodesAtKDepth.Add(Node.nodeDepth, 1);
                         //
 
                     }

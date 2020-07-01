@@ -32,7 +32,7 @@ public class OptimizationManager : MonoBehaviour
     private double returnEval;
     private int returnIter;
     private SimplePriorityQueue<Dictionary<int, StructuredAlias>> AliasChallengePriorityQueue;
-    private int maxIterations = 50;
+    private int maxIterations = 200;
 
     private List<Tuple<float,float>> graphPlot = new List<Tuple<float, float>>();
     private int iterationRandomRestart;
@@ -203,8 +203,12 @@ public class OptimizationManager : MonoBehaviour
         iterationRandomRestart = 0;
 
         ParameterManager pMan = ParameterManager.Instance;
-        StopwatchProxy.Instance.Stopwatch.Start();
+        
         System.Diagnostics.Stopwatch sWatch = StopwatchProxy.Instance.Stopwatch;
+        sWatch.Stop();
+        sWatch.Reset();
+        sWatch.Start();
+
         int totalIterations = 0;
         while (iterationRandomRestart < maxIterations)
         {
@@ -220,18 +224,18 @@ public class OptimizationManager : MonoBehaviour
             catch (Exception e)
             {
 
-                ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, e.Message + StopwatchProxy.Instance.Stopwatch.ElapsedMilliseconds / 1000f + "s #iteration: " + iterationRandomRestart + " (" + totalIterations + returnIter +")."+ SaveAliasChallengeOptimization());
-                StopwatchProxy.Instance.Stopwatch.Stop();
-                StopwatchProxy.Instance.Stopwatch.Reset();
+                ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, e.Message + sWatch.ElapsedMilliseconds / 1000f + "s #iteration: " + iterationRandomRestart + " (" + totalIterations + returnIter +")."+ SaveAliasChallengeOptimization());
+                sWatch.Stop();
+                sWatch.Reset();
                 return AliasChallengePriorityQueue.Dequeue();
             }
             totalIterations +=returnIter;
             iterationRandomRestart++;
         }
 
-        GeneratorUIManager.Instance.showMessageDialogBox("Execution time: " + StopwatchProxy.Instance.Stopwatch.ElapsedMilliseconds / 1000f + "s #iteration: " + iterationRandomRestart + " ("+ maxIterations * pMan.hillClimberNumBatch +")."+ SaveAliasChallengeOptimization());
-        StopwatchProxy.Instance.Stopwatch.Stop();
-        StopwatchProxy.Instance.Stopwatch.Reset();
+        GeneratorUIManager.Instance.showMessageDialogBox("F= "+ Mathf.Abs(AliasChallengePriorityQueue.GetPriority(AliasChallengePriorityQueue.First)) + "\nExecution time: " + sWatch.ElapsedMilliseconds / 1000f + "s #iteration: " + iterationRandomRestart + " ("+ maxIterations * pMan.hillClimberNumBatch +")."+ SaveAliasChallengeOptimization());
+        sWatch.Stop();
+        sWatch.Reset();
         return AliasChallengePriorityQueue.Dequeue();
     }
 
