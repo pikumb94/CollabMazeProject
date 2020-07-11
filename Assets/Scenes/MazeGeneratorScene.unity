@@ -3495,8 +3495,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -241.65002, y: 0}
-  m_SizeDelta: {x: 55, y: 20}
+  m_AnchoredPosition: {x: -227.5, y: 0}
+  m_SizeDelta: {x: 80, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &279588484
 MonoBehaviour:
@@ -7536,7 +7536,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -129.1, y: 0}
+  m_AnchoredPosition: {x: -115, y: 0}
   m_SizeDelta: {x: 106.86, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &478281411
@@ -18023,7 +18023,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 982400900}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.9999999
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -22745,7 +22745,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 125, y: 20}
+  m_SizeDelta: {x: 90, y: 50}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &1373677252
 MonoBehaviour:
@@ -22767,9 +22767,9 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: 'Best Worst
+  m_text: 'Longest
 
-    Path'
+    Best Path'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 79459efec17a4d00a321bdcc27bbc385, type: 2}
@@ -22800,9 +22800,9 @@ MonoBehaviour:
   m_fontSize: 15
   m_fontSizeBase: 15
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 1
+  m_fontSizeMax: 18
   m_fontStyle: 1
   m_textAlignment: 513
   m_characterSpacing: 0
@@ -24987,7 +24987,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 75, y: 20}
+  m_SizeDelta: {x: 55, y: 35}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &1532234141
 MonoBehaviour:
@@ -25009,9 +25009,9 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: 'Best
+  m_text: 'Shortest
 
-    Path'
+    Best Path'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 79459efec17a4d00a321bdcc27bbc385, type: 2}
@@ -25042,8 +25042,8 @@ MonoBehaviour:
   m_fontSize: 15
   m_fontSizeBase: 15
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 0
   m_fontSizeMax: 72
   m_fontStyle: 1
   m_textAlignment: 513

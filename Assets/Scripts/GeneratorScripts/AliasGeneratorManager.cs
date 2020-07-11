@@ -205,9 +205,16 @@ public class AliasGeneratorManager : MonoBehaviour/*Singleton<AliasGeneratorMana
         if (ParameterManager.Instance.isOptimizerOn) {
             List<TileObject[,]> alises = new List<TileObject[,]>();
             BaseAliasCollisionMask = getMainMapKMaxMinCells(mainMap, gridType, ParameterManager.Instance.minStepsSolution, ParameterManager.Instance.minStepsSolution, ParameterManager.Instance.StartCell, 0f);
-
-            foreach (var a in AliasGeneratorManager.Instance.GetComponent<AliasGameEvaluator>().AliasGameOptimizerHandler())
-                SimilarMapsQueue.Enqueue(a.Value.AliasMap, a.Value.similarityDistance);
+            //
+            int experimentsNum = 9;
+            while (experimentsNum > 0)
+            {
+                foreach (var a in AliasGeneratorManager.Instance.GetComponent<AliasGameEvaluator>().AliasGameOptimizerHandler())
+                    SimilarMapsQueue.Enqueue(a.Value.AliasMap, a.Value.similarityDistance);
+                experimentsNum--;
+            }
+            
+            //
         }
             else
             GenerateAndTestAliasMaps();

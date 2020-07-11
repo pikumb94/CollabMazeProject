@@ -32,7 +32,7 @@ public class OptimizationManager : MonoBehaviour
     private double returnEval;
     private int returnIter;
     private SimplePriorityQueue<Dictionary<int, StructuredAlias>> AliasChallengePriorityQueue;
-    private int maxIterations = 200;
+    private int maxIterations = 300;
 
     private List<Tuple<float,float>> graphPlot = new List<Tuple<float, float>>();
     private int iterationRandomRestart;
@@ -201,7 +201,7 @@ public class OptimizationManager : MonoBehaviour
 
         AliasChallengePriorityQueue = new SimplePriorityQueue<Dictionary<int, StructuredAlias>>();
         iterationRandomRestart = 0;
-
+        graphPlot.Clear();
         ParameterManager pMan = ParameterManager.Instance;
         
         System.Diagnostics.Stopwatch sWatch = StopwatchProxy.Instance.Stopwatch;
@@ -295,5 +295,89 @@ public class OptimizationManager : MonoBehaviour
                 ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, "Optimization type not found.");
                 return "";
         }
+    }
+
+    int randomIterations=2100;
+    public Dictionary<int, StructuredAlias> PurelyRandom(StructuredAlias realMap, EvaluateNode Eval)
+    {
+
+        AliasChallengePriorityQueue = new SimplePriorityQueue<Dictionary<int, StructuredAlias>>();
+        iterationRandomRestart = 0;
+        graphPlot.Clear();
+
+        ParameterManager pMan = ParameterManager.Instance;
+        TimeCap = pMan.timeCap;
+        BatchAliases = pMan.aliasNum;
+        System.Diagnostics.Stopwatch sWatch = StopwatchProxy.Instance.Stopwatch;
+        AliasGeneratorManager aGMan = AliasGeneratorManager.Instance;
+        sWatch.Stop();
+        sWatch.Reset();
+        sWatch.Start();
+
+        int totalIterations = 0;
+        while (totalIterations<randomIterations)
+        {
+            Dictionary<int, StructuredAlias> randomAliases = aGMan.GenerateNRandomAliasFromRealMap(realMap, BatchAliases);
+
+            try
+            {
+                if (sWatch.ElapsedMilliseconds > pMan.timeCap * 1000f && pMan.timeCap >= 0)
+                {
+                    throw new Exception("Time cap elapsed.\n");
+                }
+                float tmpEval = (float) Eval(realMap, randomAliases);
+                AliasChallengePriorityQueue.Enqueue(randomAliases, -(float)tmpEval);
+                graphPlot.Add(new Tuple<float, float>(iterationRandomRestart, Mathf.Abs((float)tmpEval)));
+            }
+            catch (Exception e)
+            {
+
+                ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, e.Message + sWatch.ElapsedMilliseconds / 1000f + "s #iteration: " + totalIterations  + SaveAliasPurelyRandom());
+                sWatch.Stop();
+                sWatch.Reset();
+                return AliasChallengePriorityQueue.Dequeue();
+            }
+            totalIterations++;
+        }
+        
+
+
+        GeneratorUIManager.Instance.showMessageDialogBox("SIMPLERANDOM-F= " + Mathf.Abs(AliasChallengePriorityQueue.GetPriority(AliasChallengePriorityQueue.First)) + "\nExecution time: " + sWatch.ElapsedMilliseconds / 1000f + "s #iteration: " + totalIterations + SaveAliasPurelyRandom());
+        sWatch.Stop();
+        sWatch.Reset();
+        return AliasChallengePriorityQueue.Dequeue();
+    }
+
+    public string SaveAliasPurelyRandom()
+    {
+        string textFilePath = Application.persistentDataPath;
+        ParameterManager pMan = ParameterManager.Instance;
+        string returnString = "";
+
+        if (textFilePath == null && !Directory.Exists(textFilePath))
+        {
+            ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, "Error while retrieving the folder, please insert a " + "valid path.");
+        }
+        else
+        {
+            try
+            {
+                string textMap = "";
+                textMap +=  objectiveFunctionName() + "\n";
+                foreach (var v in graphPlot)
+                    textMap += v.Item2.ToString(new CultureInfo("en-US")) + "\n";
+
+                string fileName = "Opt" + pMan.optimizerType + "BestP" + (pMan.isBestPathOnlyExplorative ? 0 : pMan.onlyBestPath ? 1 : 2) + "-" + pMan.MapToPlay.GetLength(0) + "x" + pMan.MapToPlay.GetLength(1) + "_" + pMan.aliasNum + "_" + pMan.hillClimberNumBatch + "@" + graphPlot.Count + "PURELYRANDOM"+$@"{DateTime.Now.Ticks}"+".csv";
+                File.WriteAllText(@textFilePath + "/" + fileName, textMap);
+                returnString = "\n" + "Optimization values \"" + fileName + "\" successfully saved at:\n" + textFilePath;
+
+            }
+            catch (Exception)
+            {
+                ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, "Error while saving the map at " + @textFilePath + ", please insert a valid path and check its permissions. ");
+            }
+        }
+
+        return returnString;
     }
 }

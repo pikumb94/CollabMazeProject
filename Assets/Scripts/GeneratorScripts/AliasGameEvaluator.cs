@@ -80,7 +80,6 @@ public class AliasGameEvaluator : MonoBehaviour
 
             var watch = new System.Diagnostics.Stopwatch();
             watch.Start();
-
             ZeroLeavesSet = (pMan.isBestPathOnlyExplorative? ConstructAliasTreeWDuplicates(RealMap, aliasList.dictionaryMap): ConstructSmartAgentAliasTree(RealMap, aliasList.dictionaryMap));
             watch.Stop();
             Debug.Log("BestPath exeTime: "+watch.ElapsedMilliseconds / 1000f);
@@ -123,7 +122,8 @@ public class AliasGameEvaluator : MonoBehaviour
                 ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, "Optimization type not found.");
                 break;
                 */
-                
+             /*
+            //RANDOM-RESTART
             case 0:
                 return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().RandomRestartHillClimber(RealMap, EvalFirstZero);
             case 1:
@@ -139,25 +139,43 @@ public class AliasGameEvaluator : MonoBehaviour
             default:
                 ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, "Optimization type not found.");
                 break;
-                
-                /*
-                case 0:
-                    return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().StochasticFirstChoiceHillClimber(RealMap, EvalFirstZero);
-                case 1:
-                    return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().StochasticFirstChoiceHillClimber(RealMap, EvalForkBestPath);
-                case 2:
-                    return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().StochasticFirstChoiceHillClimber(RealMap, EvalForkAgents);
-                case 3:
-                    return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().StochasticFirstChoiceHillClimber(RealMap, EvalForkOverall);
-                case 4:
-                    return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().StochasticFirstChoiceHillClimber(RealMap, EvalMinReliabilityBestPath);
-                case 5:
-                    return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().StochasticFirstChoiceHillClimber(RealMap, EvalMaxReliabilityBestPath);
+            */
+            /*
+            case 0:
+                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().StochasticFirstChoiceHillClimber(RealMap, EvalFirstZero);
+            case 1:
+                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().StochasticFirstChoiceHillClimber(RealMap, EvalForkBestPath);
+            case 2:
+                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().StochasticFirstChoiceHillClimber(RealMap, EvalForkAgents);
+            case 3:
+                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().StochasticFirstChoiceHillClimber(RealMap, EvalForkOverall);
+            case 4:
+                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().StochasticFirstChoiceHillClimber(RealMap, EvalMinReliabilityBestPath);
+            case 5:
+                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().StochasticFirstChoiceHillClimber(RealMap, EvalMaxReliabilityBestPath);
 
-                default:
-                    ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, "Optimization type not found.");
-                    break;
-                    */
+            default:
+                ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, "Optimization type not found.");
+                break;
+                */
+            
+                //PURELY RANDOM
+            case 0:
+                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().PurelyRandom(RealMap, EvalFirstZero);
+            case 1:
+                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().PurelyRandom(RealMap, EvalForkBestPath);
+            case 2:
+                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().PurelyRandom(RealMap, EvalForkAgents);
+            case 3:
+                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().PurelyRandom(RealMap, EvalForkOverall);
+            case 4:
+                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().PurelyRandom(RealMap, EvalMinReliabilityBestPath);
+            case 5:
+                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().PurelyRandom(RealMap, EvalMaxReliabilityBestPath);
+            default:
+                ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, "Optimization type not found.");
+                break;
+                
         }
         return null;
 
