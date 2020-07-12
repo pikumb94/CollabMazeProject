@@ -297,7 +297,7 @@ public class OptimizationManager : MonoBehaviour
         }
     }
 
-    int randomIterations=2100;
+    int randomIterations=18420;
     public Dictionary<int, StructuredAlias> PurelyRandom(StructuredAlias realMap, EvaluateNode Eval)
     {
 
