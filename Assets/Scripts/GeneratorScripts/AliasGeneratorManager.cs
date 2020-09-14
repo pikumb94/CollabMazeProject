@@ -206,7 +206,7 @@ public class AliasGeneratorManager : MonoBehaviour/*Singleton<AliasGeneratorMana
             List<TileObject[,]> alises = new List<TileObject[,]>();
             BaseAliasCollisionMask = getMainMapKMaxMinCells(mainMap, gridType, ParameterManager.Instance.minStepsSolution, ParameterManager.Instance.minStepsSolution, ParameterManager.Instance.StartCell, 0f);
             //
-            int experimentsNum = 9;
+            int experimentsNum = 1;
             while (experimentsNum > 0)
             {
                 foreach (var a in AliasGeneratorManager.Instance.GetComponent<AliasGameEvaluator>().AliasGameOptimizerHandler())
@@ -485,6 +485,10 @@ public class AliasGeneratorManager : MonoBehaviour/*Singleton<AliasGeneratorMana
     }
 
     public Dictionary<int, StructuredAlias>.ValueCollection generateAliasOnTheFly(){
+        mainMap = ParameterManager.Instance.MapToPlay;
+        gridType = ParameterManager.Instance.GridType;
+        SimilarMapsQueue = new SimplePriorityQueue<TileObject[,]>();
+        K_CollisionSet = MapEvaluator.BuildKCollisionVec(mainMap, gridType, ParameterManager.Instance.StartCell, Mathf.Max(ParameterManager.Instance.minStepsSolution, ParameterManager.Instance.maxStepsSolution));
         GenerateAndTestAliasMaps();
         Dictionary<int, StructuredAlias> dic = new Dictionary<int, StructuredAlias>();
 

@@ -122,7 +122,7 @@ public class AliasGameEvaluator : MonoBehaviour
                 ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, "Optimization type not found.");
                 break;
                 */
-             /*
+             
             //RANDOM-RESTART
             case 0:
                 return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().RandomRestartHillClimber(RealMap, EvalFirstZero);
@@ -139,7 +139,7 @@ public class AliasGameEvaluator : MonoBehaviour
             default:
                 ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, "Optimization type not found.");
                 break;
-            */
+            
             /*
             case 0:
                 return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().StochasticFirstChoiceHillClimber(RealMap, EvalFirstZero);
@@ -158,8 +158,8 @@ public class AliasGameEvaluator : MonoBehaviour
                 ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, "Optimization type not found.");
                 break;
                 */
-            
-                //PURELY RANDOM
+            /*
+                //PURELY RANDOM (RANDOM SEARCH)
             case 0:
                 return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().PurelyRandom(RealMap, EvalFirstZero);
             case 1:
@@ -175,7 +175,7 @@ public class AliasGameEvaluator : MonoBehaviour
             default:
                 ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, "Optimization type not found.");
                 break;
-                
+              */
         }
         return null;
 
@@ -519,7 +519,7 @@ public class AliasGameEvaluator : MonoBehaviour
 
                 BestWorstPaths.Add(backtrackSolution);
 
-                List<float> toChart = buildPathChartLine(backtrackSolution, Z_LeavesSet);
+                List<float> toChart = buildPathChartLine(l, Z_LeavesSet);//buildPathChartLine(backtrackSolution, Z_LeavesSet);
                 toChart.Reverse();
                 if (toChart.Count > BestWorstChart.Count)
                 {
@@ -575,7 +575,7 @@ public class AliasGameEvaluator : MonoBehaviour
             }
             BestPaths.Add(backtrackSolution);
 
-            List<float> toChart = buildPathChartLine(backtrackSolution, Z_LeavesSet);
+            List<float> toChart = buildPathChartLine(l, Z_LeavesSet);
             toChart.Reverse();
             if (toChart.Count > BestChart.Count)
             {
@@ -618,10 +618,10 @@ public class AliasGameEvaluator : MonoBehaviour
         return new List<List<float>>() { BestChart, BestWorstChart};
     }
 
-    public List<float> buildPathChartLine(List<Vector2Int> pointList, List<TreeNode<Vector2Int, Dictionary<int, bool>>> Z_LeavesSet)
+    public List<float> buildPathChartLine(TreeNode<Vector2Int, Dictionary<int, bool>> leafNode, List<TreeNode<Vector2Int, Dictionary<int, bool>>> Z_LeavesSet)//List<Vector2Int> pointList
     {
         List<float> aliasPathCount = new List<float>();
-        TreeNode<Vector2Int, Dictionary<int, bool>> tmp = Z_LeavesSet.Find(x => x.NodeKeyValue.Key == pointList[0]);//(LeavesSet.ContainsKey(pointList[0])? LeavesSet[pointList[0]]:DupLeavesList.Find(x => x.NodeKeyValue.Key == pointList[0]));
+        TreeNode<Vector2Int, Dictionary<int, bool>> tmp = Z_LeavesSet.Find(x => x == leafNode);//(LeavesSet.ContainsKey(pointList[0])? LeavesSet[pointList[0]]:DupLeavesList.Find(x => x.NodeKeyValue.Key == pointList[0]));
         while (tmp!=null)
         {
             aliasPathCount.Add(tmp.NodeKeyValue.Value.Count);

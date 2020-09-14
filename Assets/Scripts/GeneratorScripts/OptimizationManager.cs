@@ -28,11 +28,11 @@ public class OptimizationManager : MonoBehaviour
 {
     private int BatchAliases = 10;//should not be greater than MAX_OPT_ALIAS
     public delegate double EvaluateNode(StructuredAlias realMap, Dictionary<int, StructuredAlias> alias);
-    private int TimeCap;
+    private int TimeCap; //If negative there's no time cap so the optimization/random search continues until the algorithm finishes
     private double returnEval;
     private int returnIter;
     private SimplePriorityQueue<Dictionary<int, StructuredAlias>> AliasChallengePriorityQueue;
-    private int maxIterations = 300;
+    private int maxIterations = 100; //Number of iterations of optimization algorithm/random search
 
     private List<Tuple<float,float>> graphPlot = new List<Tuple<float, float>>();
     private int iterationRandomRestart;
@@ -297,7 +297,7 @@ public class OptimizationManager : MonoBehaviour
         }
     }
 
-    int randomIterations=18420;
+    int randomIterations= 1000;
     public Dictionary<int, StructuredAlias> PurelyRandom(StructuredAlias realMap, EvaluateNode Eval)
     {
 
