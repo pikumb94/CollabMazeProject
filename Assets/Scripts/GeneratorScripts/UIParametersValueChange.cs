@@ -38,6 +38,11 @@ public class UIParametersValueChange : MonoBehaviour
 
     private void Start()
     {
+        InitUIPVC();
+    }
+
+    public void  InitUIPVC()
+    {
         genM = GeneratorManager.Instance;
     }
 

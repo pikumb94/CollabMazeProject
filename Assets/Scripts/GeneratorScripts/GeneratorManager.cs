@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 /// GeneratorManager coordinates both UI and logic of every kind of generator attached.
 /// </summary>
 
-public class GeneratorManager : Singleton<GeneratorManager>
+public class GeneratorManager : MonoBehaviour /*Singleton<GeneratorManager>*/
 {
     public enum GeneratorEnum { CONNECTED, CELLULAR_AUTOMATA, PRIM };
     [HideInInspector]
@@ -42,19 +42,43 @@ public class GeneratorManager : Singleton<GeneratorManager>
     public bool inAliasGenerator = false;
     private DataMap dataMap;
 
+    public static GeneratorManager Instance = null;
     protected GeneratorManager() {}
 
-    void Start()
+    private void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+        else if (Instance != this)
+            Destroy(gameObject);
+        //DontDestroyOnLoad(transform.gameObject);
+    }
+
+    private void InitGenMan()
     {
         Content = MapHolder.transform.Find("BorderMask/Content").gameObject;
         GeneratorsVect = new IGenerator[] { connectedGenerator, cellularAutomataGenerator, primGenerator };
-        TypeGridVect = new ITypeGrid[] { squareGrid};
+        TypeGridVect = new ITypeGrid[] { squareGrid };
 
         connectedGenerator.TypeGrid = squareGrid;
         cellularAutomataGenerator.TypeGrid = squareGrid;
         primGenerator.TypeGrid = squareGrid;
 
-        GeneratorUIManager.Instance.gameObject.GetComponent<UIParametersValueChange>().refreshUIParams();
+        GeneratorUIManager.Instance.gameObject.GetComponent<UIParametersValueChange>().InitUIPVC();
+        GeneratorUIManager.Instance.gameObject.GetComponent<UIParametersValueChange>().refreshUIParams();//IN SCENE LOADED!
+    }
+    
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        InitGenMan();
     }
 
     public void generateButtonPressed()
@@ -126,12 +150,15 @@ public class GeneratorManager : Singleton<GeneratorManager>
     {
         GeneratorUIManager.Instance.savePlayParametersInManager();
 
-        if(!GeneratorManager.Instance.inAliasGenerator)
-            ParameterManager.Instance.MapToPlay = (GeneratorUIManager.Instance.isTrapsOnMapBorderToggleOn()? GeneratorsVect[(int)activeGenerator].getMapWTrapBorder():GeneratorsVect[(int)activeGenerator].getMap());
-        else
+        ParameterManager.Instance.GridType = GeneratorsVect[(int)activeGenerator].TypeGrid;
+        ParameterManager.Instance.StartCell = GeneratorsVect[(int)activeGenerator].startPos;
+        ParameterManager.Instance.EndCell = GeneratorsVect[(int)activeGenerator].endPos;
+
+        if (!GeneratorManager.Instance.inAliasGenerator) {
+            ParameterManager.Instance.MapToPlay = (GeneratorUIManager.Instance.isTrapsOnMapBorderToggleOn() ? GeneratorsVect[(int)activeGenerator].getMapWTrapBorder() : GeneratorsVect[(int)activeGenerator].getMap());
+        }else
             ParameterManager.Instance.MapToPlay = (ParameterManager.Instance.IsTrapsOnMapBorder ? ParameterManager.Instance.MapToPlayWTrapBorder : ParameterManager.Instance.MapToPlay);
 
-        ParameterManager.Instance.GridType = GeneratorsVect[(int)activeGenerator].TypeGrid;
         ParameterManager.Instance.AliasMaps = (inAliasGenerator ? AliasGeneratorManager.Instance.AliasDragAreas[0].GetComponent<MapListManager>().getMapList() : AliasGeneratorManager.Instance.generateAliasOnTheFly());
         SceneManager.LoadScene(AssembledLevelSceneName);
     }

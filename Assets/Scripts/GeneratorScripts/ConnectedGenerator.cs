@@ -14,7 +14,7 @@ public class ConnectedGenerator : IGenerator
 
     private List<Vector2Int> allTileCoords;
     private Queue<Vector2Int> shuffledTileCoords;
-    private Vector2Int mapCentre;
+    //private Vector2Int mapCentre;
 
     public ConnectedGenerator(ITypeGrid i, int w, int h) : base(i)
     {
@@ -52,7 +52,7 @@ public class ConnectedGenerator : IGenerator
             for (int y = 0; y < height; y++)
             {
                 Vector2Int pos = new Vector2Int(x, y);
-                if (pos != startPos && pos != endPos)
+                //if (pos != startPos && pos != endPos)
                     allTileCoords.Add(new Vector2Int(x, y));
             }
         }
@@ -65,7 +65,6 @@ public class ConnectedGenerator : IGenerator
 
         //Shuffle the vector of all tile's locations.
         shuffledTileCoords = new Queue<Vector2Int>(Utility.ShuffleArray(allTileCoords.ToArray(), seed));
-        mapCentre = new Vector2Int((int)width / 2, (int)height / 2);
 
 
         map = new TileObject[width, height];
@@ -107,7 +106,7 @@ public class ConnectedGenerator : IGenerator
             obstacleMap[randomCoord.x, randomCoord.y] = true;
             currentObstacleCount++;
 
-            if (randomCoord != mapCentre && MapIsFullyAccessible(obstacleMap, currentObstacleCount))
+            if (randomCoord != startPos && randomCoord != endPos && MapIsFullyAccessible(obstacleMap, currentObstacleCount))
             {
                 map[randomCoord.x, randomCoord.y].type = wallChar;
             }
@@ -131,8 +130,8 @@ public class ConnectedGenerator : IGenerator
     {
         bool[,] mapFlags = new bool[obstacleMap.GetLength(0), obstacleMap.GetLength(1)];
         Queue<Vector2Int> queue = new Queue<Vector2Int>();
-        queue.Enqueue(mapCentre);
-        mapFlags[mapCentre.x, mapCentre.y] = true;
+        queue.Enqueue(startPos);
+        mapFlags[startPos.x, startPos.y] = true;
 
         int accessibleTileCount = 1;
 
