@@ -43,31 +43,3 @@ public class TreeNodeComplete<T1, T2>
         ChildNodes = cN;
     }
 }
-/*
-public class NTree<T1, T2>
-{
-    public int nodesCount { get; set; }
-    public TreeNode<T1, T2> root { get; }
-    public HashSet<T1> NodesSet { get; set; }
-    public HashSet<T1> LeavesSet { get; set; }
-
-
-
-    public NTree(TreeNode<T1, T2> rootNode)
-    {
-        root = rootNode;
-        nodesCount = 1;
-        NodesSet = new HashSet<T1>();
-        NodesSet.Add(rootNode.NodeKeyValue.Key);
-    }
-
-    public bool isNodeInTree(TreeNode<T1, T2> parentNode)
-    {
-        return NodesSet.Contains(parentNode.NodeKeyValue.Key);
-    }
-
-    public void addLeafNode(TreeNode<T1, T2> parent, TreeNode<T1, T2> child)
-    {
-        
-    }
-}*/

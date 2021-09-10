@@ -46,13 +46,13 @@ public class OptimizationManager : MonoBehaviour
         //inizialization: take BATCH_ALIASES random alias
         currentNode = AliasGeneratorManager.Instance.GenerateNRandomAliasFromRealMap(realMap,ParameterManager.Instance.aliasNum);
 
-        //
+        
         int iterations = 0;
         TimeCap = ParameterManager.Instance.timeCap;
         BatchAliases = ParameterManager.Instance.hillClimberNumBatch;
 
         iterationHCSwap = 0;
-        //
+        
 
         while (true)
         {
@@ -87,7 +87,7 @@ public class OptimizationManager : MonoBehaviour
                         nextNode = tmpAliases;
                     }
 
-                    //
+                    
                     if (maxEval <= currEval)
                     {
                         graphPlot.Add(new Tuple<float, float>(iterationRandomRestart,Mathf.Abs((float)currEval)));
@@ -96,7 +96,7 @@ public class OptimizationManager : MonoBehaviour
                     {
                         graphPlot.Add(new Tuple<float, float>(iterationRandomRestart, Mathf.Abs((float)maxEval)));
                     }
-                    //
+                    
                     iterationHCSwap++;
                 }
 
@@ -125,12 +125,12 @@ public class OptimizationManager : MonoBehaviour
         //inizialization: take BATCH_ALIASES random alias
         currentNode = AliasGeneratorManager.Instance.GenerateNRandomAliasFromRealMap(realMap, ParameterManager.Instance.aliasNum);
 
-        //
+        
         int iterations = 0;
         TimeCap = ParameterManager.Instance.timeCap;
 
         StopwatchProxy.Instance.Stopwatch.Start();
-        //
+        
 
         while (iterations< maxIterations)
         {
@@ -219,7 +219,6 @@ public class OptimizationManager : MonoBehaviour
                     throw new Exception("Time cap elapsed.\n");
                 }
                 AliasChallengePriorityQueue.Enqueue(HillClimber(realMap, Eval), -(float) returnEval);
-                //graphPlot.Add(-AliasChallengePriorityQueue.GetPriority(AliasChallengePriorityQueue.First));
             }
             catch (Exception e)
             {
@@ -258,7 +257,6 @@ public class OptimizationManager : MonoBehaviour
                 foreach (var v in graphPlot)
                     textMap += Mathf.Abs(v.Item1) +","+v.Item2.ToString(new CultureInfo("en-US")) +"\n";
 
-                //string fileName = pMan.aliasNum+"_"+pMan.minStepsSolution +"_" +(pMan.isBestPathOnlyExplorative? 0: pMan.onlyBestPath? 1:2)+"-" + pMan.optimizerType+"_"+pMan.hillClimberNumBatch+ "OptValues.txt";
                 string fileName = "Opt"+ pMan.optimizerType+"BestP"+ (pMan.isBestPathOnlyExplorative ? 0 : pMan.onlyBestPath ? 1 : 2)+"-"+ pMan.MapToPlay.GetLength(0)+"x"+ pMan.MapToPlay.GetLength(1)+"_"+ pMan.aliasNum+"_"+ pMan.hillClimberNumBatch +"@" +$@"{DateTime.Now.Ticks}.csv";
                 File.WriteAllText(@textFilePath + "/" + fileName, textMap);
                 returnString = "\n" + "Optimization values \"" + fileName + "\" successfully saved at:\n" + textFilePath;

@@ -94,7 +94,7 @@ public abstract class IGenerator
     //this version get all neighbours walls excluded
     public Vector2Int[] getNeighbours(Vector2Int id)
     {
-        Vector2Int[] results = new Vector2Int[/*TypeGrid.getDirs().Length*/] { };
+        Vector2Int[] results = new Vector2Int[] { };
 
         foreach(Vector2Int dir in TypeGrid.getDirs())
         {
@@ -124,7 +124,6 @@ public abstract class IGenerator
             Vector2Int next = new Vector2Int(id.x + dir.x, id.y + dir.y);
             if (in_bounds(next))
             {
-                //results[results.Length] = next;
                 Array.Resize(ref results, results.Length + 1);
                 results[results.GetUpperBound(0)] = next;
             }
@@ -148,7 +147,6 @@ public abstract class IGenerator
             Vector2Int next = new Vector2Int(id.x + dir.x, id.y + dir.y);
             if (in_bounds(next))
             {
-                //results[results.Length] = next;
                 Array.Resize(ref results, results.Length + 1);
                 results[results.GetUpperBound(0)] = next;
             }
@@ -159,7 +157,6 @@ public abstract class IGenerator
             Vector2Int next = new Vector2Int(id.x + dir.x, id.y + dir.y);
             if (in_bounds(next))
             {
-                //results[results.Length] = next;
                 Array.Resize(ref results, results.Length + 1);
                 results[results.GetUpperBound(0)] = next;
             }

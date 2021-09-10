@@ -31,9 +31,6 @@ public static class Utility
 
     public static bool rectOverlaps(RectTransform rectTrans1, RectTransform rectTrans2)
     {
-        //Rect rect1 = new Rect(rectTrans1.localPosition.x, rectTrans1.localPosition.y, rectTrans1.rect.width, rectTrans1.rect.height);
-        //Rect rect2 = new Rect(rectTrans2.localPosition.x, rectTrans2.localPosition.y, rectTrans2.rect.width, rectTrans2.rect.height);
-
         return GetWorldSapceRect(rectTrans1).Overlaps(GetWorldSapceRect(rectTrans2));
     }
 
@@ -130,18 +127,7 @@ public static class Utility
         LineGameObj.transform.localPosition = Vector3.zero;
         LineGameObj.transform.localScale = Vector3.one;
         UILineRenderer LineRenderer = LineGameObj.GetComponent<UILineRenderer>();
-        /*
-        Vector2[] PointsF = Array.ConvertAll(Points, item => (Vector2)item);
 
-        for (int i = Points.Length - 1; i >= 0; i--)
-        {
-            float dx = Points[i].x - Points[Points.Length - 1].x;
-            float dy = Points[i].y - Points[Points.Length - 1].y;
-
-            Vector2 pUI = new Vector2(originPos.x + offsetX * dx, originPos.y + offsetY * dy);
-            PointsF[i] = pUI;
-        }
-        LineRenderer.Points = PointsF;*/
         for (int i = 0; i < Points.Length; i++)
         {
             Points[i].x *= offsetX;
@@ -361,7 +347,6 @@ public static class Utility
             Vector2Int next = new Vector2Int(id.x + dir.x, id.y + dir.y);
             if (in_bounds_General(next, width, height))
             {
-                //results[results.Length] = next;
                 Array.Resize(ref results, results.Length + 1);
                 results[results.GetUpperBound(0)] = next;
             }
@@ -372,7 +357,6 @@ public static class Utility
             Vector2Int next = new Vector2Int(id.x + dir.x, id.y + dir.y);
             if (in_bounds_General(next, width, height))
             {
-                //results[results.Length] = next;
                 Array.Resize(ref results, results.Length + 1);
                 results[results.GetUpperBound(0)] = next;
             }
@@ -442,11 +426,7 @@ public static class Utility
         for (int i = 0; i < count; i++)
         {
             Color B = bData[i];
-            /*
-            if (B == Color.white) { 
-                rData[i] = (c+B)/2;
-            }else
-                rData[i] = B;*/
+
             Color T = c;
             float srcF = T.a;
             float destF = 1f - T.a;
@@ -654,65 +634,3 @@ public static class Utility
     }
 }
 
-
-/*
-[System.Serializable]
-
-public class Pair<T, U>
-{
-    [SerializeField]
-    public T x;
-    [SerializeField]
-    public U y;
-
-    public Pair()
-    {
-    }
-
-    public Pair(T x, U y)
-    {
-        this.x = x;
-        this.y = y;
-    }
-
-    
-
-    public override bool Equals(object obj)
-    {
-        if (ReferenceEquals(null, obj)) return false;
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != this.GetType()) return false;
-        return Equals((Pair<T, U>)obj);
-    }
-
-    public bool Equals(Pair<T, U> obj)
-    {
-        return obj != null && obj == this;
-    }
-
-    public override int GetHashCode()
-    {
-        return x.GetHashCode() ^ y.GetHashCode();
-    }
-
-
-    public static bool operator ==(Pair<T, U> p1, Pair<T, U> p2)
-    {
-        return ((dynamic)p1.x == p2.x && (dynamic)p1.y == p2.y);
-    }
-
-    public static bool operator !=(Pair<T, U> p1, Pair<T, U> p2)
-    {
-        return !(p1== p2);
-    }
-
-    public static bool operator <(Pair<T, U> p1, Pair<T, U> p2)
-    {
-        return ((dynamic)p1.x < p2.x && (dynamic)p1.y < p2.y);
-    }
-
-    public static bool operator >(Pair<T, U> p1, Pair<T, U> p2)
-    {
-        return !(p1<p2) && p1!=p2;
-    }
-};*/

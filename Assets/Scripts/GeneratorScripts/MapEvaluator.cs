@@ -23,7 +23,6 @@ public struct DataMap
         {
             if (Object.ReferenceEquals(rhs, null))
             {
-                // null == null = true.
                 return true;
             }
 
@@ -252,16 +251,6 @@ public static class MapEvaluator
         int lY = Mathf.Min(startMainMap.y, startAlias.y);
         int hY = Mathf.Min(mainMap.GetLength(1) - startMainMap.y-1, Alias.GetLength(1) - startAlias.y-1);
 
-        /*
-        for (int i = -lX; i <= hX; i++)
-        {
-            for (int j = lY; j <= hY; j++)
-            {
-                if ((mainMap[startMainMap.x + i, startMainMap.y + j].type == IGenerator.wallChar ? 1 : 0) - (Alias[startAlias.x + i, startAlias.y + j].type == IGenerator.wallChar ? 1 : 0) != 0)
-                    similarity += functionPointsDifference(new Vector2(startMainMap.x + i, startMainMap.y + j), new Vector2(startAlias.x + i, startAlias.y + j));
-                    
-            }
-        }*/
 
         for (int i = -lX; i <= hX; i++)
         {
@@ -298,7 +287,6 @@ public static class MapEvaluator
             KCollisionCells[i] = new HashSet<Vector2Int>();
         }
 
-        //KCollisionCells[0].Add(start);
         KCollisionCells[0].Add(Vector2Int.zero);
         i = 1;
         while (i<=lookahead)
@@ -307,7 +295,7 @@ public static class MapEvaluator
             foreach(Vector2Int curr in KCollisionCells[i-1])
             {
                 Vector2Int mainMapPos = new Vector2Int(start.x + curr.x, start.y + curr.y);
-                if (/*Utility.in_bounds_General(curr, map.GetLength(0), map.GetLength(1)) &&*/ map[mainMapPos.x, mainMapPos.y].type != IGenerator.wallChar)
+                if (map[mainMapPos.x, mainMapPos.y].type != IGenerator.wallChar)
                 {
                     foreach (Vector2Int next in Utility.getAllNeighbours_General(mainMapPos, TypeGrid, map.GetLength(0), map.GetLength(1)))
                     {

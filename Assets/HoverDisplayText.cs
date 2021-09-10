@@ -36,7 +36,7 @@ public class HoverDisplayText : MonoBehaviour
 
         RectTransform RectTxtCmp = TextComp.gameObject.GetComponent<RectTransform>();
         if (TextComp.preferredHeight > RectTxtCmp.sizeDelta.y)
-            RectTxtCmp.sizeDelta = new Vector2(RectTxtCmp.sizeDelta.x, TextComp.preferredHeight);// TextComp.renderedWidth
+            RectTxtCmp.sizeDelta = new Vector2(RectTxtCmp.sizeDelta.x, TextComp.preferredHeight);
         if (TextComp.preferredHeight < RectTxtCmp.sizeDelta.y)
             RectTxtCmp.sizeDelta = new Vector2(RectTxtCmp.sizeDelta.x, BoxRect.sizeDelta.y);
         DialogBoxInfo.transform.Find("Scrollbar").GetComponent<Scrollbar>().value = 1;
@@ -62,7 +62,7 @@ public class HoverDisplayText : MonoBehaviour
 
             Vector3 mousePos = this.transform.position;
 
-            DialogBoxInfo.transform.position = mousePos+ new Vector3(BoxRect.sizeDelta.x / 2, -BoxRect.sizeDelta.y / 2, 0);// + new Vector3(-2,2,0);//gameObject.transform.position; /*new Vector3(pos.x,pos.y,0)+*/ // new Vector3(BoxRect.sizeDelta.x / 2, -BoxRect.sizeDelta.y / 2, 0);
+            DialogBoxInfo.transform.position = mousePos+ new Vector3(BoxRect.sizeDelta.x / 2, -BoxRect.sizeDelta.y / 2, 0);
             Vector3 overflowOffsets = Utility.GetGUIElementOffset(DialogBoxInfo.GetComponent<RectTransform>());
             DialogBoxInfo.transform.position = DialogBoxInfo.transform.position + overflowOffsets;
 

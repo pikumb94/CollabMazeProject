@@ -138,10 +138,6 @@ public class SpawnerManager : MonoBehaviour
         this.xPos = sO.xPos;
         this.yPos = sO.yPos;
         this.zPos = sO.zPos;
-        //this.freqXOrbit = sO.freqXOrbit;
-        //this.freqYOrbit = sO.freqYOrbit;
-        //this.freqZOrbit = sO.freqZOrbit;
-        //this.numObj = sO.numObj;
 
     }
 

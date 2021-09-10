@@ -25,17 +25,7 @@ public class Window_Graph : MonoBehaviour {
         dashTemplateY = graphContainer.Find("dashTemplateY").GetComponent<RectTransform>();
 
         gameObjectList = new List<GameObject>();
-        /*
-        //List<int> valueList = new List<int>() { 5, 98, 56, 45, 30, 22, 17, 15, 13, 17, 25, 37, 40, 36, 33, 50, 30, 60, 50, 40, 20, 5, 20, 10, 50, 30, 20, 11 };
 
-        List<int> valueList = new List<int>() { 800,800,800,800,800,666,600,450,460,267,300,400,350,267,200,67,100,200,200,200,150,200,150,75 };
-        List<float> valueListFloat = new List<float>();
-
-            foreach (var v in valueList)
-                valueListFloat.Add((float)v / 100);
-        //ShowGraph(valueList, -1, (int _i) => "Day " + (_i + 1), (float _f) => "$" + Mathf.RoundToInt(_f));
-        ShowGraph(valueListFloat, -1, null,null);
-        */
     }
 
     public void RemoveAllGraphs()
@@ -85,10 +75,7 @@ public class Window_Graph : MonoBehaviour {
         if (yDifference <= 0) {
             yDifference = 5f;
         }
-        /*
-        yMaximum = yMaximum + (yDifference * 0.2f);
-        yMinimum = yMinimum - (yDifference * 0.2f);
-        */
+
         while (yMaximum % 10 != 0)
             yMaximum++;
         yMinimum = 0f; // Start the graph at zero
@@ -113,12 +100,7 @@ public class Window_Graph : MonoBehaviour {
             float yPosition = ((valueList[i] - yMinimum) / (yMaximum - yMinimum)) * graphHeight;
             GameObject circleGameObject = CreateCircle(new Vector2(xPosition, yPosition));
             gameObjectList.Add(circleGameObject);
-            /*
-            if (lastCircleGameObject != null) {
-                GameObject dotConnectionGameObject = CreateDotConnection(lastCircleGameObject.GetComponent<RectTransform>().anchoredPosition, circleGameObject.GetComponent<RectTransform>().anchoredPosition);
-                gameObjectList.Add(dotConnectionGameObject);
-                
-            }*/
+
             lastCircleGameObject = circleGameObject;
 
             RectTransform labelX = Instantiate(labelTemplateX);
@@ -131,7 +113,7 @@ public class Window_Graph : MonoBehaviour {
             RectTransform dashX = Instantiate(dashTemplateX);
             dashX.SetParent(graphContainer, false);
             dashX.gameObject.SetActive(true);
-            dashX.anchoredPosition = new Vector2(xPosition, 0/*-3f*/);
+            dashX.anchoredPosition = new Vector2(xPosition, 0);
             gameObjectList.Add(dashX.gameObject);
 
             xIndex++;
@@ -155,7 +137,7 @@ public class Window_Graph : MonoBehaviour {
             RectTransform dashY = Instantiate(dashTemplateY);
             dashY.SetParent(graphContainer, false);
             dashY.gameObject.SetActive(true);
-            dashY.anchoredPosition = new Vector2(0/*-4f*/, normalizedValue * graphHeight);
+            dashY.anchoredPosition = new Vector2(0, normalizedValue * graphHeight);
             gameObjectList.Add(dashY.gameObject);
         }
     }
@@ -224,12 +206,7 @@ public class Window_Graph : MonoBehaviour {
             float yPosition = ((LineBatch[maxI].Item1[i] - yMinimum) / (yMaximum - yMinimum)) * graphHeight;
             GameObject circleGameObject = CreateCircle(new Vector2(xPosition, yPosition));
             gameObjectList.Add(circleGameObject);
-            /*
-            if (lastCircleGameObject != null) {
-                GameObject dotConnectionGameObject = CreateDotConnection(lastCircleGameObject.GetComponent<RectTransform>().anchoredPosition, circleGameObject.GetComponent<RectTransform>().anchoredPosition);
-                gameObjectList.Add(dotConnectionGameObject);
-                
-            }*/
+
             lastCircleGameObject = circleGameObject;
 
             RectTransform labelX = Instantiate(labelTemplateX);
@@ -242,7 +219,7 @@ public class Window_Graph : MonoBehaviour {
             RectTransform dashX = Instantiate(dashTemplateX);
             dashX.SetParent(graphContainer, false);
             dashX.gameObject.SetActive(true);
-            dashX.anchoredPosition = new Vector2(xPosition, 0/*-3f*/);
+            dashX.anchoredPosition = new Vector2(xPosition, 0);
             gameObjectList.Add(dashX.gameObject);
 
             xIndex++;
@@ -302,7 +279,7 @@ public class Window_Graph : MonoBehaviour {
             RectTransform dashY = Instantiate(dashTemplateY);
             dashY.SetParent(graphContainer, false);
             dashY.gameObject.SetActive(true);
-            dashY.anchoredPosition = new Vector2(0/*-4f*/, normalizedValue * graphHeight);
+            dashY.anchoredPosition = new Vector2(0, normalizedValue * graphHeight);
             gameObjectList.Add(dashY.gameObject);
         }
     }

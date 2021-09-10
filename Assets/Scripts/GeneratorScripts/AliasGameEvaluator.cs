@@ -37,11 +37,11 @@ public class AliasGameEvaluator : MonoBehaviour
     private List<List<Vector2Int>> BestWorstPaths;
 
     private List<GameObject> LinesGO;
-    //
+
     Dictionary<int, int> nodesAtKDepth = new Dictionary<int, int>();
     Tuple<int, int> NumDepthPairBestPath;
     Tuple<int, int> NumDepthPairBestWorstPath;
-    //
+    
     private void InitAliasGameEvaluator()
     {
         AliasContainerGO = AliasGeneratorManager.Instance.AliasDragAreas[0].gameObject;//IN SCENE LOADED!!
@@ -75,7 +75,6 @@ public class AliasGameEvaluator : MonoBehaviour
         if (aliasList.dictionaryMap.Count != 0)
         {
 
-            //ZeroLeavesSet = ConstructAliasTree();
             StructuredAlias RealMap = new StructuredAlias(pMan.MapToPlay, pMan.StartCell, pMan.EndCell, -1);
 
             var watch = new System.Diagnostics.Stopwatch();
@@ -94,7 +93,6 @@ public class AliasGameEvaluator : MonoBehaviour
         else
         {
             CartesianGraphGO.GetComponent<Window_Graph>().RemoveAllGraphs();
-            //CartesianGraphGO.GetComponent<Window_Graph>().ShowGraph(new List<float>(){ 0}, lineColoraverage, -1, null, null);
         }
         refreshBlueToggle();
     }
@@ -105,23 +103,6 @@ public class AliasGameEvaluator : MonoBehaviour
 
         switch (pMan.optimizerType)
         {
-            /*
-            case 0:
-                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().HillClimber(RealMap, EvalFirstZero);
-            case 1:
-                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().HillClimber(RealMap, EvalForkBestPath);
-            case 2:
-                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().HillClimber(RealMap, EvalForkAgents);
-            case 3:
-                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().HillClimber(RealMap,  EvalForkOverall);
-            case 4:
-                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().HillClimber(RealMap,  EvalMinReliabilityBestPath);
-            case 5:
-                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().HillClimber(RealMap,  EvalMaxReliabilityBestPath);
-            default:
-                ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, "Optimization type not found.");
-                break;
-                */
              
             //RANDOM-RESTART
             case 0:
@@ -140,42 +121,6 @@ public class AliasGameEvaluator : MonoBehaviour
                 ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, "Optimization type not found.");
                 break;
             
-            /*
-            case 0:
-                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().StochasticFirstChoiceHillClimber(RealMap, EvalFirstZero);
-            case 1:
-                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().StochasticFirstChoiceHillClimber(RealMap, EvalForkBestPath);
-            case 2:
-                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().StochasticFirstChoiceHillClimber(RealMap, EvalForkAgents);
-            case 3:
-                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().StochasticFirstChoiceHillClimber(RealMap, EvalForkOverall);
-            case 4:
-                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().StochasticFirstChoiceHillClimber(RealMap, EvalMinReliabilityBestPath);
-            case 5:
-                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().StochasticFirstChoiceHillClimber(RealMap, EvalMaxReliabilityBestPath);
-
-            default:
-                ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, "Optimization type not found.");
-                break;
-                */
-            /*
-                //PURELY RANDOM (RANDOM SEARCH)
-            case 0:
-                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().PurelyRandom(RealMap, EvalFirstZero);
-            case 1:
-                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().PurelyRandom(RealMap, EvalForkBestPath);
-            case 2:
-                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().PurelyRandom(RealMap, EvalForkAgents);
-            case 3:
-                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().PurelyRandom(RealMap, EvalForkOverall);
-            case 4:
-                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().PurelyRandom(RealMap, EvalMinReliabilityBestPath);
-            case 5:
-                return AliasGeneratorManager.Instance.GetComponent<OptimizationManager>().PurelyRandom(RealMap, EvalMaxReliabilityBestPath);
-            default:
-                ErrorManager.ManageError(ErrorManager.Error.SOFT_ERROR, "Optimization type not found.");
-                break;
-              */
         }
         return null;
 
@@ -355,7 +300,6 @@ public class AliasGameEvaluator : MonoBehaviour
 
         frontier.Enqueue(root);
         visitedNodes.Add(Vector2Int.zero);
-        //leafNodes.Add(root);
         TreeNode<Vector2Int, Dictionary<int, bool>> minLeafNode = root;
 
         LeavesSet = new Dictionary<Vector2Int, TreeNode<Vector2Int, Dictionary<int, bool>>>();
@@ -409,11 +353,10 @@ public class AliasGameEvaluator : MonoBehaviour
                     {
                         leafNodes.Add(Node);
                     }
-                    //
                     //Debug.Log(newDictionary.Count);
                     if (newDictionary.Count < minLeafNode.NodeKeyValue.Value.Count)
                         minLeafNode = Node;
-                    //
+
                     visitedNodes.Add(Node.NodeKeyValue.Key);
                 }
 
@@ -421,12 +364,12 @@ public class AliasGameEvaluator : MonoBehaviour
 
         }
 
-        //
+        
         if(leafNodes.Count == 0)
         {
             leafNodes.Add(minLeafNode);
         }
-        //
+        
         return leafNodes;
     }
 
@@ -497,10 +440,10 @@ public class AliasGameEvaluator : MonoBehaviour
                     minNodes.Add(l);
             }
         }
-        //
+        
         NumDepthPairBestPath = new Tuple<int, int>(minNodes.Count, minDepth);
         NumDepthPairBestWorstPath = new Tuple<int, int>(maxNodes.Count, maxDepth);
-        //
+        
         List<float> BestWorstChart = new List<float>();
         if (!pMan.onlyBestPath) { 
             BestWorstPaths = new List<List<Vector2Int>>();
@@ -519,7 +462,7 @@ public class AliasGameEvaluator : MonoBehaviour
 
                 BestWorstPaths.Add(backtrackSolution);
 
-                List<float> toChart = buildPathChartLine(l, Z_LeavesSet);//buildPathChartLine(backtrackSolution, Z_LeavesSet);
+                List<float> toChart = buildPathChartLine(l, Z_LeavesSet);
                 toChart.Reverse();
                 if (toChart.Count > BestWorstChart.Count)
                 {
@@ -618,10 +561,10 @@ public class AliasGameEvaluator : MonoBehaviour
         return new List<List<float>>() { BestChart, BestWorstChart};
     }
 
-    public List<float> buildPathChartLine(TreeNode<Vector2Int, Dictionary<int, bool>> leafNode, List<TreeNode<Vector2Int, Dictionary<int, bool>>> Z_LeavesSet)//List<Vector2Int> pointList
+    public List<float> buildPathChartLine(TreeNode<Vector2Int, Dictionary<int, bool>> leafNode, List<TreeNode<Vector2Int, Dictionary<int, bool>>> Z_LeavesSet)
     {
         List<float> aliasPathCount = new List<float>();
-        TreeNode<Vector2Int, Dictionary<int, bool>> tmp = Z_LeavesSet.Find(x => x == leafNode);//(LeavesSet.ContainsKey(pointList[0])? LeavesSet[pointList[0]]:DupLeavesList.Find(x => x.NodeKeyValue.Key == pointList[0]));
+        TreeNode<Vector2Int, Dictionary<int, bool>> tmp = Z_LeavesSet.Find(x => x == leafNode);
         while (tmp!=null)
         {
             aliasPathCount.Add(tmp.NodeKeyValue.Value.Count);
@@ -648,7 +591,7 @@ public class AliasGameEvaluator : MonoBehaviour
 
             VisitedTreeNodes.Add(leaf.NodeKeyValue.Key);
         }
-        //dicktionaryKeyStep.Add(0, new List<TreeNode<Vector2Int, Dictionary<int, bool>>>() {root});
+
         int i = maxDepth;
 
         while (i > 0)
@@ -685,15 +628,9 @@ public class AliasGameEvaluator : MonoBehaviour
             avgLine.Add((float)avg / (float)dicktionaryKeyStep[i].Count);
         }
 
-        /*
-        GameObject LineGO = Instantiate(LineUIPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-        avgLine.Reverse();
-        Utility.displaySegmentedLineUI_General(LineGO, StatisticsUIContainer.GetComponent<RectTransform>(),avgLine.ToArray(), Vector3.zero,10,10);
-        LineGO.GetComponent<UILineRenderer>().color = lineColoraverage;
-        LineGO.GetComponent<UILineRenderer>().LineThickness = 5;*/
 
         ChartLines.Add(new Tuple<List<float>, Color>(avgLine, lineColorAverage));
-        //CartesianGraphGO.GetComponent<Window_Graph>().ShowGraph(avgLine, lineColoraverage, -1, null, null);
+
         return avgLine;
     }
 
@@ -758,7 +695,7 @@ public class AliasGameEvaluator : MonoBehaviour
         Dictionary<int, bool> playerDictionary = new Dictionary<int, bool>();
         foreach (KeyValuePair<int, StructuredAlias> m in Aliases)
             playerDictionary.Add(m.Key, true);
-        playerDictionary.Add(MainMapGO.GetInstanceID(), true);//?
+        playerDictionary.Add(MainMapGO.GetInstanceID(), true);
 
         
         TreeNodeComplete<Vector2Int, Dictionary<int, bool>> root = new TreeNodeComplete<Vector2Int, Dictionary<int, bool>>(new KeyValuePair<Vector2Int, Dictionary<int, bool>>(Vector2Int.zero, playerDictionary), 0, null);
@@ -785,16 +722,15 @@ public class AliasGameEvaluator : MonoBehaviour
                 currCell = currCell.ParentNode;
                 visitedCells.Add(currCell.NodeKeyValue.Key);
                 pathAgentWDicCount.Add(new Tuple<Vector2Int, int>(currCell.NodeKeyValue.Key, playerDictionary.Count));
-                //currCell = currCell.ParentNode;
+
             }
             else//is a room cell current so seek for unvisited child using the smart policy
             {
                 HashSet<Vector2Int> NeighCells = new HashSet<Vector2Int>(Utility.getAllNeighboursWOBoundCheck_General(currCell.NodeKeyValue.Key, pMan.GridType));
-                //List<Vector2Int> cellList = new List<Vector2Int>(Cells);
+
                 Dictionary<Vector2Int, Tuple<float[], List<int>[]>> StatisticsOnAttempts = new Dictionary<Vector2Int, Tuple<float[], List<int>[]>>();
 
-                //if (currCell.ParentNode != null)
-                    NeighCells.ExceptWith(visitedCells);
+                NeighCells.ExceptWith(visitedCells);
 
                 if (NeighCells.Count != 0)
                 {
@@ -828,14 +764,12 @@ public class AliasGameEvaluator : MonoBehaviour
                     }
                     else
                     {
-                        int minDstOfNxtMove = realMap.AliasMap.GetLength(0) * realMap.AliasMap.GetLength(1);//ParameterManager.Instance.GridType.heuristic(realMap.end, realMap.end);
+                        int minDstOfNxtMove = realMap.AliasMap.GetLength(0) * realMap.AliasMap.GetLength(1);
 
                         foreach (var nextMvs in maxList)
                         {
                             List<int> mapsID = new List<int>();
-                            /*foreach (var f in StatisticsOnAttempts[nextMvs].Item1) suppose to delete
-                                if (f == max)
-                                    mapsID.Add(StatisticsOnAttempts[nextMvs].Item2[i]);*/
+
 
                             for (int i = 0; i < StatisticsOnAttempts[nextMvs].Item1.Length; i++)
                             {
@@ -893,9 +827,6 @@ public class AliasGameEvaluator : MonoBehaviour
                 else
                 {
                     //DEADENDFOUND BACKTRACK: go back from room deadend to parent
-                    /*visitedCells.Add(currCell.ParentNode.NodeKeyValue.Key);
-                    pathAgentWDicCount.Add(new Tuple<Vector2Int, int>(currCell.NodeKeyValue.Key, playerDictionary.Count));
-                    currCell = currCell.ParentNode;*/
 
                     currCell = currCell.ParentNode;
                     visitedCells.Add(currCell.NodeKeyValue.Key);
@@ -952,7 +883,7 @@ public class AliasGameEvaluator : MonoBehaviour
         Dictionary<int, bool> playerDictionary = new Dictionary<int, bool>();
         foreach (KeyValuePair<int, StructuredAlias> m in Aliases)
             playerDictionary.Add(m.Key, true);
-        playerDictionary.Add(MainMapGO.GetInstanceID(), true);//?
+        playerDictionary.Add(MainMapGO.GetInstanceID(), true);
 
 
         TreeNodeComplete<Vector2Int, Dictionary<int, bool>> root = new TreeNodeComplete<Vector2Int, Dictionary<int, bool>>(new KeyValuePair<Vector2Int, Dictionary<int, bool>>(Vector2Int.zero, playerDictionary), 0, null);
@@ -978,16 +909,15 @@ public class AliasGameEvaluator : MonoBehaviour
                 currCell = currCell.ParentNode;
                 visitedCells.Add(currCell.NodeKeyValue.Key);
                 pathAgentWDicCount.Add(new Tuple<Vector2Int, int>(currCell.NodeKeyValue.Key, playerDictionary.Count));
-                //currCell = currCell.ParentNode;
+
             }
             else//is a room cell current so seek for unvisited child using the smart policy
             {
                 HashSet<Vector2Int> NeighCells = new HashSet<Vector2Int>(Utility.getAllNeighboursWOBoundCheck_General(currCell.NodeKeyValue.Key, pMan.GridType));
-                //List<Vector2Int> cellList = new List<Vector2Int>(Cells);
+
                 Dictionary<Vector2Int, Tuple<float[], List<int>[]>> StatisticsOnAttempts = new Dictionary<Vector2Int, Tuple<float[], List<int>[]>>();
 
-                //if (currCell.ParentNode != null)
-                    NeighCells.ExceptWith(visitedCells);
+                NeighCells.ExceptWith(visitedCells);
 
                 if (NeighCells.Count != 0)
                 {
@@ -1002,7 +932,7 @@ public class AliasGameEvaluator : MonoBehaviour
 
                     foreach (var attemptStatistic in StatisticsOnAttempts)
                     {
-                        //float newMax = Math.Min(attemptStatistic.Value.Item1[0], Math.Min(attemptStatistic.Value.Item1[1], attemptStatistic.Value.Item1[2]));
+
                         float[] list = { attemptStatistic.Value.Item1[0], attemptStatistic.Value.Item1[1], attemptStatistic.Value.Item1[2] };
                         list = list.Where(i => i != 0).ToArray();
 
@@ -1025,15 +955,13 @@ public class AliasGameEvaluator : MonoBehaviour
                     }
                     else
                     {
-                        //int minDstOfNxtMove = ParameterManager.Instance.GridType.heuristic(pMan.StartCell, pMan.EndCell);//for all the cases where the heuristic, have brought the agent far, this initialization will be always less than a move attempt
+                        //for all the cases where the heuristic, have brought the agent far, this initialization will be always less than a move attempt
                         int minDstOfNxtMove = realMap.AliasMap.GetLength(0) * realMap.AliasMap.GetLength(1);
 
                         foreach (var nextMvs in minList)
                         {
                             List<int> mapsID = new List<int>();
-                            /*foreach (var f in StatisticsOnAttempts[nextMvs].Item1) suppose to delete
-                                if (f == max)
-                                    mapsID.Add(StatisticsOnAttempts[nextMvs].Item2[i]);*/
+
 
                             for (int i = 0; i < StatisticsOnAttempts[nextMvs].Item1.Length; i++)
                             {
@@ -1073,9 +1001,6 @@ public class AliasGameEvaluator : MonoBehaviour
                 else
                 {
                     //DEADENDFOUND BACKTRACK: go back from room deadend to parent
-                    /*visitedCells.Add(currCell.ParentNode.NodeKeyValue.Key);
-                    pathAgentWDicCount.Add(new Tuple<Vector2Int, int>(currCell.NodeKeyValue.Key, playerDictionary.Count));
-                    currCell = currCell.ParentNode;*/
 
                     currCell = currCell.ParentNode;
                     visitedCells.Add(currCell.NodeKeyValue.Key);
@@ -1139,25 +1064,25 @@ public class AliasGameEvaluator : MonoBehaviour
 
         frontier.Enqueue(root);
         visitedNodes.Add(Vector2Int.zero);
-        //leafNodes.Add(root);
+
         TreeNode<Vector2Int, Dictionary<int, bool>> minLeafNode = root;
 
         LeavesSet = new Dictionary<Vector2Int, TreeNode<Vector2Int, Dictionary<int, bool>>>();
         DupLeavesList = new List<TreeNode<Vector2Int, Dictionary<int, bool>>>();
         LeavesSet.Add(root.NodeKeyValue.Key, root);
-        //
+        
         nodesAtKDepth.Clear();
-        //
+        
         while (frontier.Count > 0)
         {
             checkTime();
             TreeNode<Vector2Int, Dictionary<int, bool>> CurrentNode = frontier.Dequeue();
-            //
+            
             if (nodesAtKDepth.ContainsKey(CurrentNode.nodeDepth))
                 nodesAtKDepth[CurrentNode.nodeDepth]++;
             else
                 nodesAtKDepth.Add(CurrentNode.nodeDepth, 1);
-            //
+            
             Vector2Int[] Cells = Utility.getAllNeighboursWOBoundCheck_General(CurrentNode.NodeKeyValue.Key, pMan.GridType);
             List<Vector2Int> cellList = new List<Vector2Int>(Cells);
             //You can never come from outside the map => except the coming cells, you should have 3 elements with getAllNeighbours and the difference indicates the OoB cells.
@@ -1183,9 +1108,9 @@ public class AliasGameEvaluator : MonoBehaviour
                     checkLoopSet.Add(tmp.NodeKeyValue.Key);
                     tmp = tmp.ParentNode;
                 }
-                //
+                
 
-                if (/*!visitedNodes.Contains(c)*/!checkLoopSet.Contains(c))
+                if (!checkLoopSet.Contains(c))
                 {
                     Dictionary<int, bool> newDictionary = updateAliasDictionary(c, CurrentNode.NodeKeyValue.Value, realMap,Aliases);
                     TreeNode<Vector2Int, Dictionary<int, bool>> Node;
@@ -1194,30 +1119,6 @@ public class AliasGameEvaluator : MonoBehaviour
                         Node = new TreeNode<Vector2Int, Dictionary<int, bool>>(new KeyValuePair<Vector2Int, Dictionary<int, bool>>(c, CurrentNode.NodeKeyValue.Value), CurrentNode.nodeDepth + 1, CurrentNode);
                     else
                         Node = new TreeNode<Vector2Int, Dictionary<int, bool>>(new KeyValuePair<Vector2Int, Dictionary<int, bool>>(c, newDictionary), CurrentNode.nodeDepth + 1, CurrentNode);
-                    /*
-                    if (LeavesSet.ContainsKey(CurrentNode.NodeKeyValue.Key))
-                        LeavesSet.Remove(CurrentNode.NodeKeyValue.Key);
-                    LeavesSet.Add(Node.NodeKeyValue.Key, Node);
-                    */
-
-                    /*
-                    if (LeavesSet.ContainsKey(CurrentNode.NodeKeyValue.Key))
-                        LeavesSet.Remove(CurrentNode.NodeKeyValue.Key);
-
-                    if (LeavesSet.ContainsKey(Node.NodeKeyValue.Key)) {
-                        TreeNode<Vector2Int, Dictionary<int, bool>> duplicate = LeavesSet[Node.NodeKeyValue.Key];
-                        if (duplicate.nodeDepth > Node.nodeDepth)
-                        {
-                            DupLeavesList.Add(Node);
-                        }
-                            
-                        else
-                        {
-                            DupLeavesList.Add(duplicate);
-                            LeavesSet.Remove(Node.NodeKeyValue.Key);
-                            LeavesSet.Add(Node.NodeKeyValue.Key, Node);
-                        }       
-                    }*/
 
                     if (newDictionary.Count != 0)
                     {
@@ -1230,11 +1131,11 @@ public class AliasGameEvaluator : MonoBehaviour
                     {
                         leafNodes.Add(Node);
                     }
-                    //
+                    
                     //Debug.Log(newDictionary.Count);
                     if (newDictionary.Count < minLeafNode.NodeKeyValue.Value.Count)
                         minLeafNode = Node;
-                    //
+                    
                     visitedNodes.Add(Node.NodeKeyValue.Key);
                 }
 
@@ -1242,12 +1143,12 @@ public class AliasGameEvaluator : MonoBehaviour
 
         }
 
-        //
+        
         if (leafNodes.Count == 0)
         {
             leafNodes.Add(minLeafNode);
         }
-        //
+        
         return leafNodes;
     }
 
@@ -1268,11 +1169,11 @@ public class AliasGameEvaluator : MonoBehaviour
 
         LeavesSet = new Dictionary<Vector2Int, TreeNode<Vector2Int, Dictionary<int, bool>>>();
         LeavesSet.Add(root.NodeKeyValue.Key, root);
-        //
+        
         bool oneBestPathFound = false;
         int stepBestPath = 0;
         nodesAtKDepth.Clear();
-        //
+        
         while (frontier.Count > 0)
         {
             checkTime();
@@ -1294,27 +1195,19 @@ public class AliasGameEvaluator : MonoBehaviour
                     cellList.Remove(toRemove);
                 }
 
-                //int countFailedSteps = 0;
-
                 foreach (var c in cellList)
                 {
                     //Avoid self loops
                     HashSet<Vector2Int> checkLoopSet = new HashSet<Vector2Int>();
                     TreeNode<Vector2Int, Dictionary<int, bool>> tmp = CurrentNode;
-                    //
+                    
                     bool isBacktracking = false;
                     List<Vector2Int> checkList = new List<Vector2Int>() { };
                     int cnt = 0;
 
                     while (tmp != null)
                     {
-                        //
-                        /*
-                        if(tmp.ParentNode!= null && tmp.ParentNode.ParentNode!= null && tmp.NodeKeyValue.Key == tmp.ParentNode.ParentNode.NodeKeyValue.Key)
-                        {
-                            isBacktracking = true;
-                            break;
-                        }*/
+
                         if (tmp.NodeKeyValue.Key == CurrentNode.NodeKeyValue.Key)
                             cnt++;
 
@@ -1329,14 +1222,12 @@ public class AliasGameEvaluator : MonoBehaviour
                             }
 
                         }
-                        //
 
                         checkLoopSet.Add(tmp.NodeKeyValue.Key);
                         tmp = tmp.ParentNode;
                     }
-                    //
 
-                    if (/*isBacktracking*/ Utility.checkListCoordIsPalindrome(checkList) || !checkLoopSet.Contains(c))//added backstrack check
+                    if (Utility.checkListCoordIsPalindrome(checkList) || !checkLoopSet.Contains(c))//added backstrack check
                     {
                         Dictionary<int, bool> newDictionary = updateAliasDictionary(c, CurrentNode.NodeKeyValue.Value, realMap, Aliases);
                         TreeNode<Vector2Int, Dictionary<int, bool>> Node;
@@ -1372,18 +1263,6 @@ public class AliasGameEvaluator : MonoBehaviour
                                 
                             }
 
-                            /*
-                            //if is a wall or border that DOES NOT produces an alias reduction: count as a failure
-                            if ((!Utility.in_bounds_General(c + realMap.start, realMap.AliasMap.GetLength(0), realMap.AliasMap.GetLength(1)) &&
-                                newDictionary.Count - CurrentNode.NodeKeyValue.Value.Count == 0)
-                                ||
-                                (Utility.in_bounds_General(c + realMap.start, realMap.AliasMap.GetLength(0), realMap.AliasMap.GetLength(1)) &&
-                                newDictionary.Count - CurrentNode.NodeKeyValue.Value.Count == 0 &&
-                                realMap.AliasMap[c.x + realMap.start.x, c.y + realMap.start.y].type == IGenerator.wallChar))
-                            {
-                                countFailedSteps++;
-                            }*/
-
                         }
                         else
                         {
@@ -1394,7 +1273,7 @@ public class AliasGameEvaluator : MonoBehaviour
                             leafNodes.Add(Node);
                         }
 
-                        //
+                        
                         if (newDictionary.Count < minLeafNodes.First().NodeKeyValue.Value.Count)
                         {
                             minLeafNodes.Clear();
@@ -1402,44 +1281,19 @@ public class AliasGameEvaluator : MonoBehaviour
                         }
                         else if (newDictionary.Count == minLeafNodes.First().NodeKeyValue.Value.Count)
                             minLeafNodes.Add(Node);
-                        //
+                        
 
-                        //
+                        
                         if (nodesAtKDepth.ContainsKey(Node.nodeDepth))
                             nodesAtKDepth[Node.nodeDepth]++;
                         else
                             nodesAtKDepth.Add(Node.nodeDepth, 1);
-                        //
+                        
 
                     }
-                    /*else
-                    {
-                        countFailedSteps++;
-                    }*/
 
                 }
 
-                /*
-                if(CurrentNode.ParentNode != null && countFailedSteps >= 3)
-                {
-                    //WE ARE FORCED TO BACKTRACK
-                
-                    TreeNode<Vector2Int, Dictionary<int, bool>> Node;
-
-                    foreach (var c in Cells)
-                    {
-                        Node = new TreeNode<Vector2Int, Dictionary<int, bool>>(new KeyValuePair<Vector2Int, Dictionary<int, bool>>(c, CurrentNode.NodeKeyValue.Value), CurrentNode.nodeDepth + 1, CurrentNode);
-                        if (Utility.in_bounds_General(c + realMap.start, realMap.AliasMap.GetLength(0), realMap.AliasMap.GetLength(1)) &&
-                                 realMap.AliasMap[c.x + realMap.start.x, c.y + realMap.start.y].type != IGenerator.wallChar)
-                            frontier.Enqueue(Node);
-
-                    }
-                    //
-                    TreeNode<Vector2Int, Dictionary<int, bool>> backtrackNode =
-                                    new TreeNode<Vector2Int, Dictionary<int, bool>>(new KeyValuePair<Vector2Int, Dictionary<int, bool>>(CurrentNode.ParentNode.NodeKeyValue.Key, CurrentNode.NodeKeyValue.Value), CurrentNode.nodeDepth + 1, CurrentNode);
-                    frontier.Enqueue(backtrackNode);
-                    //
-                }*/
             }
 
         }

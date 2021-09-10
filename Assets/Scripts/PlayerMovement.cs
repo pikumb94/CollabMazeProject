@@ -33,7 +33,7 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
-    //CHIEDERE S3E VA BENE USARE CONTROLLER E ONTRIGGERENTER
+    //CHIEDERE SE VA BENE USARE CONTROLLER E ONTRIGGERENTER
     protected void OnTriggerEnter(Collider other)
     {
         Debug.Log(other.name);

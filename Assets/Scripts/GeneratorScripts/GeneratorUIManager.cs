@@ -9,7 +9,7 @@ using System;
 /// GeneratorUIManager allows to print the outcome of the generator on the UI
 /// </summary>
 
-public class GeneratorUIManager : MonoBehaviour/*Singleton<GeneratorUIManager>*/
+public class GeneratorUIManager : MonoBehaviour
 {
 
     public Color roomColor;
@@ -74,7 +74,7 @@ public class GeneratorUIManager : MonoBehaviour/*Singleton<GeneratorUIManager>*/
                 RectTransform newTileRect = newTile.GetComponent<RectTransform>();
                 newTileRect.SetParent(contentRect);
 
-                newTileRect.localScale = Vector3.one * (1 - outlinePercent);// * (GetScale(Screen.width, Screen.height, new Vector2(1920,1080), .5f));
+                newTileRect.localScale = Vector3.one * (1 - outlinePercent);
                 newTileRect.anchoredPosition = tilePosition;
 
                 if (map[x, y].type == IGenerator.startChar)
@@ -100,7 +100,6 @@ public class GeneratorUIManager : MonoBehaviour/*Singleton<GeneratorUIManager>*/
         prefabTexture.SetPixels(a.GetPixels());
         Utility.TextureScale.Point(prefabTexture, prefabTexture.width / 4, prefabTexture.height / 4);
 
-        //Texture2D prefabTexture = (Texture2D) tileImg.mainTexture;
 
         float displX = (map.GetLength(0) % 2 == 0 ? .5f : 0f);
         float displY = (map.GetLength(1) % 2 == 0 ? .5f : 0f);
@@ -128,7 +127,7 @@ public class GeneratorUIManager : MonoBehaviour/*Singleton<GeneratorUIManager>*/
         {
             for (int y = 0; y < map.GetLength(1); y++)
             {
-                Vector3 tilePosition = new Vector3((/*-map.GetLength(0) / 2 + displX */+x) * g.offsetX * prefabTexture.width, (/*-map.GetLength(1) / 2 + displY + */y) * g.offsetY * prefabTexture.height, 0);
+                Vector3 tilePosition = new Vector3((+x) * g.offsetX * prefabTexture.width, (y) * g.offsetY * prefabTexture.height, 0);
 
                 switch (map[x, y].type)
                 {
@@ -161,7 +160,6 @@ public class GeneratorUIManager : MonoBehaviour/*Singleton<GeneratorUIManager>*/
         NewObj.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
         NewObj.SetActive(true); //Activate the GameObject
 
-        //contentRect.sizeDelta = new Vector2(map.GetLength(0) * prefabRect.sizeDelta.x, map.GetLength(1) * prefabRect.sizeDelta.y);
         contentRect.sizeDelta = NewObj.GetComponent<RectTransform>().sizeDelta;
 
         ScaleToFitContainer(contentRect);
@@ -225,13 +223,11 @@ public class GeneratorUIManager : MonoBehaviour/*Singleton<GeneratorUIManager>*/
 
     public void increaseScale(RectTransform t)
     {
-        //if(t.sizeDelta.x*t.localScale.x < t.parent.gameObject.GetComponent<RectTransform>().rect.width)
         t.localScale = t.localScale * scaleFactorResizeButtons;
     }
 
     public void decreaseScale(RectTransform t)
     {
-        //if (t.sizeDelta.x * t.localScale.x > t.parent.gameObject.GetComponent<RectTransform>().rect.width)
         t.localScale = t.localScale / (scaleFactorResizeButtons);
     }
 
@@ -329,15 +325,11 @@ public class GeneratorUIManager : MonoBehaviour/*Singleton<GeneratorUIManager>*/
     public void disableGenerateButton()
     {
         generateButton.interactable = false;
-        //cursorLoadingScript.enableCursor(true);
-        //Cursor.visible = false;
 
     }
 
     public void enableGenerateButton()
     {
-        //Cursor.visible = true;
-        //cursorLoadingScript.enableCursor(false);
         generateButton.interactable = true;
     }
 
@@ -456,7 +448,7 @@ public class GeneratorUIManager : MonoBehaviour/*Singleton<GeneratorUIManager>*/
         //Save alias generation params
         p.aliasNum = Int32.Parse(InpFields[0].text);
         p.minStepsSolution = Int32.Parse(InpFields[1].text);
-        p.maxStepsSolution = p.minStepsSolution;// Int32.Parse(InpFields[2].text); metto max uguale a min perchè attualmente l'impatto è poco influente data la natura generativa della creazione delle mappe
+        p.maxStepsSolution = p.minStepsSolution;// metto max uguale a min perchè attualmente l'impatto è poco influente data la natura generativa della creazione delle mappe
         p.allowAutosolverForAlias = tS[0].isOn;
 
         p.isOptimizerOn = tS[1].isOn;

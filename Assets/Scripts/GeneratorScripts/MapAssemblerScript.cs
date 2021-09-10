@@ -83,11 +83,6 @@ public class MapAssemblerScript : MonoBehaviour
 
     private void RenderAliasMapsOnUI()
     {
-        /*
-        foreach (StructuredAlias v in ParameterManager.Instance.AliasMaps) { 
-            GameObject g = Utility.renderAliasOnUI(AliasUIDisplay.transform.GetChild(0).GetComponent<RectTransform>(), ParameterManager.Instance.GridType, v, AliasPrefab, false);
-            g.transform.GetComponentInChildren<DragHandler>().canvas = GameUIManager.instance.GetComponent<Canvas>();
-        }*/
 
         List<StructuredAlias> maps = new List<StructuredAlias>();
         foreach (StructuredAlias v in ParameterManager.Instance.AliasMaps)

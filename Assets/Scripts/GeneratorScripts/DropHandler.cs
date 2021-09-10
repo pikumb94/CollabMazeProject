@@ -27,13 +27,11 @@ public class DropHandler : MonoBehaviour, IDropHandler
             
             CanvasGroup canvasGroup = eventData.pointerDrag.GetComponent<CanvasGroup>();
             GameObject AliasElement = eventData.pointerDrag.transform.parent.parent.gameObject;
-            //if (RectTransformUtility.RectangleContainsScreenPoint(GetComponent<RectTransform>(), Input.mousePosition)){
             if (eventData.pointerDrag.transform.parent.GetComponent<ScrollRect>() != null)
                 eventData.pointerDrag.transform.parent.GetComponent<ScrollRect>().enabled = true;
 
             AliasElement.transform.SetParent(transform.GetChild(0).transform);
 
-            //}
             if (!dicMaps.dictionaryMap.ContainsKey(AliasElement.GetInstanceID()))
             {
                 dicMaps.addMapToDictionary(eventData.pointerDrag.GetComponent<DragHandler>().MapOnDrag.Value, AliasElement.GetInstanceID());
@@ -45,8 +43,7 @@ public class DropHandler : MonoBehaviour, IDropHandler
             }
                 
             Image i = GetComponent<Image>();
-            //Color c = Color.white;
-            //c.a = 0f;
+
             i.color = defaultColor;
 
 

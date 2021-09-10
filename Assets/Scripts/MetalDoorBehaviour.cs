@@ -23,15 +23,6 @@ public class MetalDoorBehaviour : MonoBehaviour
     bool hasHit;
     float speedTrap = 6f;
 
-    /*
-    private void Awake()
-    {
-        if (Physics.CheckSphere(transform.position, .25f, 1 << gameObject.layer))
-        {
-            Destroy(gameObject);
-        }
-    }*/
-
     void Start()
     {
         doorTrs = GetComponentsInChildren<Transform>();
@@ -43,8 +34,7 @@ public class MetalDoorBehaviour : MonoBehaviour
             Destroy(doorTrs[3].gameObject);
             Destroy(doorTrs[4].gameObject);
         }
-        //foreach (Transform t in doorTrs)
-        //    Debug.Log(t.name);
+        //Debug.Log(t.name);
     }
 
     // Update is called once per frame
@@ -65,7 +55,6 @@ public class MetalDoorBehaviour : MonoBehaviour
 
         if (trapGObject != null)
         {
-            //Vector3 newDir = Quaternion.Euler(0, trapGObject.transform.eulerAngles.y, 0) * trapGObject.transform.forward;
             //Debug.Log(newDir);
             trapGObject.transform.Translate((hasHit?1:-1)*transform.forward * Time.deltaTime *speedTrap, Space.World);
         }
@@ -79,10 +68,6 @@ public class MetalDoorBehaviour : MonoBehaviour
             isOpening = true;
             if (hasTrap)
                 Invoke("ShootTrap", .5f);
-            /*if ()
-                Debug.Log("Dietro");
-            else
-                Debug.Log("Avanti");*/
         }
 
     }
@@ -96,13 +81,13 @@ public class MetalDoorBehaviour : MonoBehaviour
     void ShootTrap()
     {
         Debug.DrawRay( new Vector3(transform.position.x, transform.position.y, 1.5f*transform.position.z), transform.forward);
-        if (Physics.CheckSphere(transform.position+transform.forward,.4f)/*Physics.Raycast(new Vector3(transform.position.x, transform.position.y, 1.5f * transform.position.z), transform.forward, 1f)*/) { 
-            trapGObject = Instantiate(trapPrefab, transform.position /*+ (-transform.forward)*/, transform.rotation);
+        if (Physics.CheckSphere(transform.position+transform.forward,.4f)) { 
+            trapGObject = Instantiate(trapPrefab, transform.position, transform.rotation);
             Debug.Log("RAYCASTHIT");
             hasHit = true;
         }
         else{
-            trapGObject = Instantiate(trapPrefab, transform.position /*+(transform.forward)*/, Quaternion.Euler(0, transform.eulerAngles.y + 180, 0));
+            trapGObject = Instantiate(trapPrefab, transform.position, Quaternion.Euler(0, transform.eulerAngles.y + 180, 0));
             hasHit = false;
         }
         

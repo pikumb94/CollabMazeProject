@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// ParameterManager allows to exchange information between different scenes.
 /// </summary>
-public class ParameterManager:MonoBehaviour /*: Singleton<ParameterManager> */{
+public class ParameterManager:MonoBehaviour{
 
     public enum BuildVersion { COMPLETE, GAME_ONLY, EXPERIMENT_CONTROL, EXPERIMENT_ONLY };
 
@@ -52,12 +52,6 @@ public class ParameterManager:MonoBehaviour /*: Singleton<ParameterManager> */{
     [HideInInspector] public bool LogOffline { get; set; }
     [HideInInspector] public bool LogSetted { get; set; }
     [HideInInspector] public string ExperimentControlScene { get; set; }
-
-    /*// Mouse sensibility data.
-    [HideInInspector] public float MinSensibility { get; internal set; }
-    [HideInInspector] public float MaxSensibility { get; internal set; }
-    [HideInInspector] public float DefaultSensibility { get; internal set; }
-    [HideInInspector] public float WebSensibilityDownscale { get; internal set; }*/
     
     // Other data.
     [HideInInspector] public Quaternion BackgroundRotation { get; set; }
@@ -75,11 +69,6 @@ public class ParameterManager:MonoBehaviour /*: Singleton<ParameterManager> */{
         LogOnline = true;
         LogOffline = true;
         LogSetted = false;
-        /*
-        MinSensibility = 0.75f;
-        MaxSensibility = 2.75f;
-        DefaultSensibility = 1.75f;
-        WebSensibilityDownscale = 3f;*/
 
 
         if (Instance == null)

@@ -31,7 +31,7 @@ public struct StructuredAlias
     }
 }
 
-public class AliasGeneratorManager : MonoBehaviour/*Singleton<AliasGeneratorManager>*/
+public class AliasGeneratorManager : MonoBehaviour
 {
     static readonly int MAX_ALIAS = 1000;
     static readonly int MAX_ALIASMASKS = 5;
@@ -151,15 +151,6 @@ public class AliasGeneratorManager : MonoBehaviour/*Singleton<AliasGeneratorMana
             else
             {
                 //only from zero to kMinStep
-                /*
-                for (int x = 0; x < aliasMap.GetLength(0); x++)
-                {
-                    for (int y = 0; y < aliasMap.GetLength(1); y++)
-                    {
-                        if (Utility.in_bounds_General(new Vector2Int(startMainMap.x + x, startMainMap.y + y), width, height) && BaseAliasCollisionMask.Contains(new Vector2Int(x - startAlias.x, y - startAlias.y)))
-                            aliasMap[x, y].type = ParameterManager.Instance.MapToPlay[startMainMap.x + x, startMainMap.y + y].type;
-                    }
-                }*/
                 foreach(var m in BaseAliasCollisionMask)
                 {
                     if(Utility.in_bounds_General(new Vector2Int(startMainMap.x + m.x, startMainMap.y + m.y), mainMap.GetLength(0), mainMap.GetLength(1)) &&
@@ -171,22 +162,6 @@ public class AliasGeneratorManager : MonoBehaviour/*Singleton<AliasGeneratorMana
             if (MapEvaluator.isEndReachable(aliasMap, gridType, startAlias, endAlias, ParameterManager.Instance.allowAutosolverForAlias).First() == endAlias)
             {//if the map has a path from start to end, add it
                 float dst = MapEvaluator.BinaryMapSimilarity(mainMap, aliasMap, startMainMap, startAlias);
-                /*
-                int mapWCount = 0;
-                int aliasWCount = 0;
-                for (int h = 0; h < mainMap.GetLength(0); h++)
-                {
-                    for (int k = 0; k < mainMap.GetLength(1); k++)
-                    {
-                        if (mainMap[h, k].type == IGenerator.wallChar)
-                            mapWCount++;
-                        if (aliasMap[h, k].type == IGenerator.wallChar)
-                            aliasWCount++;
-                    }
-                }
-
-                dst = dst + Math.Abs(mapWCount - aliasWCount);
-                */
                 SimilarMapsQueue.Enqueue(aliasMap, dst);
             }
             i++;
@@ -205,7 +180,7 @@ public class AliasGeneratorManager : MonoBehaviour/*Singleton<AliasGeneratorMana
         if (ParameterManager.Instance.isOptimizerOn) {
             List<TileObject[,]> alises = new List<TileObject[,]>();
             BaseAliasCollisionMask = getMainMapKMaxMinCells(mainMap, gridType, ParameterManager.Instance.minStepsSolution, ParameterManager.Instance.minStepsSolution, ParameterManager.Instance.StartCell, 0f);
-            //
+            
             int experimentsNum = 1;
             while (experimentsNum > 0)
             {
@@ -214,7 +189,7 @@ public class AliasGeneratorManager : MonoBehaviour/*Singleton<AliasGeneratorMana
                 experimentsNum--;
             }
             
-            //
+            
         }
             else
             GenerateAndTestAliasMaps();
@@ -347,9 +322,7 @@ public class AliasGeneratorManager : MonoBehaviour/*Singleton<AliasGeneratorMana
         {
             foreach(Vector2Int p in K_CollisionSet[i])
             {
-                //Vector2Int x = p + startCell; 
-                //if (Utility.in_bounds_General(p, width, height))
-                    UnionCollisionSet.Add(p);
+                UnionCollisionSet.Add(p);
             }
             
             i++;
@@ -418,39 +391,6 @@ public class AliasGeneratorManager : MonoBehaviour/*Singleton<AliasGeneratorMana
 
         return UnionCollisionSet;
     }
-
-    /*
-    public void renderAliasOnUI(RectTransform container, ITypeGrid typeGrid, StructuredAlias alias, bool attachMapMetrics)
-    {
-        GameObject AliasGO = Instantiate(AliasPrefab, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
-
-        container.parent.GetComponent<MapListManager>().addMapToDictionary(alias.AliasMap,AliasGO.GetInstanceID());
-
-        AliasGO.transform.SetParent(container, false);
-        Transform t = AliasGO.transform.Find("BorderMask/Content");
-        RectTransform contentRect = t.GetComponent<RectTransform>();
-        RectTransform prefabRect = typeGrid.TilePrefab.GetComponent<RectTransform>();
-        initAliasGameObject(AliasGO);
-        GeneratorUIManager.Instance.DisplayMap(alias.AliasMap, t, ParameterManager.Instance.GridType);
-
-        GeneratorUIManager.Instance.ScaleToFitContainer(contentRect, new Rect(Vector2.zero, container.GetComponent<GridLayoutGroup>().cellSize));
-
-        if (attachMapMetrics)
-            AliasGO.GetComponentInChildren<HoverDisplayText>().textToDisplay = MapEvaluator.aggregateAliasDataMap(MapEvaluator.computeMetrics(alias.AliasMap, typeGrid, alias.start, alias.end), alias.similarityDistance);
-        else
-            AliasGO.GetComponentInChildren<HoverDisplayText>().gameObject.SetActive(false);
-    }
-
-    private void initAliasGameObject(GameObject AliasGO)
-    {
-        HoverDisplayText scriptHoverDisplay =  AliasGO.GetComponentInChildren<HoverDisplayText>();
-        DragHandler dHand = AliasGO.GetComponentInChildren<DragHandler>();
-        scriptHoverDisplay.DialogBoxInfo = GameObject.FindGameObjectWithTag("DialogBox");
-
-        dHand.OriginalParent = dHand.ToMoveGameObj.transform.parent.parent.gameObject; 
-        dHand.canvas = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Canvas>();
-    }
-    */
 
     public void backToMapGeneratorHandler()
     {
@@ -524,7 +464,7 @@ public class AliasGeneratorManager : MonoBehaviour/*Singleton<AliasGeneratorMana
         SimplePriorityQueue<TileObject[,]> tmpPQ = new SimplePriorityQueue<TileObject[,]>();
         bool isAliasSameAsReal = true;
 
-        while (i < N/*MAX_OPT_ALIAS*/)
+        while (i < N)
         {
             //define here the width, height, start and end  of the chosen map
             TileObject[,] aliasMap = new TileObject[width, height];
@@ -574,22 +514,6 @@ public class AliasGeneratorManager : MonoBehaviour/*Singleton<AliasGeneratorMana
             {
                 //if the map has a path from start to end, add it
                 float dst = MapEvaluator.BinaryMapSimilarity(mainMap, aliasMap, startMainMap, startAlias);
-                /*
-                int mapWCount = 0;
-                int aliasWCount = 0;
-                for (int h = 0; h < mainMap.GetLength(0); h++)
-                {
-                    for (int k = 0; k < mainMap.GetLength(1); k++)
-                    {
-                        if (mainMap[h, k].type == IGenerator.wallChar)
-                            mapWCount++;
-                        if (aliasMap[h, k].type == IGenerator.wallChar)
-                            aliasWCount++;
-                    }
-                }
-
-                dst = dst + Math.Abs(mapWCount - aliasWCount);
-                */
                 tmpPQ.Enqueue(aliasMap, dst);
                 
                 
@@ -646,7 +570,7 @@ public class AliasGeneratorManager : MonoBehaviour/*Singleton<AliasGeneratorMana
         float dst=0;
         TileObject[,] aliasMap = new TileObject[width, height];
 
-        while (i < 1/*MAX_OPT_ALIAS*/)
+        while (i < 1)
         {
             //define here the width, height, start and end  of the chosen map
             
@@ -683,22 +607,6 @@ public class AliasGeneratorManager : MonoBehaviour/*Singleton<AliasGeneratorMana
             {
                 //if the map has a path from start to end, add it
                 dst = MapEvaluator.BinaryMapSimilarity(mainMap, aliasMap, startMainMap, startAlias);
-                /*
-                int mapWCount = 0;
-                int aliasWCount = 0;
-                for (int h = 0; h < mainMap.GetLength(0); h++)
-                {
-                    for (int k = 0; k < mainMap.GetLength(1); k++)
-                    {
-                        if (mainMap[h, k].type == IGenerator.wallChar)
-                            mapWCount++;
-                        if (aliasMap[h, k].type == IGenerator.wallChar)
-                            aliasWCount++;
-                    }
-                }
-
-                dst = dst + Math.Abs(mapWCount - aliasWCount);
-                */
 
                 i++;
             }

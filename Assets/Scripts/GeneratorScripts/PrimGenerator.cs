@@ -48,18 +48,10 @@ public class PrimGenerator : IGenerator
     public override TileObject[,] initializeMap()
     {
         tmpMapWBorder = null;
-        ColorLookupTable = new char[/*GridColoring.Item1, GridColoring.Item3*/,] { { roomChar, wallChar}, { wallChar, endChar}};
+        ColorLookupTable = new char[,] { { roomChar, wallChar}, { wallChar, endChar}};
 
         map = new TileObject[width, height];
         //Map initialization: mark all walls as closed
-        /*
-        for (int x = 0; x < width; x++)
-        {
-            for (int y = 0; y < height; y++)
-            {
-                map[x, y].type = ColorLookupTable[x% ColorLookupTable.GetLength(0),y % ColorLookupTable.GetLength(1)];
-            }
-        }*/
 
         for (int x = -startPos.x; x < width- startPos.x; x++)
         {

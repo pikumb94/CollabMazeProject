@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 /// GeneratorManager coordinates both UI and logic of every kind of generator attached.
 /// </summary>
 
-public class GeneratorManager : MonoBehaviour /*Singleton<GeneratorManager>*/
+public class GeneratorManager : MonoBehaviour
 {
     public enum GeneratorEnum { CONNECTED, CELLULAR_AUTOMATA, PRIM };
     [HideInInspector]

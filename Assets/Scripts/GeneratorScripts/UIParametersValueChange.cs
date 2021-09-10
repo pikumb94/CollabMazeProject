@@ -180,15 +180,15 @@ public class UIParametersValueChange : MonoBehaviour
         }
         else if (UIIF==UIObstacleCountC)
         {
-            genM.connectedGenerator.obstaclePercent = Convert.ToSingle(UIObstacleCountC.text, CultureInfo.InvariantCulture.NumberFormat);// float.Parse(UIObstacleCountC.text, ci);
+            genM.connectedGenerator.obstaclePercent = Convert.ToSingle(UIObstacleCountC.text, CultureInfo.InvariantCulture.NumberFormat);
         }
         else if (UIIF == UIObstacleToRemove)
         {
-            genM.primGenerator.obstacleToRemovePercent = Convert.ToSingle(UIObstacleToRemove.text, CultureInfo.InvariantCulture.NumberFormat); //float.Parse(UIObstacleToRemove.text, ci);
+            genM.primGenerator.obstacleToRemovePercent = Convert.ToSingle(UIObstacleToRemove.text, CultureInfo.InvariantCulture.NumberFormat);
         }
         else if (UIIF == UIObstacleCountCA)
         {
-            genM.cellularAutomataGenerator.obstaclePercent = Convert.ToSingle(UIObstacleCountCA.text, CultureInfo.InvariantCulture.NumberFormat); //float.Parse(UIObstacleCountCA.text, ci);
+            genM.cellularAutomataGenerator.obstaclePercent = Convert.ToSingle(UIObstacleCountCA.text, CultureInfo.InvariantCulture.NumberFormat);
         }
         else if (UIIF == UIObstacleThreshold)
         {
